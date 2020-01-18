@@ -1,8 +1,12 @@
 {
   "version": 3,
   "file": "bundle.css",
-  "sources": [],
-  "sourcesContent": [],
+  "sources": [
+    "../../ListBreakdown.svelte"
+  ],
+  "sourcesContent": [
+    "<script>\n  import {onMount, beforeUpdate, afterUpdate } from 'svelte';\n  import axios from 'axios';\n  import List from './List.svelte';\n\timport { processListsWithRankings } from './analytics';\n\texport let params = params;\n  let listData = [];\n  let yearData;\n  let derivedData;\n\t//onMount(()=>rolled=Math.floor(Math.random() * params.bound) + 1);\n\t//With the onMount instead of the assignment below, when you go from a die with 7 sides to one with 15 or vice-versa, it does not update rolled. With the function below, it does, but it does not re-roll if you route from the 7-sided die back to the 7-sided die.\n\n  const loadFile = async () => {\n    const fileName = `/data/${params.year}-${params.format}.json`;\n\t\taxios.get(fileName).then(({data}) => {\n      yearData = data;\n\t\t\tlistData = processListsWithRankings(\n        data.critics\n      );\n      \n\t\t});\n  }\n  beforeUpdate(loadFile);\n\t\n</script>\n<style>\n  .ListBreakdown {\n    display: flex;\n    flex: 1 1 0;\n    max-height: 80vh;\n    overflow: auto;\n  }\n  .ListBreakdown__details {\n    width: 60%;\n  }\n</style>\n\n<div class=\"ListBreakdown\">\n  {#if yearData}\n    <div class=\"ListBreakdown__details\">\n      <div>\n      Number of list: { Object.keys(yearData.critics).length}\n      </div>\n      <div>\n      Number of unique entries: { Object.keys(yearData.works).length}\n      </div>\n      <div>\n      Highest ranked with no number 1's\n      </div>\n      <div>\n      Lowest ranked with number 1's\n      </div>\n      <div>\n      Highest ranked pair that are in no lists together\n      </div>\n      <div>\n      Only in one list\n      </div>\n      <div>\n      Most contrarian critic (lowest points for overall list)\n      </div>\n      <div>\n      Most contrarian critic with &lt;4 unique entries\n      </div>\n    </div>\n  {/if}\n  <div class=\"ListBreakdown__list\">\n    {#if listData.length}\n      <List listData={listData} yearData={yearData} />\n    {:else}\n      Loading...\n    {/if}\n  </div>\n</div>"
+  ],
   "names": [],
-  "mappings": ""
+  "mappings": "AA0BE,cAAc,cAAC,CAAC,AACd,OAAO,CAAE,IAAI,CACb,IAAI,CAAE,CAAC,CAAC,CAAC,CAAC,CAAC,CACX,UAAU,CAAE,IAAI,CAChB,QAAQ,CAAE,IAAI,AAChB,CAAC,AACD,uBAAuB,cAAC,CAAC,AACvB,KAAK,CAAE,GAAG,AACZ,CAAC"
 }
