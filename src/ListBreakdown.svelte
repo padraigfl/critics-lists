@@ -2,7 +2,13 @@
   import {onMount, beforeUpdate, afterUpdate } from 'svelte';
   import axios from 'axios';
   import List from './List.svelte';
-	import { processListsWithRankings } from './analytics';
+  import DataBlock from './DataBlock.svelte';
+  import DataList from './DataList.svelte';
+	import {
+    deriveAdditionalDataFromProcessedList,
+    processListsWithRankings,
+  } from './analytics';
+  import './styles.scss';
 	export let params = params;
   let listData = [];
   let yearData;
@@ -17,52 +23,20 @@
 			listData = processListsWithRankings(
         data.critics
       );
-      
+      derivedData = deriveAdditionalDataFromProcessedList(listData, data);
 		});
   }
   beforeUpdate(loadFile);
 	
 </script>
-<style>
-  .ListBreakdown {
-    display: flex;
-    flex: 1 1 0;
-    max-height: 80vh;
-    overflow: auto;
-  }
-  .ListBreakdown__details {
-    width: 60%;
-  }
-</style>
 
 <div class="ListBreakdown">
-  {#if yearData}
-    <div class="ListBreakdown__details">
-      <div>
-      Number of list: { Object.keys(yearData.critics).length}
-      </div>
-      <div>
-      Number of unique entries: { Object.keys(yearData.works).length}
-      </div>
-      <div>
-      Highest ranked with no number 1's
-      </div>
-      <div>
-      Lowest ranked with number 1's
-      </div>
-      <div>
-      Highest ranked pair that are in no lists together
-      </div>
-      <div>
-      Only in one list
-      </div>
-      <div>
-      Most contrarian critic (lowest points for overall list)
-      </div>
-      <div>
-      Most contrarian critic with &lt;4 unique entries
-      </div>
-    </div>
+  {#if derivedData && yearData && listData}
+    <DataList
+      derivedData={derivedData}
+      yearData={yearData}
+      listData={listData}
+    />
   {/if}
   <div class="ListBreakdown__list">
     {#if listData.length}

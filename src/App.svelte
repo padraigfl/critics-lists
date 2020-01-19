@@ -27,7 +27,6 @@
 
 </script>
 
-<body>
 <!-- In either case, if you go from Component A to Component B, it will randomly roll the die. With the 2nd method, it'll also randomly roll it if you go from component B with one parameter to component B with a different parameter. But neither way will it re-roll if you go from component B with parameter 7 back to the same exact route. -->
 	
 	<div style="display: flex;">
@@ -43,4 +42,3 @@
 		{jso2 || jso}
 	</div> -->
 	
-</body>

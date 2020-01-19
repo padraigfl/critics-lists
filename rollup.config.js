@@ -3,6 +3,7 @@ import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
+import scss from 'rollup-plugin-scss'
 import json from '@rollup/plugin-json';
 import { autoPreprocess } from 'svelte-preprocess/dist/autoProcess';
 
@@ -24,7 +25,8 @@ export default {
 			// a separate file  better for performance
 			css: css => {
 				css.write('public/build/bundle.css');
-			}
+			},
+			preprocess: autoPreprocess(),
 		}),
 
 		// If you have external dependencies installed from
@@ -38,7 +40,7 @@ export default {
 		}),
 		commonjs(),
 		json(),
-		autoPreprocess({ scss: {}}),
+		scss(),
 
 		// In dev mode, call `npm run start` once
 		// the bundle has been generated

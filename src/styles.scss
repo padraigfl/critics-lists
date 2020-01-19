@@ -1,0 +1,47 @@
+$dark: #111;
+$bright: #eee;
+
+$s: 8px;
+$m: 16px;
+$L: 24px;
+
+$mobile: 480px;
+
+.ListBreakdown {
+  padding: $s;
+  display: flex;
+  flex: 1 1 0;
+  overflow: auto;
+  &__details {
+    width: 60%;
+  }
+  @media (max-width: $mobile) {
+    display: block;
+    &__details, &__list {
+      width: 100%;
+    }
+  }
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  margin: 0px;
+  padding: 0px;
+  background-color: $bright;
+  color: $dark;
+  flex-grow: 1;
+}
+
+a, a:visited {
+  color: $dark;
+  text-decoration: underline;
+}
+
+body.dark {
+  background-color: $dark;
+  color: $bright;
+  a, a:visited {
+    color: $bright;
+  }
+}
