@@ -3,3 +3,4 @@ data
 node_modules
 dataformatted
 .DS_Store
+public/build

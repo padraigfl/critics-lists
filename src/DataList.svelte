@@ -13,23 +13,37 @@
   const getDerivedData = () => {
     derivedData = deriveAdditionalDataFromProcessedList(listData, yearData);
     dataList = [
-      { title: 'Number of list:', data: Object.keys(yearData.critics).length },
-      { title: 'Number of unique entries: ', data: Object.keys(yearData.works).length },
-      { title: 'Highest ranked with no number 1\'s', data: derivedData.biggestLoser },
-      { title: 'Lowest ranked with number 1\'s', data: derivedData.smallestWinner },
-      { title: 'Lowest ranked with number 1 (and more than one nomination)', data: derivedData.smallestWinnerValidator },
-      { title: 'Highest ranked pair that are in no lists together', data: derivedData.divisivePair },
-      { title: 'Most contrarian critic (lowest points for overall list) ', data: ` ${ derivedData.mostContrarianCritic.name} with ${ derivedData.mostContrarianCritic.score }
-    against an average of ${ derivedData.mostContrarianCritic.totalVal / (Object.keys(yearData.critics).length)}`  },
-      { title: 'Most contrarian critic with &lt;4 unique entries', data: ` ${ derivedData.mostContrarianCriticValidator.name} with ${ derivedData.mostContrarianCriticValidator.score }
-    against an average of ${ derivedData.mostContrarianCriticValidator.totalVal / (Object.keys(yearData.critics).length)}`  },
+      { title: '# Lists aggregated:', data: Object.keys(yearData.critics).length },
+      { title: '# Unique entries', data: Object.keys(yearData.works).length },
+      { title: 'Highest ranked with no #1', data: derivedData.biggestLoser },
+      {
+        title: 'Lowest ranked with a #1',
+        data: derivedData.smallestWinner,
+        validator: {
+          text: 'Omitting entries in <3 lists',
+          data: derivedData.smallestWinnerValidator,
+        },
+      },
+      { title: 'Highest ranked pair that share no lists', data: derivedData.divisivePair },
+      {
+        title: 'Most contrarian critic (lowest points for overall list)',
+        data: derivedData.mostContrarianCritic.name,
+        descriptors: `with ${ derivedData.mostContrarianCritic.score }
+    against an average of ${ (derivedData.mostContrarianCritic.totalVal / (Object.keys(yearData.critics).length)).toFixed(1)}`,
+        validator: {
+          text: 'Omitting lists with 3+ unique entries',
+          data: derivedData.mostContrarianCriticValidator.name,
+          descriptors: `with ${ derivedData.mostContrarianCriticValidator.score }
+    against an average of ${ (derivedData.mostContrarianCriticValidator.totalVal / (Object.keys(yearData.critics).length)).toFixed(1)}`
+        },
+      }
     ];
   }
   beforeUpdate(getDerivedData);
 
 </script>
 
-<dl>
+<dl class="DataList">
   {#each dataList as entry
   }
     <DataBlock

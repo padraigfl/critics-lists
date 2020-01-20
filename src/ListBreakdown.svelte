@@ -38,11 +38,9 @@
       listData={listData}
     />
   {/if}
-  <div class="ListBreakdown__list">
-    {#if listData.length}
-      <List listData={listData} yearData={yearData} />
-    {:else}
-      Loading...
-    {/if}
-  </div>
+  {#if listData.length && yearData}
+    <List listData={listData} yearData={yearData} />
+  {:else}
+    Loading...
+  {/if}
 </div>

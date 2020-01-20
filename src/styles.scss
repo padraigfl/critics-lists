@@ -8,10 +8,9 @@ $L: 24px;
 $mobile: 480px;
 
 .ListBreakdown {
-  padding: $s;
   display: flex;
   flex: 1 1 0;
-  overflow: auto;
+  height: 100%;
   &__details {
     width: 60%;
   }
@@ -19,6 +18,7 @@ $mobile: 480px;
     display: block;
     &__details, &__list {
       width: 100%;
+      padding: $s;
     }
   }
 }
@@ -43,5 +43,92 @@ body.dark {
   color: $bright;
   a, a:visited {
     color: $bright;
+  }
+}
+
+
+.Meter {
+  width: 140px;
+  display: flex;
+  &__icon {
+    font-size: 0.5rem;
+    margin-right: 0px;
+  }
+  &__text {
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+    flex-grow: 1;
+    margin-left: auto;
+  }
+  
+  &__graph {
+    width: 80px;
+    flex-grow: 0;
+    flex-shrink: 0;
+    border: 2px solid $dark;
+    margin-bottom: 1px;
+    &__value {
+      background-color: $dark;
+      height: 100%;
+    }
+  }
+  font-size: 0.9rem;
+  &--small {
+    font-size: 0.65rem;
+    .Meter__text {
+      width: 28px;
+      flex-grow: 0;
+    }
+  }
+}
+
+.List {
+  padding: $s;
+  overflow-y: auto;
+  width: 100%;
+}
+
+.ListEntry {
+  list-style-type: none;
+  padding-bottom: $s;
+  margin-bottom: -1px;
+  border-bottom: 1px solid $dark;
+  &__data {
+    display: flex;
+    align-items: top;
+    > *:not(:last-child) {
+      margin-right: $s;
+    }
+  }
+  &__placement {
+    flex-shrink: 0;
+    background-color: $dark;
+    color: $bright;
+    font-weight: bold;
+    width: 28px;
+    height: 28px;
+    padding: 4px;
+    text-align: right;
+  }
+  &__title {
+    flex-grow: 1;
+  }
+  &__stats {
+    flex-shrink: 0;
+  }
+
+}
+
+.DataList {
+  padding: $s;
+  dd {
+    margin-bottom: 0px;
+  }
+  dd {
+    margin: 0px;
+    margin-bottom: $s;
+    .DataBlock__validator {
+      font-size: 0.75rem;
+    }
   }
 }

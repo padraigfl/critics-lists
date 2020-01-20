@@ -1,10 +1,22 @@
 <script>
+  import ListEntry from './ListEntry.svelte';
   export let listData;
   export let yearData;  
+  let iterativeWorks = Object.entries(yearData.works);
+  let mostFirsts = iterativeWorks.sort((a, b) => b[1].firsts.length - a[1].firsts.length)[0][0];
+  let mostLists = iterativeWorks.sort((a, b) => b[1].critics.length - a[1].critics.length)[0][0];
 </script>
 
-<ol>
-  {#each listData as entry}
-    <li>{entry[0]} - {entry[1]} - {yearData.works[entry[0]].firsts.length} firsts</li>
+<ol class="List">
+  {#each listData as [ key, points ], i}
+    <ListEntry
+      placement={i+1}
+      title={key}
+      points={points}
+      entry={yearData.works[key]}
+      highestPoints={listData[0][1]}
+      mostLists={yearData.works[mostLists].critics.length}
+      mostFirsts={yearData.works[mostLists].firsts.length}
+    />
   {/each}
 </ol>
