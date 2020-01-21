@@ -1,15 +1,15 @@
 .ListBreakdown {
-  padding: 8px;
   display: flex;
   flex: 1 1 0;
-  overflow: auto; }
+  height: 100%; }
   .ListBreakdown__details {
     width: 60%; }
   @media (max-width: 480px) {
     .ListBreakdown {
       display: block; }
       .ListBreakdown__details, .ListBreakdown__list {
-        width: 100%; } }
+        width: 100%;
+        padding: 8px; } }
 
 body {
   display: flex;
@@ -29,3 +29,74 @@ body.dark {
   color: #eee; }
   body.dark a, body.dark a:visited {
     color: #eee; }
+
+.Meter {
+  width: 110px;
+  display: flex;
+  font-size: 0.9rem; }
+  .Meter__icon {
+    font-size: 0.5rem;
+    margin-right: 0px; }
+  .Meter__text {
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+    flex-grow: 1;
+    margin-left: auto; }
+  .Meter__graph {
+    width: 40px;
+    flex-grow: 0;
+    flex-shrink: 0;
+    border: 2px solid #111;
+    margin-bottom: 1px; }
+    .Meter__graph__value {
+      background-color: #111;
+      height: 100%; }
+  .Meter--small {
+    font-size: 0.65rem; }
+    .Meter--small .Meter__text {
+      width: 28px;
+      flex-grow: 0; }
+
+.List {
+  padding: 8px;
+  overflow-y: auto;
+  width: 100%; }
+
+.ListEntry {
+  list-style-type: none;
+  padding-bottom: 8px;
+  margin-bottom: -1px;
+  border-bottom: 1px solid #111; }
+  .ListEntry__data {
+    display: flex;
+    align-items: top; }
+    .ListEntry__data > *:not(:last-child) {
+      margin-right: 8px; }
+  .ListEntry__placement {
+    flex-shrink: 0;
+    background-color: #111;
+    color: #eee;
+    font-weight: bold;
+    width: 28px;
+    height: 28px;
+    padding: 4px;
+    text-align: right; }
+  .ListEntry__title {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden; }
+  .ListEntry__stats {
+    flex-shrink: 0;
+    margin-left: auto; }
+  .ListEntry__links {
+    padding-left: 0px; }
+
+.DataList {
+  padding: 8px; }
+  .DataList dd {
+    margin-bottom: 0px; }
+  .DataList dd {
+    margin: 0px;
+    margin-bottom: 8px; }
+    .DataList dd .DataBlock__validator {
+      font-size: 0.75rem; }

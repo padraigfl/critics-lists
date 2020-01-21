@@ -48,7 +48,7 @@ body.dark {
 
 
 .Meter {
-  width: 140px;
+  width: 110px;
   display: flex;
   &__icon {
     font-size: 0.5rem;
@@ -62,7 +62,7 @@ body.dark {
   }
   
   &__graph {
-    width: 80px;
+    width: 40px;
     flex-grow: 0;
     flex-shrink: 0;
     border: 2px solid $dark;
@@ -111,12 +111,17 @@ body.dark {
     text-align: right;
   }
   &__title {
-    flex-grow: 1;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
   &__stats {
     flex-shrink: 0;
+    margin-left: auto;
   }
-
+  &__links {
+    padding-left: 0px;
+  }
 }
 
 .DataList {

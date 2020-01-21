@@ -11,6 +11,12 @@
   let listData = [];
   let yearData;
   let derivedData;
+
+  const film = [
+    { site: 'IMDb', link: 'https://imdb.com/search/' },
+    { site: 'RT', link: 'https://rottentomatoes.com/search/' },
+    { site: 'Letterboxd', link: 'https://letterboxd.com/search/' },
+  ];
 </script>
 
 <li class="ListEntry">
@@ -18,9 +24,12 @@
     <div class="ListEntry__placement">{placement}</div>
     <div class="ListEntry__title">
       {title}
-      <ul>
-        {#each ['imdb', 'letterboxd', 'rottentomoatoes'] as site}
-          <a href={`${site}/search/${title}`} target="_blank">{site}</a>
+      <ul class="ListEntry__links">
+        {#each film as { site, link }, i}
+          {#if i !== 0}
+          |
+          {/if}
+          <a href={`${link}/${title}`} target="_blank">{site}</a>{' '}
         {/each}
       </ul>
     </div>

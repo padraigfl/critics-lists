@@ -183,3 +183,30 @@ export const deriveAdditionalDataFromProcessedList = (processedList, data) => {
     mostContrarianCriticValidator,
   };
 }
+
+export const formatList = (smallData) => {
+  const publications = {};
+  const works = {};
+  Object.entries(smallData).forEach(([critic, { list, publication }]) => {
+    if (publications[publication]) {
+       publications[publication].push(critic);
+    } else {
+      publications[publication] = [critic];
+    }
+    Object.entries(list).forEach(([work, rank]) => {
+      if (works[work]) {
+        works[work].critics.push(critic);
+      } else {
+        works[work] = { critics: [critic], firsts: [] };
+      }
+      if (rank === 1) {
+        works[work].firsts.push(critic);
+      }
+    });
+  });
+  return {
+    publications,
+    works,
+    critics: smallData,
+  };
+};

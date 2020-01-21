@@ -1,10 +1,11 @@
 <script>
-  import {onMount, beforeUpdate, afterUpdate } from 'svelte';
+  import { onMount, beforeUpdate, afterUpdate } from 'svelte';
   import axios from 'axios';
   import List from './List.svelte';
   import DataBlock from './DataBlock.svelte';
   import DataList from './DataList.svelte';
 	import {
+    formatList,
     deriveAdditionalDataFromProcessedList,
     processListsWithRankings,
   } from './analytics';
@@ -13,20 +14,32 @@
   let listData = [];
   let yearData;
   let derivedData;
+  let data;
+  let fileName = `/data/small/${params.year}-${params.format}.json`;
+  
+  $: fileName = `/data/small/${params.year}-${params.format}.json`;
 	//onMount(()=>rolled=Math.floor(Math.random() * params.bound) + 1);
 	//With the onMount instead of the assignment below, when you go from a die with 7 sides to one with 15 or vice-versa, it does not update rolled. With the function below, it does, but it does not re-roll if you route from the 7-sided die back to the 7-sided die.
 
-  const loadFile = async () => {
-    const fileName = `/data/${params.year}-${params.format}.json`;
-		axios.get(fileName).then(({data}) => {
-      yearData = data;
-			listData = processListsWithRankings(
-        data.critics
-      );
-      derivedData = deriveAdditionalDataFromProcessedList(listData, data);
-		});
-  }
-  beforeUpdate(loadFile);
+  const getJsonData = async () => {
+    const resp = await fetch(fileName);
+    const json = await resp.json();
+    if (resp.ok) {
+      yearData = formatList(json);
+      listData = processListsWithRankings(json);
+      derivedData = deriveAdditionalDataFromProcessedList(listData, yearData);
+      return {
+        yearData,
+        listData,
+        derivedData,
+      }
+    } else {
+      throw new Error('aaag');
+    }
+  };
+
+  // $: data = getJsonData();
+  onMount(getJsonData);
 	
 </script>
 
