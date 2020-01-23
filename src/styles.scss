@@ -3,14 +3,15 @@ $bright: #eee;
 
 $s: 8px;
 $m: 16px;
-$L: 24px;
+$l: 24px;
+$xl: 32px;
 
 $mobile: 480px;
 
 .ListBreakdown {
   display: flex;
   flex: 1 1 0;
-  height: 100%;
+  height: calc(100% - 40px);
   &__details {
     width: 60%;
   }
@@ -85,7 +86,9 @@ body.dark {
 .List {
   padding: $s;
   overflow-y: auto;
-  width: 100%;
+  margin: 0px;
+  padding-right: 24px;
+  flex-grow: 1;
 }
 
 .ListEntry {
@@ -125,15 +128,86 @@ body.dark {
 }
 
 .DataList {
-  padding: $s;
-  dd {
-    margin-bottom: 0px;
+  min-width: 300px;
+
+  @media (max-width: $mobile) {
+    flex-shrink: 0;
   }
+  padding: $s;
   dd {
     margin: 0px;
     margin-bottom: $s;
     .DataBlock__validator {
       font-size: 0.75rem;
     }
+  }
+}
+
+.Modal {
+  background-color: $bright;
+  box-shadow: 0px 0px 4px $dark;
+  max-width: 320px;
+  margin: 0 auto;
+  padding: $l+$l $l $l;
+  position: relative;
+  &__close {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    height: $xl;
+    width: $xl;
+  }
+  &-bg {
+    position: absolute;
+    height: 100vh;
+    width: 100vw;
+    top: 0px;
+    left: 0px;
+    background-color: rgba(0,0,0,0.3);
+    display: flex;
+    align-items: center;
+  }
+}
+
+.matrix {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  &__option {
+    width: 85px;
+  }
+  &__option--unranked {
+    margin-left: auto;
+    text-align: left;
+    .matrix__rank {
+      width: initial;
+    }
+    width: 137px;
+  }
+  &__rank, &__input {
+    display: inline-block;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    width: 20px;
+  }
+  &__input {
+    width: 60px;
+  }
+
+}
+
+marquee {
+  position: absolute;
+  width: 100vh;
+  bottom: 0px;
+  right: 0px;
+  height: 20px;
+  transform-origin: bottom right;
+  transform: rotate(90deg) translateY(20px);
+  background-color: #111;
+  z-index: 10;
+  color: white;
+  a, a:visited {
+    color: white;
   }
 }

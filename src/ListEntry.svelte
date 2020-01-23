@@ -17,6 +17,10 @@
     { site: 'RT', link: 'https://rottentomatoes.com/search/' },
     { site: 'Letterboxd', link: 'https://letterboxd.com/search/' },
   ];
+
+  const music = [
+    { site: 'Spotify', link: '' },
+  ]
 </script>
 
 <li class="ListEntry">
