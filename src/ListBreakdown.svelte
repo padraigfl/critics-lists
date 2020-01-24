@@ -10,6 +10,7 @@
     processListsWithRankings,
   } from './analytics';
   import './styles.scss';
+  import { year, format } from './store';
 	export let params = params;
   let listData = [];
   let yearData;
@@ -33,6 +34,8 @@
   }
 
   const getJsonData = async () => {
+    year.update(() => params.year);
+    format.update(() => params.format);
     const localStorageItem = `${params.year}-${params.format}`;
     const priorData = window.localStorage.getItem(localStorageItem);
     if (priorData) {

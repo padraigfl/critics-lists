@@ -6,6 +6,7 @@
 	import Router, { push } from 'svelte-spa-router';
 	import axios from 'axios';
 	import { processListsWithRankings } from './analytics';
+  import { year, format } from './store';
 	import data from '../data/2010-film.json';
 	import smallData from '../data/small/2010-film.json';
 
@@ -15,11 +16,9 @@
 		'/:format/:year': ListBreakdown,
     '*': ComponentA,
 	}
-	let jso = JSON.stringify(processListsWithRankings(data.critics));
-	let jso2;
-	let year = "2010";
-	let format = "film";
 	let display;
+	let year_value;
+	let format_value;
 	const defaultMatrix = {
 		1: 10,
 		2: 1,
@@ -47,14 +46,19 @@
 		});
 	}
 
+	year.subscribe(value => {
+		year_value = value;
+	});
+	format.subscribe(value => {
+		format_value = value;
+	});
+
 	const changeYear = (e) => {
-		year = e.target.value;
-		push(`/${format}/${year}`);
+		push(`/${format_value}/${e.target.value}`);
 	};
 
 	const changeFormat = (e) => {
-		format = e.target.value;
-		push(`/${format}/${year}`);
+		push(`/${e.target.value}/${year_value}`);
 	}
 
 	const toggle = () => {
@@ -79,14 +83,14 @@
 	
 	<div style="display: flex; height: 40px;">
 		<strong>Title</strong>
-		<select value={year} on:change={changeYear}>
+		<select value={year_value} on:change={changeYear}>
 			{#each ['2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2010s'] as year}
 				<option value={year}>
 					{ year }
 				</option>
 			{/each}
 		</select>
-		<select value={format} on:change={changeFormat}>
+		<select value={format_value} on:change={changeFormat}>
 			{#each ['film', 'tv', 'album'] as year}
 				<option value={year}>
 					{ year }
