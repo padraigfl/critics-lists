@@ -61,7 +61,6 @@ body.dark {
   padding: 8px;
   overflow-y: auto;
   margin: 0px;
-  padding-right: 24px;
   flex-grow: 1; }
 
 .ListEntry {
@@ -94,6 +93,7 @@ body.dark {
     padding-left: 0px; }
 
 .DataList {
+  padding-left: 24px;
   min-width: 300px;
   padding: 8px; }
   @media (max-width: 480px) {
@@ -148,16 +148,25 @@ body.dark {
   .matrix__input {
     width: 60px; }
 
-marquee {
-  position: absolute;
+.wasAMarquee {
+  position: fixed;
   width: 100vh;
   bottom: 0px;
-  right: 0px;
+  left: -0px;
   height: 20px;
-  transform-origin: bottom right;
-  transform: rotate(90deg) translateY(20px);
+  transform-origin: top left;
+  transform: rotate(-90deg) translateY(0px) translateX(-20px);
   background-color: #111;
   z-index: 10;
-  color: white; }
-  marquee a, marquee a:visited {
+  color: white;
+  overflow: scroll;
+  white-space: nowrap;
+  padding-left: 8px; }
+  .wasAMarquee a, .wasAMarquee a:visited {
     color: white; }
+
+.Landing {
+  width: 95%;
+  max-width: 800px;
+  margin: 0 auto;
+  overflow: scroll; }

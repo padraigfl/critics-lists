@@ -1,6 +1,6 @@
 <script>
 	import ComponentA from './ComponentA.svelte';
-	import ComponentB from './ComponentB.svelte';
+	import Landing from './Landing.svelte';
 	import ListBreakdown from './ListBreakdown.svelte';
 	import Modal from './Modal.svelte';
 	import Router, { push } from 'svelte-spa-router';
@@ -11,7 +11,7 @@
 	import smallData from '../data/small/2010-film.json';
 
 	const routes = {
-		'/': ComponentB,
+		'/': Landing,
 		'/:format': ComponentA,
 		'/:format/:year': ListBreakdown,
     '*': ComponentA,
@@ -121,20 +121,19 @@
 		</Modal>
 	{/if}
 
-	<marquee>
-		Thanks for checking this out.
+	<div class="wasAMarquee">
+		Projects:
 		{#each [
-			{ link: 'github.com/padraigfl', text: 'My Github' },
 			{ link: 'github.com/padraigfl/critic-lists', text: 'Source code'},
-			{ link: 'packard-belle.netlify.com', text: 'another thing I made' },
-			{ link: 'react-coursebuilder.netlify.com', text: 'aand another' },
+			{ link: 'packard-belle.netlify.com', text: 'Windows98 Clone' },
+			{ link: 'react-coursebuilder.netlify.com', text: 'Youtube Notes App thing' },
 		] as {link, text}, i}
 			{#if i > 0}
 				{' '}—
 			{/if}
-			<a href={`https://${link}`} _target="_blank">{text}</a>
+			<a href={`https://${link}`} target="_blank">{text}</a>
 		{/each}
-	</marquee>
+	</div>
 	
 	<Router {routes}/>
 	<!-- <div>
