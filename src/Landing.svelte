@@ -18,7 +18,7 @@
 
 	<ul>
 		<li><strong># Unique Entries</strong> Obvious enough?</li>
-		<li><strong>Highest ranked with no #</strong> Seems like a solid bet for an easy pleaser that potentially has slipped a bit under the radar</li>
+		<li><strong>Highest ranked with no #</strong> Seems like a solid bet for an easy pleaser that potentially has slipped a bit under the radar? Alternatively it's just something people like to include in their list</li>
 		<li><strong>Lowest ranked with a #1</strong> includes a validator for entries that only make a few lists. Not sure there's any one way to interpret this one.</li>
 		<li><strong>Highest ranked pair that share no list</strong> Just a kinda cool contrast, potentially a means of signalling the biggest split in trends with mainstream critics</li>
 		<li><strong>Most contrarian critic</strong> Person who's list matches up least with the overall weighted list, not sure there's anything of value from this, contains a validator for people who have totally obscure lists</li>

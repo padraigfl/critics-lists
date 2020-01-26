@@ -18,7 +18,8 @@ body {
   padding: 0px;
   background-color: #eee;
   color: #111;
-  flex-grow: 1; }
+  flex-grow: 1;
+  padding-left: 24px; }
 
 a, a:visited {
   color: #111;
@@ -36,7 +37,8 @@ body.dark {
   font-size: 0.9rem; }
   .Meter__icon {
     font-size: 0.5rem;
-    margin-right: 0px; }
+    margin-right: 0px;
+    filter: brightness(0); }
   .Meter__text {
     font-variant-numeric: tabular-nums;
     text-align: right;
@@ -58,10 +60,17 @@ body.dark {
       flex-grow: 0; }
 
 .List {
-  padding: 8px;
-  overflow-y: auto;
   margin: 0px;
-  flex-grow: 1; }
+  padding: 0;
+  padding-top: 40px;
+  overflow-y: auto;
+  margin-left: 8px;
+  border-left: 1px solid #111;
+  flex-grow: 1;
+  margin-left: 300px; }
+  @media (max-width: 480px) {
+    .List {
+      margin-left: 0px; } }
 
 .ListEntry {
   list-style-type: none;
@@ -93,12 +102,20 @@ body.dark {
     padding-left: 0px; }
 
 .DataList {
-  padding-left: 24px;
-  min-width: 300px;
-  padding: 8px; }
+  padding: 8px;
+  padding-top: 48px;
+  padding-right: 0px;
+  margin-top: 0px;
+  width: 300px;
+  flex-shrink: 0;
+  position: fixed; }
   @media (max-width: 480px) {
     .DataList {
-      flex-shrink: 0; } }
+      position: relative;
+      flex-shrink: 0;
+      min-width: initial;
+      max-width: 300px;
+      padding-right: 8px; } }
   .DataList dd {
     margin: 0px;
     margin-bottom: 8px; }
@@ -107,22 +124,28 @@ body.dark {
 
 .Modal {
   background-color: #eee;
-  box-shadow: 0px 0px 4px #111;
+  border: 1px solid #111;
   max-width: 320px;
   margin: 0 auto;
-  padding: 48px 24px 24px;
+  padding: 24px;
   position: relative; }
   .Modal__close {
     position: absolute;
     top: 0px;
     right: 0px;
     height: 32px;
-    width: 32px; }
+    width: 32px;
+    border: none;
+    border-left: 1px solid #111;
+    border-bottom: 1px solid #111;
+    background-color: #111;
+    color: #eee;
+    font-weight: bold; }
   .Modal-bg {
-    position: absolute;
-    height: 100vh;
-    width: 100vw;
-    top: 0px;
+    z-index: 10;
+    position: fixed;
+    height: 100%;
+    width: 100%;
     left: 0px;
     background-color: rgba(0, 0, 0, 0.3);
     display: flex;
@@ -137,7 +160,7 @@ body.dark {
   .matrix__option--unranked {
     margin-left: auto;
     text-align: left;
-    width: 137px; }
+    width: 135px; }
     .matrix__option--unranked .matrix__rank {
       width: initial; }
   .matrix__rank, .matrix__input {
@@ -149,19 +172,22 @@ body.dark {
     width: 60px; }
 
 .wasAMarquee {
+  z-index: 5;
   position: fixed;
-  width: 100vh;
+  width: 140vh;
   bottom: 0px;
-  left: -0px;
-  height: 20px;
-  transform-origin: top left;
-  transform: rotate(-90deg) translateY(0px) translateX(-20px);
+  left: 0px;
+  height: 24px;
+  transform-origin: 12px;
+  transform: rotate(-90deg);
   background-color: #111;
   z-index: 10;
   color: white;
   overflow: scroll;
   white-space: nowrap;
-  padding-left: 8px; }
+  padding-left: 8px;
+  display: flex;
+  align-content: center; }
   .wasAMarquee a, .wasAMarquee a:visited {
     color: white; }
 
@@ -170,3 +196,37 @@ body.dark {
   max-width: 800px;
   margin: 0 auto;
   overflow: scroll; }
+
+.nav {
+  position: fixed;
+  display: flex;
+  height: 40px;
+  width: 100%;
+  left: 0px;
+  background-color: #eee;
+  align-content: center;
+  border-bottom: 1px solid #111;
+  overflow: hidden;
+  z-index: 10; }
+  @media (max-width: 480px) {
+    .nav {
+      width: calc(100vw - 24px); } }
+  .nav select, .nav button {
+    max-width: calc(33vw - 8px);
+    margin-right: 8px;
+    padding-top: 0px;
+    padding-bottom: 0px; }
+  .nav > :first-child {
+    margin-left: auto; }
+  .nav > :last-child {
+    margin-right: 8px; }
+
+button, select, input {
+  color: #111;
+  background-color: white;
+  border: 1px solid #111;
+  margin-right: 0px; }
+
+button, select {
+  font-weight: bold;
+  margin-bottom: 0px; }

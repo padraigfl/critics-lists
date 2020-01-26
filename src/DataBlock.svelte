@@ -4,7 +4,15 @@
 
 <dt class="DataBlock__tag">{entry.title}</dt>
 <dd class="DataBlock__data">
-  <strong>{entry.data}</strong>
+  <strong>
+    {#if Array.isArray(entry.data)}
+      {#each entry.data as v}
+        <p>{v}</p>
+      {/each}
+    {:else}
+      {entry.data}
+    {/if}
+  </strong>
   {#if entry.descriptor}
     <em class="DataBlock__descriptor">{entry.descriptor}</em>
   {/if}
@@ -12,7 +20,13 @@
     <div class="DataBlock__validator">
       [
         {entry.validator.text}:
-        {entry.validator.data}
+        {#if Array.isArray(entry.validator.data)}
+          {#each entry.data as v}
+            <p>{v}</p>
+          {/each}
+        {:else}
+          {entry.validator.data}
+        {/if}
         {#if entry.validator.descriptor}
           <em class="DataBlock__descriptor">{entry.validator.descriptor}</em>
         {/if}

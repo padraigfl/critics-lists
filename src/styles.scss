@@ -12,6 +12,7 @@ $mobile: 480px;
   display: flex;
   flex: 1 1 0;
   height: calc(100% - 40px);
+
   &__details {
     width: 60%;
   }
@@ -32,6 +33,7 @@ body {
   background-color: $bright;
   color: $dark;
   flex-grow: 1;
+  padding-left: $l;
 }
 
 a, a:visited {
@@ -54,6 +56,7 @@ body.dark {
   &__icon {
     font-size: 0.5rem;
     margin-right: 0px;
+    filter: brightness(0);
   }
   &__text {
     font-variant-numeric: tabular-nums;
@@ -84,10 +87,18 @@ body.dark {
 }
 
 .List {
-  padding: $s;
-  overflow-y: auto;
   margin: 0px;
+  padding: 0;
+  padding-top: 40px;
+  overflow-y: auto;
+  margin-left: $s;
+  border-left: 1px solid $dark;
   flex-grow: 1;
+  margin-left: 300px;
+
+  @media (max-width: $mobile) {
+    margin-left: 0px;
+  }
 }
 
 .ListEntry {
@@ -127,13 +138,21 @@ body.dark {
 }
 
 .DataList {
-  padding-left: 24px;
-  min-width: 300px;
+  padding: $s;
+  padding-top: 48px;
+  padding-right: 0px;
+  margin-top: 0px;
+  width: 300px;
+  flex-shrink: 0;
+  position: fixed;
 
   @media (max-width: $mobile) {
+    position: relative;
     flex-shrink: 0;
+    min-width: initial;
+    max-width: 300px;
+    padding-right: $s;
   }
-  padding: $s;
   dd {
     margin: 0px;
     margin-bottom: $s;
@@ -143,12 +162,14 @@ body.dark {
   }
 }
 
+$border: 1px solid $dark;
+
 .Modal {
   background-color: $bright;
-  box-shadow: 0px 0px 4px $dark;
+  border: $border;
   max-width: 320px;
   margin: 0 auto;
-  padding: $l+$l $l $l;
+  padding: $l;
   position: relative;
   &__close {
     position: absolute;
@@ -156,12 +177,18 @@ body.dark {
     right: 0px;
     height: $xl;
     width: $xl;
+    border: none;
+    border-left: $border;
+    border-bottom: $border;
+    background-color: $dark;
+    color: $bright;
+    font-weight: bold;
   }
   &-bg {
-    position: absolute;
-    height: 100vh;
-    width: 100vw;
-    top: 0px;
+    z-index: 10;
+    position: fixed;
+    height: 100%;
+    width: 100%;
     left: 0px;
     background-color: rgba(0,0,0,0.3);
     display: flex;
@@ -182,7 +209,7 @@ body.dark {
     .matrix__rank {
       width: initial;
     }
-    width: 137px;
+    width: 135px;
   }
   &__rank, &__input {
     display: inline-block;
@@ -197,19 +224,22 @@ body.dark {
 }
 
 .wasAMarquee {
+  z-index: 5;
   position: fixed;
-  width: 100vh;
+  width: 140vh;
   bottom: 0px;
-  left: -0px;
-  height: 20px;
-  transform-origin: top left;
-  transform: rotate(-90deg) translateY(0px) translateX(-20px);
+  left: 0px;
+  height: $l;
+  transform-origin: $l/2;
+  transform: rotate(-90deg);
   background-color: #111;
   z-index: 10;
   color: white;
   overflow: scroll;
   white-space: nowrap;
   padding-left: $s;
+  display: flex;
+  align-content: center;
   a, a:visited {
     color: white;
   }
@@ -220,4 +250,45 @@ body.dark {
   max-width: 800px;
   margin: 0 auto;
   overflow: scroll;
+}
+
+.nav {
+  position: fixed;
+  display: flex;
+  height: 40px;
+  width: 100%;
+  left: 0px;
+  background-color: $bright;
+  align-content: center;
+  border-bottom: 1px solid $dark;
+  overflow: hidden;
+  z-index: 10;
+
+  @media (max-width: $mobile) {
+    width: calc(100vw - 24px);
+  }
+
+  select, button {
+    max-width: calc(33vw - 8px);
+    margin-right: $s;
+    padding-top: 0px;
+    padding-bottom: 0px;
+  };
+  >:first-child {
+    margin-left: auto;
+  }
+  >:last-child {
+    margin-right: $s;
+  }
+}
+
+button, select, input {
+  color: $dark;
+  background-color: white;
+  border: $border;
+  margin-right: 0px;
+}
+button, select {
+  font-weight: bold;
+  margin-bottom: 0px;
 }

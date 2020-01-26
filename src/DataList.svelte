@@ -14,6 +14,7 @@
     derivedData = deriveAdditionalDataFromProcessedList(listData, yearData);
     dataList = [
       { title: '# Lists aggregated:', data: Object.keys(yearData.critics).length },
+      // { title: '# Publications', data: yearData.publications },
       { title: '# Unique entries', data: Object.keys(yearData.works).length },
       { title: 'Highest ranked with no #1', data: derivedData.biggestLoser },
       {
@@ -36,7 +37,8 @@
           descriptors: `with ${ derivedData.mostContrarianCriticValidator.score }
     against an average of ${ (derivedData.mostContrarianCriticValidator.totalVal / (Object.keys(yearData.critics).length)).toFixed(1)}`
         },
-      }
+      },
+      // { title: 'Data Source', data: yearData.source }
     ];
   }
   beforeUpdate(getDerivedData);

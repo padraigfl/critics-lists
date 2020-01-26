@@ -559,7 +559,7 @@ var app = (function () {
     			li6 = element("li");
     			strong1 = element("strong");
     			strong1.textContent = "Highest ranked with no #";
-    			t20 = text(" Seems like a solid bet for an easy pleaser that potentially has slipped a bit under the radar");
+    			t20 = text(" Seems like a solid bet for an easy pleaser that potentially has slipped a bit under the radar? Alternatively it's just something people like to include in their list");
     			t21 = space();
     			li7 = element("li");
     			strong2 = element("strong");
@@ -598,17 +598,17 @@ var app = (function () {
     			add_location(li5, file, 19, 2, 1132);
     			add_location(strong1, file, 20, 6, 1197);
     			add_location(li6, file, 20, 2, 1193);
-    			add_location(strong2, file, 21, 6, 1344);
-    			add_location(li7, file, 21, 2, 1340);
-    			add_location(strong3, file, 22, 6, 1509);
-    			add_location(li8, file, 22, 2, 1505);
-    			add_location(strong4, file, 23, 6, 1690);
-    			add_location(li9, file, 23, 2, 1686);
+    			add_location(strong2, file, 21, 6, 1416);
+    			add_location(li7, file, 21, 2, 1412);
+    			add_location(strong3, file, 22, 6, 1581);
+    			add_location(li8, file, 22, 2, 1577);
+    			add_location(strong4, file, 23, 6, 1762);
+    			add_location(li9, file, 23, 2, 1758);
     			add_location(ul1, file, 18, 1, 1125);
-    			add_location(br, file, 27, 140, 2064);
-    			add_location(p2, file, 26, 1, 1920);
-    			add_location(p3, file, 30, 1, 2078);
-    			add_location(p4, file, 34, 1, 2285);
+    			add_location(br, file, 27, 140, 2136);
+    			add_location(p2, file, 26, 1, 1992);
+    			add_location(p3, file, 30, 1, 2150);
+    			add_location(p4, file, 34, 1, 2357);
     			attr_dev(div, "class", "Landing");
     			add_location(div, file, 0, 0, 0);
     		},
@@ -2143,7 +2143,7 @@ var app = (function () {
     			div = element("div");
     			t = text(/*icon*/ ctx[4]);
     			attr_dev(div, "class", "Meter__icon");
-    			add_location(div, file$1, 15, 2, 320);
+    			add_location(div, file$1, 15, 2, 321);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -2202,9 +2202,9 @@ var app = (function () {
     			add_location(div0, file$1, 11, 2, 197);
     			attr_dev(div1, "class", "Meter__graph__value");
     			attr_dev(div1, "style", div1_style_value = `width: ${/*value*/ ctx[0] / /*total*/ ctx[1] * 100}%`);
-    			add_location(div1, file$1, 20, 4, 407);
+    			add_location(div1, file$1, 20, 4, 408);
     			attr_dev(div2, "class", "Meter__graph");
-    			add_location(div2, file$1, 19, 2, 376);
+    			add_location(div2, file$1, 19, 2, 377);
     			attr_dev(div3, "class", div3_class_value = `Meter ${/*small*/ ctx[3] ? "Meter--small" : ""}`);
     			add_location(div3, file$1, 8, 0, 140);
     		},
@@ -3117,8 +3117,152 @@ var app = (function () {
 
     const file$4 = "src/DataBlock.svelte";
 
-    // (8:2) {#if entry.descriptor}
-    function create_if_block_2(ctx) {
+    function get_each_context$2(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[1] = list[i];
+    	return child_ctx;
+    }
+
+    function get_each_context_1(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[1] = list[i];
+    	return child_ctx;
+    }
+
+    // (12:4) {:else}
+    function create_else_block_1(ctx) {
+    	let t_value = /*entry*/ ctx[0].data + "";
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			t = text(t_value);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, t, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*entry*/ 1 && t_value !== (t_value = /*entry*/ ctx[0].data + "")) set_data_dev(t, t_value);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(t);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block_1.name,
+    		type: "else",
+    		source: "(12:4) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (8:4) {#if Array.isArray(entry.data)}
+    function create_if_block_4(ctx) {
+    	let each_1_anchor;
+    	let each_value_1 = /*entry*/ ctx[0].data;
+    	let each_blocks = [];
+
+    	for (let i = 0; i < each_value_1.length; i += 1) {
+    		each_blocks[i] = create_each_block_1(get_each_context_1(ctx, each_value_1, i));
+    	}
+
+    	const block = {
+    		c: function create() {
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			each_1_anchor = empty();
+    		},
+    		m: function mount(target, anchor) {
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(target, anchor);
+    			}
+
+    			insert_dev(target, each_1_anchor, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*entry*/ 1) {
+    				each_value_1 = /*entry*/ ctx[0].data;
+    				let i;
+
+    				for (i = 0; i < each_value_1.length; i += 1) {
+    					const child_ctx = get_each_context_1(ctx, each_value_1, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(child_ctx, dirty);
+    					} else {
+    						each_blocks[i] = create_each_block_1(child_ctx);
+    						each_blocks[i].c();
+    						each_blocks[i].m(each_1_anchor.parentNode, each_1_anchor);
+    					}
+    				}
+
+    				for (; i < each_blocks.length; i += 1) {
+    					each_blocks[i].d(1);
+    				}
+
+    				each_blocks.length = each_value_1.length;
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			destroy_each(each_blocks, detaching);
+    			if (detaching) detach_dev(each_1_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_4.name,
+    		type: "if",
+    		source: "(8:4) {#if Array.isArray(entry.data)}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (9:6) {#each entry.data as v}
+    function create_each_block_1(ctx) {
+    	let p;
+    	let t_value = /*v*/ ctx[1] + "";
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			p = element("p");
+    			t = text(t_value);
+    			add_location(p, file$4, 9, 8, 200);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, p, anchor);
+    			append_dev(p, t);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*entry*/ 1 && t_value !== (t_value = /*v*/ ctx[1] + "")) set_data_dev(t, t_value);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(p);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block_1.name,
+    		type: "each",
+    		source: "(9:6) {#each entry.data as v}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (16:2) {#if entry.descriptor}
+    function create_if_block_3(ctx) {
     	let em;
     	let t_value = /*entry*/ ctx[0].descriptor + "";
     	let t;
@@ -3128,7 +3272,7 @@ var app = (function () {
     			em = element("em");
     			t = text(t_value);
     			attr_dev(em, "class", "DataBlock__descriptor");
-    			add_location(em, file$4, 8, 4, 176);
+    			add_location(em, file$4, 16, 4, 307);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, em, anchor);
@@ -3144,27 +3288,35 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_2.name,
+    		id: create_if_block_3.name,
     		type: "if",
-    		source: "(8:2) {#if entry.descriptor}",
+    		source: "(16:2) {#if entry.descriptor}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (11:2) {#if entry.validator && entry.validator.data !== entry.data}
+    // (19:2) {#if entry.validator && entry.validator.data !== entry.data}
     function create_if_block$2(ctx) {
     	let div;
     	let t0;
     	let t1_value = /*entry*/ ctx[0].validator.text + "";
     	let t1;
     	let t2;
-    	let t3_value = /*entry*/ ctx[0].validator.data + "";
+    	let show_if;
     	let t3;
     	let t4;
-    	let t5;
-    	let if_block = /*entry*/ ctx[0].validator.descriptor && create_if_block_1(ctx);
+
+    	function select_block_type_1(ctx, dirty) {
+    		if (show_if == null || dirty & /*entry*/ 1) show_if = !!Array.isArray(/*entry*/ ctx[0].validator.data);
+    		if (show_if) return create_if_block_2;
+    		return create_else_block;
+    	}
+
+    	let current_block_type = select_block_type_1(ctx, -1);
+    	let if_block0 = current_block_type(ctx);
+    	let if_block1 = /*entry*/ ctx[0].validator.descriptor && create_if_block_1(ctx);
 
     	const block = {
     		c: function create() {
@@ -3172,43 +3324,55 @@ var app = (function () {
     			t0 = text("[\n        ");
     			t1 = text(t1_value);
     			t2 = text(":\n        ");
-    			t3 = text(t3_value);
-    			t4 = space();
-    			if (if_block) if_block.c();
-    			t5 = text("\n      ]");
+    			if_block0.c();
+    			t3 = space();
+    			if (if_block1) if_block1.c();
+    			t4 = text("\n      ]");
     			attr_dev(div, "class", "DataBlock__validator");
-    			add_location(div, file$4, 11, 4, 309);
+    			add_location(div, file$4, 19, 4, 440);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
     			append_dev(div, t0);
     			append_dev(div, t1);
     			append_dev(div, t2);
+    			if_block0.m(div, null);
     			append_dev(div, t3);
+    			if (if_block1) if_block1.m(div, null);
     			append_dev(div, t4);
-    			if (if_block) if_block.m(div, null);
-    			append_dev(div, t5);
     		},
     		p: function update(ctx, dirty) {
     			if (dirty & /*entry*/ 1 && t1_value !== (t1_value = /*entry*/ ctx[0].validator.text + "")) set_data_dev(t1, t1_value);
-    			if (dirty & /*entry*/ 1 && t3_value !== (t3_value = /*entry*/ ctx[0].validator.data + "")) set_data_dev(t3, t3_value);
+
+    			if (current_block_type === (current_block_type = select_block_type_1(ctx, dirty)) && if_block0) {
+    				if_block0.p(ctx, dirty);
+    			} else {
+    				if_block0.d(1);
+    				if_block0 = current_block_type(ctx);
+
+    				if (if_block0) {
+    					if_block0.c();
+    					if_block0.m(div, t3);
+    				}
+    			}
 
     			if (/*entry*/ ctx[0].validator.descriptor) {
-    				if (if_block) {
-    					if_block.p(ctx, dirty);
+    				if (if_block1) {
+    					if_block1.p(ctx, dirty);
     				} else {
-    					if_block = create_if_block_1(ctx);
-    					if_block.c();
-    					if_block.m(div, t5);
+    					if_block1 = create_if_block_1(ctx);
+    					if_block1.c();
+    					if_block1.m(div, t4);
     				}
-    			} else if (if_block) {
-    				if_block.d(1);
-    				if_block = null;
+    			} else if (if_block1) {
+    				if_block1.d(1);
+    				if_block1 = null;
     			}
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div);
-    			if (if_block) if_block.d();
+    			if_block0.d();
+    			if (if_block1) if_block1.d();
     		}
     	};
 
@@ -3216,14 +3380,146 @@ var app = (function () {
     		block,
     		id: create_if_block$2.name,
     		type: "if",
-    		source: "(11:2) {#if entry.validator && entry.validator.data !== entry.data}",
+    		source: "(19:2) {#if entry.validator && entry.validator.data !== entry.data}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (16:8) {#if entry.validator.descriptor}
+    // (27:8) {:else}
+    function create_else_block(ctx) {
+    	let t_value = /*entry*/ ctx[0].validator.data + "";
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			t = text(t_value);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, t, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*entry*/ 1 && t_value !== (t_value = /*entry*/ ctx[0].validator.data + "")) set_data_dev(t, t_value);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(t);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block.name,
+    		type: "else",
+    		source: "(27:8) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (23:8) {#if Array.isArray(entry.validator.data)}
+    function create_if_block_2(ctx) {
+    	let each_1_anchor;
+    	let each_value = /*entry*/ ctx[0].data;
+    	let each_blocks = [];
+
+    	for (let i = 0; i < each_value.length; i += 1) {
+    		each_blocks[i] = create_each_block$2(get_each_context$2(ctx, each_value, i));
+    	}
+
+    	const block = {
+    		c: function create() {
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			each_1_anchor = empty();
+    		},
+    		m: function mount(target, anchor) {
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(target, anchor);
+    			}
+
+    			insert_dev(target, each_1_anchor, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*entry*/ 1) {
+    				each_value = /*entry*/ ctx[0].data;
+    				let i;
+
+    				for (i = 0; i < each_value.length; i += 1) {
+    					const child_ctx = get_each_context$2(ctx, each_value, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(child_ctx, dirty);
+    					} else {
+    						each_blocks[i] = create_each_block$2(child_ctx);
+    						each_blocks[i].c();
+    						each_blocks[i].m(each_1_anchor.parentNode, each_1_anchor);
+    					}
+    				}
+
+    				for (; i < each_blocks.length; i += 1) {
+    					each_blocks[i].d(1);
+    				}
+
+    				each_blocks.length = each_value.length;
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			destroy_each(each_blocks, detaching);
+    			if (detaching) detach_dev(each_1_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_2.name,
+    		type: "if",
+    		source: "(23:8) {#if Array.isArray(entry.validator.data)}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (24:10) {#each entry.data as v}
+    function create_each_block$2(ctx) {
+    	let p;
+    	let t_value = /*v*/ ctx[1] + "";
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			p = element("p");
+    			t = text(t_value);
+    			add_location(p, file$4, 24, 12, 611);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, p, anchor);
+    			append_dev(p, t);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*entry*/ 1 && t_value !== (t_value = /*v*/ ctx[1] + "")) set_data_dev(t, t_value);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(p);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block$2.name,
+    		type: "each",
+    		source: "(24:10) {#each entry.data as v}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (30:8) {#if entry.validator.descriptor}
     function create_if_block_1(ctx) {
     	let em;
     	let t_value = /*entry*/ ctx[0].validator.descriptor + "";
@@ -3234,7 +3530,7 @@ var app = (function () {
     			em = element("em");
     			t = text(t_value);
     			attr_dev(em, "class", "DataBlock__descriptor");
-    			add_location(em, file$4, 16, 10, 466);
+    			add_location(em, file$4, 30, 10, 754);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, em, anchor);
@@ -3252,7 +3548,7 @@ var app = (function () {
     		block,
     		id: create_if_block_1.name,
     		type: "if",
-    		source: "(16:8) {#if entry.validator.descriptor}",
+    		source: "(30:8) {#if entry.validator.descriptor}",
     		ctx
     	});
 
@@ -3266,12 +3562,20 @@ var app = (function () {
     	let t1;
     	let dd;
     	let strong;
-    	let t2_value = /*entry*/ ctx[0].data + "";
+    	let show_if;
     	let t2;
     	let t3;
-    	let t4;
-    	let if_block0 = /*entry*/ ctx[0].descriptor && create_if_block_2(ctx);
-    	let if_block1 = /*entry*/ ctx[0].validator && /*entry*/ ctx[0].validator.data !== /*entry*/ ctx[0].data && create_if_block$2(ctx);
+
+    	function select_block_type(ctx, dirty) {
+    		if (show_if == null || dirty & /*entry*/ 1) show_if = !!Array.isArray(/*entry*/ ctx[0].data);
+    		if (show_if) return create_if_block_4;
+    		return create_else_block_1;
+    	}
+
+    	let current_block_type = select_block_type(ctx, -1);
+    	let if_block0 = current_block_type(ctx);
+    	let if_block1 = /*entry*/ ctx[0].descriptor && create_if_block_3(ctx);
+    	let if_block2 = /*entry*/ ctx[0].validator && /*entry*/ ctx[0].validator.data !== /*entry*/ ctx[0].data && create_if_block$2(ctx);
 
     	const block = {
     		c: function create() {
@@ -3280,11 +3584,11 @@ var app = (function () {
     			t1 = space();
     			dd = element("dd");
     			strong = element("strong");
-    			t2 = text(t2_value);
-    			t3 = space();
-    			if (if_block0) if_block0.c();
-    			t4 = space();
+    			if_block0.c();
+    			t2 = space();
     			if (if_block1) if_block1.c();
+    			t3 = space();
+    			if (if_block2) if_block2.c();
     			attr_dev(dt, "class", "DataBlock__tag");
     			add_location(dt, file$4, 4, 0, 40);
     			add_location(strong, file$4, 6, 2, 117);
@@ -3300,40 +3604,51 @@ var app = (function () {
     			insert_dev(target, t1, anchor);
     			insert_dev(target, dd, anchor);
     			append_dev(dd, strong);
-    			append_dev(strong, t2);
-    			append_dev(dd, t3);
-    			if (if_block0) if_block0.m(dd, null);
-    			append_dev(dd, t4);
+    			if_block0.m(strong, null);
+    			append_dev(dd, t2);
     			if (if_block1) if_block1.m(dd, null);
+    			append_dev(dd, t3);
+    			if (if_block2) if_block2.m(dd, null);
     		},
     		p: function update(ctx, [dirty]) {
     			if (dirty & /*entry*/ 1 && t0_value !== (t0_value = /*entry*/ ctx[0].title + "")) set_data_dev(t0, t0_value);
-    			if (dirty & /*entry*/ 1 && t2_value !== (t2_value = /*entry*/ ctx[0].data + "")) set_data_dev(t2, t2_value);
 
-    			if (/*entry*/ ctx[0].descriptor) {
-    				if (if_block0) {
-    					if_block0.p(ctx, dirty);
-    				} else {
-    					if_block0 = create_if_block_2(ctx);
-    					if_block0.c();
-    					if_block0.m(dd, t4);
-    				}
-    			} else if (if_block0) {
+    			if (current_block_type === (current_block_type = select_block_type(ctx, dirty)) && if_block0) {
+    				if_block0.p(ctx, dirty);
+    			} else {
     				if_block0.d(1);
-    				if_block0 = null;
+    				if_block0 = current_block_type(ctx);
+
+    				if (if_block0) {
+    					if_block0.c();
+    					if_block0.m(strong, null);
+    				}
     			}
 
-    			if (/*entry*/ ctx[0].validator && /*entry*/ ctx[0].validator.data !== /*entry*/ ctx[0].data) {
+    			if (/*entry*/ ctx[0].descriptor) {
     				if (if_block1) {
     					if_block1.p(ctx, dirty);
     				} else {
-    					if_block1 = create_if_block$2(ctx);
+    					if_block1 = create_if_block_3(ctx);
     					if_block1.c();
-    					if_block1.m(dd, null);
+    					if_block1.m(dd, t3);
     				}
     			} else if (if_block1) {
     				if_block1.d(1);
     				if_block1 = null;
+    			}
+
+    			if (/*entry*/ ctx[0].validator && /*entry*/ ctx[0].validator.data !== /*entry*/ ctx[0].data) {
+    				if (if_block2) {
+    					if_block2.p(ctx, dirty);
+    				} else {
+    					if_block2 = create_if_block$2(ctx);
+    					if_block2.c();
+    					if_block2.m(dd, null);
+    				}
+    			} else if (if_block2) {
+    				if_block2.d(1);
+    				if_block2 = null;
     			}
     		},
     		i: noop,
@@ -3342,8 +3657,9 @@ var app = (function () {
     			if (detaching) detach_dev(dt);
     			if (detaching) detach_dev(t1);
     			if (detaching) detach_dev(dd);
-    			if (if_block0) if_block0.d();
+    			if_block0.d();
     			if (if_block1) if_block1.d();
+    			if (if_block2) if_block2.d();
     		}
     	};
 
@@ -3627,14 +3943,14 @@ var app = (function () {
     const { Object: Object_1$1 } = globals;
     const file$5 = "src/DataList.svelte";
 
-    function get_each_context$2(ctx, list, i) {
+    function get_each_context$3(ctx, list, i) {
     	const child_ctx = ctx.slice();
     	child_ctx[5] = list[i];
     	return child_ctx;
     }
 
-    // (47:2) {#each dataList as entry   }
-    function create_each_block$2(ctx) {
+    // (49:2) {#each dataList as entry   }
+    function create_each_block$3(ctx) {
     	let current;
 
     	const datablock = new DataBlock({
@@ -3671,9 +3987,9 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_each_block$2.name,
+    		id: create_each_block$3.name,
     		type: "each",
-    		source: "(47:2) {#each dataList as entry   }",
+    		source: "(49:2) {#each dataList as entry   }",
     		ctx
     	});
 
@@ -3687,7 +4003,7 @@ var app = (function () {
     	let each_blocks = [];
 
     	for (let i = 0; i < each_value.length; i += 1) {
-    		each_blocks[i] = create_each_block$2(get_each_context$2(ctx, each_value, i));
+    		each_blocks[i] = create_each_block$3(get_each_context$3(ctx, each_value, i));
     	}
 
     	const out = i => transition_out(each_blocks[i], 1, 1, () => {
@@ -3703,7 +4019,7 @@ var app = (function () {
     			}
 
     			attr_dev(dl, "class", "DataList");
-    			add_location(dl, file$5, 45, 0, 1725);
+    			add_location(dl, file$5, 47, 0, 1850);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -3723,13 +4039,13 @@ var app = (function () {
     				let i;
 
     				for (i = 0; i < each_value.length; i += 1) {
-    					const child_ctx = get_each_context$2(ctx, each_value, i);
+    					const child_ctx = get_each_context$3(ctx, each_value, i);
 
     					if (each_blocks[i]) {
     						each_blocks[i].p(child_ctx, dirty);
     						transition_in(each_blocks[i], 1);
     					} else {
-    						each_blocks[i] = create_each_block$2(child_ctx);
+    						each_blocks[i] = create_each_block$3(child_ctx);
     						each_blocks[i].c();
     						transition_in(each_blocks[i], 1);
     						each_blocks[i].m(dl, null);
@@ -4007,12 +4323,26 @@ var app = (function () {
     const format = writable('film');
     const year = writable('2019');
 
+    const scoringMatrix = writable({
+      1: 10,
+      2: 1,
+      3: 1,
+      4: 1,
+      5: 1,
+      6: 1,
+      7: 1,
+      8: 1,
+      9: 1,
+      10: 1,
+      '_': 1,
+    });
+
     /* src/ListBreakdown.svelte generated by Svelte v3.17.1 */
 
     const { Error: Error_1 } = globals;
     const file$6 = "src/ListBreakdown.svelte";
 
-    // (63:2) {#if derivedData && yearData && listData}
+    // (70:2) {#if derivedData && yearData && listData}
     function create_if_block_1$1(ctx) {
     	let current;
 
@@ -4058,15 +4388,15 @@ var app = (function () {
     		block,
     		id: create_if_block_1$1.name,
     		type: "if",
-    		source: "(63:2) {#if derivedData && yearData && listData}",
+    		source: "(70:2) {#if derivedData && yearData && listData}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (72:2) {:else}
-    function create_else_block(ctx) {
+    // (79:2) {:else}
+    function create_else_block$1(ctx) {
     	let t;
 
     	const block = {
@@ -4086,16 +4416,16 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_else_block.name,
+    		id: create_else_block$1.name,
     		type: "else",
-    		source: "(72:2) {:else}",
+    		source: "(79:2) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (70:2) {#if listData.length && yearData}
+    // (77:2) {#if listData.length && yearData}
     function create_if_block$3(ctx) {
     	let current;
 
@@ -4139,7 +4469,7 @@ var app = (function () {
     		block,
     		id: create_if_block$3.name,
     		type: "if",
-    		source: "(70:2) {#if listData.length && yearData}",
+    		source: "(77:2) {#if listData.length && yearData}",
     		ctx
     	});
 
@@ -4153,7 +4483,7 @@ var app = (function () {
     	let if_block1;
     	let current;
     	let if_block0 = /*derivedData*/ ctx[2] && /*yearData*/ ctx[1] && /*listData*/ ctx[0] && create_if_block_1$1(ctx);
-    	const if_block_creators = [create_if_block$3, create_else_block];
+    	const if_block_creators = [create_if_block$3, create_else_block$1];
     	const if_blocks = [];
 
     	function select_block_type(ctx, dirty) {
@@ -4171,7 +4501,7 @@ var app = (function () {
     			t = space();
     			if_block1.c();
     			attr_dev(div, "class", "ListBreakdown");
-    			add_location(div, file$6, 61, 0, 1955);
+    			add_location(div, file$6, 68, 0, 2175);
     		},
     		l: function claim(nodes) {
     			throw new Error_1("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -4264,10 +4594,11 @@ var app = (function () {
     	let derivedData;
     	let data;
     	let fileName = `/data/small/${params.year}-${params.format}.json`;
+    	let matrix_value;
 
     	const processFile = json => {
     		 $$invalidate(1, yearData = formatList(json));
-    		 $$invalidate(0, listData = processListsWithRankings(json));
+    		 $$invalidate(0, listData = processListsWithRankings(json, matrix_value));
     		 $$invalidate(2, derivedData = deriveAdditionalDataFromProcessedList(listData, yearData));
     		return { yearData, listData, derivedData };
     	};
@@ -4287,6 +4618,7 @@ var app = (function () {
 
     		if (resp.ok) {
     			window.localStorage.setItem(`${params.year}-${params.format}`, JSON.stringify(json));
+    			window.localStorage.setItem("latest", Date.now());
     			return processFile(json);
     		} else {
     			throw new Error("aaag");
@@ -4294,6 +4626,12 @@ var app = (function () {
     	};
 
     	afterUpdate(getJsonData);
+
+    	scoringMatrix.subscribe(value => {
+    		matrix_value = value;
+    		getJsonData();
+    	});
+
     	const writable_props = ["params"];
 
     	Object.keys($$props).forEach(key => {
@@ -4311,7 +4649,8 @@ var app = (function () {
     			yearData,
     			derivedData,
     			data,
-    			fileName
+    			fileName,
+    			matrix_value
     		};
     	};
 
@@ -4322,6 +4661,7 @@ var app = (function () {
     		if ("derivedData" in $$props) $$invalidate(2, derivedData = $$props.derivedData);
     		if ("data" in $$props) data = $$props.data;
     		if ("fileName" in $$props) fileName = $$props.fileName;
+    		if ("matrix_value" in $$props) matrix_value = $$props.matrix_value;
     	};
 
     	$$self.$$.update = () => {
@@ -6567,17 +6907,17 @@ var app = (function () {
     /* src/App.svelte generated by Svelte v3.17.1 */
     const file$8 = "src/App.svelte";
 
-    function get_each_context$3(ctx, list, i) {
+    function get_each_context$4(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[13] = list[i].link;
-    	child_ctx[14] = list[i].text;
-    	child_ctx[16] = i;
+    	child_ctx[13] = list[i];
     	return child_ctx;
     }
 
-    function get_each_context_1(ctx, list, i) {
+    function get_each_context_1$1(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[17] = list[i];
+    	child_ctx[16] = list[i].link;
+    	child_ctx[17] = list[i].text;
+    	child_ctx[19] = i;
     	return child_ctx;
     }
 
@@ -6593,7 +6933,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (87:3) {#each ['2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2010s'] as year}
+    // (89:3) {#each ['2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2010s'] as year}
     function create_each_block_3(ctx) {
     	let option;
     	let t0;
@@ -6607,7 +6947,7 @@ var app = (function () {
     			t1 = space();
     			option.__value = option_value_value = /*year*/ ctx[20];
     			option.value = option.__value;
-    			add_location(option, file$8, 87, 4, 2095);
+    			add_location(option, file$8, 89, 4, 2092);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, option, anchor);
@@ -6624,14 +6964,14 @@ var app = (function () {
     		block,
     		id: create_each_block_3.name,
     		type: "each",
-    		source: "(87:3) {#each ['2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2010s'] as year}",
+    		source: "(89:3) {#each ['2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2010s'] as year}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (94:3) {#each ['film', 'tv', 'album'] as year}
+    // (96:3) {#each ['film', 'tv', 'album'] as year}
     function create_each_block_2(ctx) {
     	let option;
     	let t0;
@@ -6645,7 +6985,7 @@ var app = (function () {
     			t1 = space();
     			option.__value = option_value_value = /*year*/ ctx[20];
     			option.value = option.__value;
-    			add_location(option, file$8, 94, 4, 2272);
+    			add_location(option, file$8, 96, 4, 2269);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, option, anchor);
@@ -6662,15 +7002,90 @@ var app = (function () {
     		block,
     		id: create_each_block_2.name,
     		type: "each",
-    		source: "(94:3) {#each ['film', 'tv', 'album'] as year}",
+    		source: "(96:3) {#each ['film', 'tv', 'album'] as year}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (105:1) {#if display}
-    function create_if_block_1$2(ctx) {
+    // (114:3) {#if i > 0}
+    function create_if_block_2$1(ctx) {
+    	let t0_value = " " + "";
+    	let t0;
+    	let t1;
+
+    	const block = {
+    		c: function create() {
+    			t0 = text(t0_value);
+    			t1 = text("—");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, t0, anchor);
+    			insert_dev(target, t1, anchor);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(t0);
+    			if (detaching) detach_dev(t1);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_2$1.name,
+    		type: "if",
+    		source: "(114:3) {#if i > 0}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (108:2) {#each [    { link: 'github.com/padraigfl', text: 'Github' },    { link: 'github.com/padraigfl/critic-lists', text: 'Source code'},    { link: 'packard-belle.netlify.com', text: 'Windows98 Clone' },    { link: 'react-coursebuilder.netlify.com', text: 'Youtube App thing' },   ] as {link, text}
+    function create_each_block_1$1(ctx) {
+    	let t0;
+    	let a;
+    	let t1;
+    	let a_href_value;
+    	let if_block = /*i*/ ctx[19] > 0 && create_if_block_2$1(ctx);
+
+    	const block = {
+    		c: function create() {
+    			if (if_block) if_block.c();
+    			t0 = space();
+    			a = element("a");
+    			t1 = text(/*text*/ ctx[17]);
+    			attr_dev(a, "href", a_href_value = `https://${/*link*/ ctx[16]}`);
+    			attr_dev(a, "target", "_blank");
+    			add_location(a, file$8, 116, 3, 2775);
+    		},
+    		m: function mount(target, anchor) {
+    			if (if_block) if_block.m(target, anchor);
+    			insert_dev(target, t0, anchor);
+    			insert_dev(target, a, anchor);
+    			append_dev(a, t1);
+    		},
+    		p: noop,
+    		d: function destroy(detaching) {
+    			if (if_block) if_block.d(detaching);
+    			if (detaching) detach_dev(t0);
+    			if (detaching) detach_dev(a);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block_1$1.name,
+    		type: "each",
+    		source: "(108:2) {#each [    { link: 'github.com/padraigfl', text: 'Github' },    { link: 'github.com/padraigfl/critic-lists', text: 'Source code'},    { link: 'packard-belle.netlify.com', text: 'Windows98 Clone' },    { link: 'react-coursebuilder.netlify.com', text: 'Youtube App thing' },   ] as {link, text}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (121:1) {#if display}
+    function create_if_block$4(ctx) {
     	let current;
 
     	const modal = new Modal({
@@ -6715,26 +7130,26 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_1$2.name,
+    		id: create_if_block$4.name,
     		type: "if",
-    		source: "(105:1) {#if display}",
+    		source: "(121:1) {#if display}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (113:6) {:else}
-    function create_else_block$1(ctx) {
+    // (129:6) {:else}
+    function create_else_block$2(ctx) {
     	let span;
     	let t;
 
     	const block = {
     		c: function create() {
     			span = element("span");
-    			t = text(/*entry*/ ctx[17]);
+    			t = text(/*entry*/ ctx[13]);
     			attr_dev(span, "class", "matrix__rank");
-    			add_location(span, file$8, 113, 7, 2775);
+    			add_location(span, file$8, 129, 7, 3211);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, span, anchor);
@@ -6747,17 +7162,17 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_else_block$1.name,
+    		id: create_else_block$2.name,
     		type: "else",
-    		source: "(113:6) {:else}",
+    		source: "(129:6) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (111:6) {#if entry === '_'}
-    function create_if_block_2$1(ctx) {
+    // (127:6) {#if entry === '_'}
+    function create_if_block_1$2(ctx) {
     	let span;
 
     	const block = {
@@ -6765,7 +7180,7 @@ var app = (function () {
     			span = element("span");
     			span.textContent = "Unranked";
     			attr_dev(span, "class", "matrix__rank ");
-    			add_location(span, file$8, 111, 7, 2710);
+    			add_location(span, file$8, 127, 7, 3146);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, span, anchor);
@@ -6777,17 +7192,17 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_2$1.name,
+    		id: create_if_block_1$2.name,
     		type: "if",
-    		source: "(111:6) {#if entry === '_'}",
+    		source: "(127:6) {#if entry === '_'}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (109:4) {#each [1,2,3,4,5,6,7,8,9,10,'_'] as entry}
-    function create_each_block_1(ctx) {
+    // (125:4) {#each [1,2,3,4,5,6,7,8,9,10,'_'] as entry}
+    function create_each_block$4(ctx) {
     	let div;
     	let t0;
     	let input;
@@ -6797,8 +7212,8 @@ var app = (function () {
     	let dispose;
 
     	function select_block_type(ctx, dirty) {
-    		if (/*entry*/ ctx[17] === "_") return create_if_block_2$1;
-    		return create_else_block$1;
+    		if (/*entry*/ ctx[13] === "_") return create_if_block_1$2;
+    		return create_else_block$2;
     	}
 
     	let current_block_type = select_block_type(ctx);
@@ -6806,7 +7221,7 @@ var app = (function () {
 
     	function input_input_handler() {
     		input_updating = true;
-    		/*input_input_handler*/ ctx[12].call(input, /*entry*/ ctx[17]);
+    		/*input_input_handler*/ ctx[12].call(input, /*entry*/ ctx[13]);
     	}
 
     	const block = {
@@ -6819,24 +7234,24 @@ var app = (function () {
     			attr_dev(input, "max", "100");
     			attr_dev(input, "class", "matrix__input");
     			attr_dev(input, "type", "number");
-    			add_location(input, file$8, 115, 6, 2835);
+    			add_location(input, file$8, 131, 6, 3271);
 
-    			attr_dev(div, "class", div_class_value = `matrix__option ${/*entry*/ ctx[17] === "_"
+    			attr_dev(div, "class", div_class_value = `matrix__option ${/*entry*/ ctx[13] === "_"
 			? "matrix__option--unranked"
 			: ""}`);
 
-    			add_location(div, file$8, 109, 5, 2597);
+    			add_location(div, file$8, 125, 5, 3033);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
     			if_block.m(div, null);
     			append_dev(div, t0);
     			append_dev(div, input);
-    			set_input_value(input, /*matrix*/ ctx[3][/*entry*/ ctx[17]]);
+    			set_input_value(input, /*matrix*/ ctx[3][/*entry*/ ctx[13]]);
     			append_dev(div, t1);
 
     			dispose = [
-    				listen_dev(input, "change", /*update*/ ctx[8](/*entry*/ ctx[17]), false, false, false),
+    				listen_dev(input, "change", /*update*/ ctx[8](/*entry*/ ctx[13]), false, false, false),
     				listen_dev(input, "input", input_input_handler)
     			];
     		},
@@ -6844,7 +7259,7 @@ var app = (function () {
     			ctx = new_ctx;
 
     			if (!input_updating && dirty & /*matrix*/ 8) {
-    				set_input_value(input, /*matrix*/ ctx[3][/*entry*/ ctx[17]]);
+    				set_input_value(input, /*matrix*/ ctx[3][/*entry*/ ctx[13]]);
     			}
 
     			input_updating = false;
@@ -6858,16 +7273,16 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_each_block_1.name,
+    		id: create_each_block$4.name,
     		type: "each",
-    		source: "(109:4) {#each [1,2,3,4,5,6,7,8,9,10,'_'] as entry}",
+    		source: "(125:4) {#each [1,2,3,4,5,6,7,8,9,10,'_'] as entry}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (106:2) <Modal onclose={toggle}>
+    // (122:2) <Modal onclose={toggle}>
     function create_default_slot(ctx) {
     	let p;
     	let t1;
@@ -6875,11 +7290,11 @@ var app = (function () {
     	let t2;
     	let button;
     	let dispose;
-    	let each_value_1 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, "_"];
+    	let each_value = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, "_"];
     	let each_blocks = [];
 
     	for (let i = 0; i < 11; i += 1) {
-    		each_blocks[i] = create_each_block_1(get_each_context_1(ctx, each_value_1, i));
+    		each_blocks[i] = create_each_block$4(get_each_context$4(ctx, each_value, i));
     	}
 
     	const block = {
@@ -6896,11 +7311,11 @@ var app = (function () {
     			t2 = space();
     			button = element("button");
     			button.textContent = "Update";
-    			add_location(p, file$8, 106, 3, 2458);
+    			add_location(p, file$8, 122, 3, 2894);
     			attr_dev(div, "class", "matrix");
-    			add_location(div, file$8, 107, 3, 2523);
+    			add_location(div, file$8, 123, 3, 2959);
     			set_style(button, "float", "right");
-    			add_location(button, file$8, 119, 3, 2980);
+    			add_location(button, file$8, 135, 3, 3416);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -6917,16 +7332,16 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			if (dirty & /*matrix, update*/ 264) {
-    				each_value_1 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, "_"];
+    				each_value = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, "_"];
     				let i;
 
     				for (i = 0; i < 11; i += 1) {
-    					const child_ctx = get_each_context_1(ctx, each_value_1, i);
+    					const child_ctx = get_each_context$4(ctx, each_value, i);
 
     					if (each_blocks[i]) {
     						each_blocks[i].p(child_ctx, dirty);
     					} else {
-    						each_blocks[i] = create_each_block_1(child_ctx);
+    						each_blocks[i] = create_each_block$4(child_ctx);
     						each_blocks[i].c();
     						each_blocks[i].m(div, null);
     					}
@@ -6952,82 +7367,7 @@ var app = (function () {
     		block,
     		id: create_default_slot.name,
     		type: "slot",
-    		source: "(106:2) <Modal onclose={toggle}>",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (131:3) {#if i > 0}
-    function create_if_block$4(ctx) {
-    	let t0_value = " " + "";
-    	let t0;
-    	let t1;
-
-    	const block = {
-    		c: function create() {
-    			t0 = text(t0_value);
-    			t1 = text("—");
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, t0, anchor);
-    			insert_dev(target, t1, anchor);
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(t0);
-    			if (detaching) detach_dev(t1);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_if_block$4.name,
-    		type: "if",
-    		source: "(131:3) {#if i > 0}",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (126:2) {#each [    { link: 'github.com/padraigfl/critic-lists', text: 'Source code'},    { link: 'packard-belle.netlify.com', text: 'Windows98 Clone' },    { link: 'react-coursebuilder.netlify.com', text: 'Youtube Notes App thing' },   ] as {link, text}
-    function create_each_block$3(ctx) {
-    	let t0;
-    	let a;
-    	let t1;
-    	let a_href_value;
-    	let if_block = /*i*/ ctx[16] > 0 && create_if_block$4(ctx);
-
-    	const block = {
-    		c: function create() {
-    			if (if_block) if_block.c();
-    			t0 = space();
-    			a = element("a");
-    			t1 = text(/*text*/ ctx[14]);
-    			attr_dev(a, "href", a_href_value = `https://${/*link*/ ctx[13]}`);
-    			attr_dev(a, "target", "_blank");
-    			add_location(a, file$8, 133, 3, 3399);
-    		},
-    		m: function mount(target, anchor) {
-    			if (if_block) if_block.m(target, anchor);
-    			insert_dev(target, t0, anchor);
-    			insert_dev(target, a, anchor);
-    			append_dev(a, t1);
-    		},
-    		p: noop,
-    		d: function destroy(detaching) {
-    			if (if_block) if_block.d(detaching);
-    			if (detaching) detach_dev(t0);
-    			if (detaching) detach_dev(a);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_each_block$3.name,
-    		type: "each",
-    		source: "(126:2) {#each [    { link: 'github.com/padraigfl/critic-lists', text: 'Source code'},    { link: 'packard-belle.netlify.com', text: 'Windows98 Clone' },    { link: 'react-coursebuilder.netlify.com', text: 'Youtube Notes App thing' },   ] as {link, text}",
+    		source: "(122:2) <Modal onclose={toggle}>",
     		ctx
     	});
 
@@ -7036,20 +7376,17 @@ var app = (function () {
 
     function create_fragment$a(ctx) {
     	let div0;
-    	let strong;
-    	let t1;
     	let select0;
     	let select0_value_value;
-    	let t2;
+    	let t0;
     	let select1;
     	let select1_value_value;
-    	let t3;
+    	let t1;
     	let button;
-    	let t5;
-    	let t6;
+    	let t3;
     	let div1;
-    	let t7;
-    	let t8;
+    	let t4;
+    	let t5;
     	let current;
     	let dispose;
 
@@ -7080,9 +7417,11 @@ var app = (function () {
     		each_blocks_1[i] = create_each_block_2(get_each_context_2(ctx, each_value_2, i));
     	}
 
-    	let if_block = /*display*/ ctx[0] && create_if_block_1$2(ctx);
-
-    	let each_value = [
+    	let each_value_1 = [
+    		{
+    			link: "github.com/padraigfl",
+    			text: "Github"
+    		},
     		{
     			link: "github.com/padraigfl/critic-lists",
     			text: "Source code"
@@ -7093,15 +7432,17 @@ var app = (function () {
     		},
     		{
     			link: "react-coursebuilder.netlify.com",
-    			text: "Youtube Notes App thing"
+    			text: "Youtube App thing"
     		}
     	];
 
     	let each_blocks = [];
 
-    	for (let i = 0; i < 3; i += 1) {
-    		each_blocks[i] = create_each_block$3(get_each_context$3(ctx, each_value, i));
+    	for (let i = 0; i < 4; i += 1) {
+    		each_blocks[i] = create_each_block_1$1(get_each_context_1$1(ctx, each_value_1, i));
     	}
+
+    	let if_block = /*display*/ ctx[0] && create_if_block$4(ctx);
 
     	const router = new Router({
     			props: { routes: /*routes*/ ctx[4] },
@@ -7111,54 +7452,46 @@ var app = (function () {
     	const block = {
     		c: function create() {
     			div0 = element("div");
-    			strong = element("strong");
-    			strong.textContent = "Title";
-    			t1 = space();
     			select0 = element("select");
 
     			for (let i = 0; i < 11; i += 1) {
     				each_blocks_2[i].c();
     			}
 
-    			t2 = space();
+    			t0 = space();
     			select1 = element("select");
 
     			for (let i = 0; i < 3; i += 1) {
     				each_blocks_1[i].c();
     			}
 
-    			t3 = space();
+    			t1 = space();
     			button = element("button");
     			button.textContent = "Scoring Metric";
-    			t5 = space();
-    			if (if_block) if_block.c();
-    			t6 = space();
+    			t3 = space();
     			div1 = element("div");
-    			t7 = text("Projects:\n\t\t");
 
-    			for (let i = 0; i < 3; i += 1) {
+    			for (let i = 0; i < 4; i += 1) {
     				each_blocks[i].c();
     			}
 
-    			t8 = space();
+    			t4 = space();
+    			if (if_block) if_block.c();
+    			t5 = space();
     			create_component(router.$$.fragment);
-    			add_location(strong, file$8, 84, 2, 1906);
-    			add_location(select0, file$8, 85, 2, 1931);
-    			add_location(select1, file$8, 92, 2, 2170);
-    			add_location(button, file$8, 99, 2, 2347);
-    			set_style(div0, "display", "flex");
-    			set_style(div0, "height", "40px");
-    			add_location(div0, file$8, 83, 1, 1861);
+    			add_location(select0, file$8, 87, 2, 1928);
+    			add_location(select1, file$8, 94, 2, 2167);
+    			add_location(button, file$8, 101, 2, 2344);
+    			attr_dev(div0, "class", "nav");
+    			add_location(div0, file$8, 86, 1, 1908);
     			attr_dev(div1, "class", "wasAMarquee");
-    			add_location(div1, file$8, 123, 1, 3070);
+    			add_location(div1, file$8, 106, 1, 2411);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div0, anchor);
-    			append_dev(div0, strong);
-    			append_dev(div0, t1);
     			append_dev(div0, select0);
 
     			for (let i = 0; i < 11; i += 1) {
@@ -7176,7 +7509,7 @@ var app = (function () {
     				}
     			}
 
-    			append_dev(div0, t2);
+    			append_dev(div0, t0);
     			append_dev(div0, select1);
 
     			for (let i = 0; i < 3; i += 1) {
@@ -7194,19 +7527,18 @@ var app = (function () {
     				}
     			}
 
-    			append_dev(div0, t3);
+    			append_dev(div0, t1);
     			append_dev(div0, button);
-    			insert_dev(target, t5, anchor);
-    			if (if_block) if_block.m(target, anchor);
-    			insert_dev(target, t6, anchor);
+    			insert_dev(target, t3, anchor);
     			insert_dev(target, div1, anchor);
-    			append_dev(div1, t7);
 
-    			for (let i = 0; i < 3; i += 1) {
+    			for (let i = 0; i < 4; i += 1) {
     				each_blocks[i].m(div1, null);
     			}
 
-    			insert_dev(target, t8, anchor);
+    			insert_dev(target, t4, anchor);
+    			if (if_block) if_block.m(target, anchor);
+    			insert_dev(target, t5, anchor);
     			mount_component(router, target, anchor);
     			current = true;
 
@@ -7244,10 +7576,10 @@ var app = (function () {
     					if_block.p(ctx, dirty);
     					transition_in(if_block, 1);
     				} else {
-    					if_block = create_if_block_1$2(ctx);
+    					if_block = create_if_block$4(ctx);
     					if_block.c();
     					transition_in(if_block, 1);
-    					if_block.m(t6.parentNode, t6);
+    					if_block.m(t5.parentNode, t5);
     				}
     			} else if (if_block) {
     				group_outros();
@@ -7274,12 +7606,12 @@ var app = (function () {
     			if (detaching) detach_dev(div0);
     			destroy_each(each_blocks_2, detaching);
     			destroy_each(each_blocks_1, detaching);
-    			if (detaching) detach_dev(t5);
-    			if (if_block) if_block.d(detaching);
-    			if (detaching) detach_dev(t6);
+    			if (detaching) detach_dev(t3);
     			if (detaching) detach_dev(div1);
     			destroy_each(each_blocks, detaching);
-    			if (detaching) detach_dev(t8);
+    			if (detaching) detach_dev(t4);
+    			if (if_block) if_block.d(detaching);
+    			if (detaching) detach_dev(t5);
     			destroy_component(router, detaching);
     			run_all(dispose);
     		}
@@ -7307,21 +7639,7 @@ var app = (function () {
     	let display;
     	let year_value;
     	let format_value;
-
-    	const defaultMatrix = {
-    		1: 10,
-    		2: 1,
-    		3: 1,
-    		4: 1,
-    		5: 1,
-    		6: 1,
-    		7: 1,
-    		8: 1,
-    		9: 1,
-    		10: 1,
-    		"_": 1
-    	};
-
+    	let matrix_value;
     	window.smallData = smallData;
 
     	const handleClick = () => {
@@ -7338,6 +7656,10 @@ var app = (function () {
     		$$invalidate(2, format_value = value);
     	});
 
+    	scoringMatrix.subscribe(value => {
+    		matrix_value = value;
+    	});
+
     	const changeYear = e => {
     		push(`/${format_value}/${e.target.value}`);
     	};
@@ -7348,16 +7670,15 @@ var app = (function () {
 
     	const toggle = () => {
     		$$invalidate(0, display = !display);
-    		 $$invalidate(3, matrix = defaultMatrix);
     	};
 
     	const update = key => e => {
-    		$$invalidate(3, matrix = { ...matrix, [key]: e.target.value });
+    		$$invalidate(3, matrix = { ...matrix, [key]: +e.target.value });
     	};
 
     	const saveNewMatrix = () => {
-    		$$invalidate(10, defaultMatrix = matrix);
-    		close();
+    		scoringMatrix.update(() => matrix);
+    		toggle();
     	};
 
     	function input_input_handler(entry) {
@@ -7373,11 +7694,25 @@ var app = (function () {
     		if ("display" in $$props) $$invalidate(0, display = $$props.display);
     		if ("year_value" in $$props) $$invalidate(1, year_value = $$props.year_value);
     		if ("format_value" in $$props) $$invalidate(2, format_value = $$props.format_value);
+    		if ("matrix_value" in $$props) matrix_value = $$props.matrix_value;
     		if ("matrix" in $$props) $$invalidate(3, matrix = $$props.matrix);
     	};
 
     	let matrix;
-    	 $$invalidate(3, matrix = defaultMatrix);
+
+    	 $$invalidate(3, matrix = {
+    		1: 10,
+    		2: 1,
+    		3: 1,
+    		4: 1,
+    		5: 1,
+    		6: 1,
+    		7: 1,
+    		8: 1,
+    		9: 1,
+    		10: 1,
+    		"_": 1
+    	});
 
     	return [
     		display,
@@ -7390,7 +7725,7 @@ var app = (function () {
     		toggle,
     		update,
     		saveNewMatrix,
-    		defaultMatrix,
+    		matrix_value,
     		handleClick,
     		input_input_handler
     	];
