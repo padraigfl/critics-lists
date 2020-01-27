@@ -1,5 +1,5 @@
 
-const defaultScoringMatrix = {
+export const defaultScoringMatrix = {
   1: 10,
   2: 9,
   3: 8,

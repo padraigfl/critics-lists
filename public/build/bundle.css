@@ -1,10 +1,14 @@
 .ListBreakdown {
   display: flex;
   flex: 1 1 0;
-  height: calc(100% - 40px); }
+  height: calc(100% - 44px);
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  border-right: 2px solid #111; }
   .ListBreakdown__details {
     width: 60%; }
-  @media (max-width: 480px) {
+  @media (max-width: 640px) {
     .ListBreakdown {
       display: block; }
       .ListBreakdown__details, .ListBreakdown__list {
@@ -19,7 +23,8 @@ body {
   background-color: #eee;
   color: #111;
   flex-grow: 1;
-  padding-left: 24px; }
+  padding-left: 24px;
+  height: initial; }
 
 a, a:visited {
   color: #111;
@@ -44,11 +49,14 @@ body.dark {
     text-align: right;
     flex-grow: 1;
     margin-left: auto; }
+  .Meter:first-child .Meter__graph {
+    border-top: none; }
   .Meter__graph {
     width: 40px;
     flex-grow: 0;
     flex-shrink: 0;
     border: 2px solid #111;
+    border-right: none;
     margin-bottom: 1px; }
     .Meter__graph__value {
       background-color: #111;
@@ -62,21 +70,22 @@ body.dark {
 .List {
   margin: 0px;
   padding: 0;
-  padding-top: 40px;
+  padding-top: 44px;
   overflow-y: auto;
   margin-left: 8px;
-  border-left: 1px solid #111;
+  border-left: 2px solid #111;
   flex-grow: 1;
-  margin-left: 300px; }
-  @media (max-width: 480px) {
+  margin-left: 320px; }
+  @media (max-width: 640px) {
     .List {
-      margin-left: 0px; } }
+      margin-left: 0px;
+      padding-top: 0px; } }
 
 .ListEntry {
   list-style-type: none;
   padding-bottom: 8px;
   margin-bottom: -1px;
-  border-bottom: 1px solid #111; }
+  border-bottom: 2px solid #111; }
   .ListEntry__data {
     display: flex;
     align-items: top; }
@@ -109,7 +118,7 @@ body.dark {
   width: 300px;
   flex-shrink: 0;
   position: fixed; }
-  @media (max-width: 480px) {
+  @media (max-width: 640px) {
     .DataList {
       position: relative;
       flex-shrink: 0;
@@ -124,7 +133,7 @@ body.dark {
 
 .Modal {
   background-color: #eee;
-  border: 1px solid #111;
+  border: 2px solid #111;
   max-width: 320px;
   margin: 0 auto;
   padding: 24px;
@@ -136,8 +145,8 @@ body.dark {
     height: 32px;
     width: 32px;
     border: none;
-    border-left: 1px solid #111;
-    border-bottom: 1px solid #111;
+    border-left: 2px solid #111;
+    border-bottom: 2px solid #111;
     background-color: #111;
     color: #eee;
     font-weight: bold; }
@@ -192,6 +201,7 @@ body.dark {
     color: white; }
 
 .Landing {
+  padding-top: 50px;
   width: 95%;
   max-width: 800px;
   margin: 0 auto;
@@ -201,16 +211,14 @@ body.dark {
   position: fixed;
   display: flex;
   height: 40px;
+  padding: 2px 0px;
   width: 100%;
   left: 0px;
   background-color: #eee;
   align-content: center;
-  border-bottom: 1px solid #111;
+  border-bottom: 2px solid #111;
   overflow: hidden;
   z-index: 10; }
-  @media (max-width: 480px) {
-    .nav {
-      width: calc(100vw - 24px); } }
   .nav select, .nav button {
     max-width: calc(33vw - 8px);
     margin-right: 8px;
@@ -219,14 +227,17 @@ body.dark {
   .nav > :first-child {
     margin-left: auto; }
   .nav > :last-child {
-    margin-right: 8px; }
+    margin-right: auto; }
 
 button, select, input {
   color: #111;
   background-color: white;
-  border: 1px solid #111;
+  border: 2px solid #111;
   margin-right: 0px; }
 
 button, select {
   font-weight: bold;
   margin-bottom: 0px; }
+
+.tabularNumber {
+  font-variant-numeric: tabular-nums; }

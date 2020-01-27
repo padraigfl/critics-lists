@@ -6,12 +6,17 @@ $m: 16px;
 $l: 24px;
 $xl: 32px;
 
-$mobile: 480px;
+$mobile: 640px;
+$border: 2px solid $dark;
 
 .ListBreakdown {
   display: flex;
   flex: 1 1 0;
-  height: calc(100% - 40px);
+  height: calc(100% - 44px);
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  border-right: $border;
 
   &__details {
     width: 60%;
@@ -34,6 +39,7 @@ body {
   color: $dark;
   flex-grow: 1;
   padding-left: $l;
+  height: initial;
 }
 
 a, a:visited {
@@ -64,12 +70,15 @@ body.dark {
     flex-grow: 1;
     margin-left: auto;
   }
-  
+  &:first-child .Meter__graph {
+    border-top: none;
+  }
   &__graph {
     width: 40px;
     flex-grow: 0;
     flex-shrink: 0;
     border: 2px solid $dark;
+    border-right: none;
     margin-bottom: 1px;
     &__value {
       background-color: $dark;
@@ -89,15 +98,16 @@ body.dark {
 .List {
   margin: 0px;
   padding: 0;
-  padding-top: 40px;
+  padding-top: 44px;
   overflow-y: auto;
   margin-left: $s;
-  border-left: 1px solid $dark;
+  border-left: $border;
   flex-grow: 1;
-  margin-left: 300px;
+  margin-left: 320px;
 
   @media (max-width: $mobile) {
     margin-left: 0px;
+    padding-top: 0px;
   }
 }
 
@@ -105,7 +115,7 @@ body.dark {
   list-style-type: none;
   padding-bottom: $s;
   margin-bottom: -1px;
-  border-bottom: 1px solid $dark;
+  border-bottom: $border;
   &__data {
     display: flex;
     align-items: top;
@@ -161,8 +171,6 @@ body.dark {
     }
   }
 }
-
-$border: 1px solid $dark;
 
 .Modal {
   background-color: $bright;
@@ -246,6 +254,7 @@ $border: 1px solid $dark;
 }
 
 .Landing {
+  padding-top: 50px;
   width: 95%;
   max-width: 800px;
   margin: 0 auto;
@@ -256,17 +265,14 @@ $border: 1px solid $dark;
   position: fixed;
   display: flex;
   height: 40px;
+  padding: 2px 0px;
   width: 100%;
   left: 0px;
   background-color: $bright;
   align-content: center;
-  border-bottom: 1px solid $dark;
+  border-bottom: $border;
   overflow: hidden;
   z-index: 10;
-
-  @media (max-width: $mobile) {
-    width: calc(100vw - 24px);
-  }
 
   select, button {
     max-width: calc(33vw - 8px);
@@ -278,7 +284,7 @@ $border: 1px solid $dark;
     margin-left: auto;
   }
   >:last-child {
-    margin-right: $s;
+    margin-right: auto;
   }
 }
 
@@ -291,4 +297,8 @@ button, select, input {
 button, select {
   font-weight: bold;
   margin-bottom: 0px;
+}
+
+.tabularNumber {
+  font-variant-numeric: tabular-nums;
 }

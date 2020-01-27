@@ -14,14 +14,14 @@
     derivedData = deriveAdditionalDataFromProcessedList(listData, yearData);
     dataList = [
       { title: '# Lists aggregated:', data: Object.keys(yearData.critics).length },
-      // { title: '# Publications', data: yearData.publications },
+      { title: '# Publications', data: Object.keys(yearData.publications).length },
       { title: '# Unique entries', data: Object.keys(yearData.works).length },
       { title: 'Highest ranked with no #1', data: derivedData.biggestLoser },
       {
         title: 'Lowest ranked with a #1',
         data: derivedData.smallestWinner,
         validator: {
-          text: 'Omitting entries in <3 lists',
+          text: 'in more than 2 lists',
           data: derivedData.smallestWinnerValidator,
         },
       },
@@ -31,11 +31,13 @@
         data: derivedData.mostContrarianCritic.name,
         descriptors: `with ${ derivedData.mostContrarianCritic.score }
     against an average of ${ (derivedData.mostContrarianCritic.totalVal / (Object.keys(yearData.critics).length)).toFixed(1)}`,
+        link: yearData.critics[derivedData.mostContrarianCritic.name].link,
         validator: {
           text: 'Omitting lists with 3+ unique entries',
           data: derivedData.mostContrarianCriticValidator.name,
           descriptors: `with ${ derivedData.mostContrarianCriticValidator.score }
-    against an average of ${ (derivedData.mostContrarianCriticValidator.totalVal / (Object.keys(yearData.critics).length)).toFixed(1)}`
+    against an average of ${ (derivedData.mostContrarianCriticValidator.totalVal / (Object.keys(yearData.critics).length)).toFixed(1)}`,
+        link: yearData.critics[derivedData.mostContrarianCriticValidator.name].link,
         },
       },
       // { title: 'Data Source', data: yearData.source }

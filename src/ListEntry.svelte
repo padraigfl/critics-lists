@@ -20,14 +20,20 @@
 
   const music = [
     { site: 'Spotify', link: '' },
-  ]
+    { site: 'Allmusic', link: '' },
+  ];
+
+  const tv = [
+    { site: 'IMDb', link: 'https://imdb.com/search/' },
+    { site: 'RT', link: 'https://rottentomatoes.com/search/' },
+  ];
 </script>
 
-<li class="ListEntry">
+<li class="ListEntry" id={title.split(' ').join('_').replace(/[\[\]]/)}>
   <div class="ListEntry__data">
     <div class="ListEntry__placement">{placement}</div>
     <div class="ListEntry__title">
-      {title}
+      <strong>{title}</strong>
       <ul class="ListEntry__links">
         {#each film as { site, link }, i}
           {#if i !== 0}

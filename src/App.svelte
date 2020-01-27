@@ -5,10 +5,10 @@
 	import Modal from './Modal.svelte';
 	import Router, { push } from 'svelte-spa-router';
 	import axios from 'axios';
-	import { processListsWithRankings } from './analytics';
-  import { year, format, scoringMatrix } from './store';
+	import { processListsWithRankings, defaultScoringMatrix } from './analytics';
+  import { year, format, scoringMatrix, OPTIONS } from './store';
 	import data from '../data/2010-film.json';
-	import smallData from '../data/small/2010-film.json';
+	import smallData from '../data2010-film.json';
 
 	const routes = {
 		'/': Landing,
@@ -17,34 +17,12 @@
     '*': ComponentA,
 	}
 	let display;
-	let year_value;
-	let format_value;
+	let year_value = 'Year';
+	let format_value = 'Format';
 	let matrix_value;
-	$: matrix = {
-		1: 10,
-		2: 1,
-		3: 1,
-		4: 1,
-		5: 1,
-		6: 1,
-		7: 1,
-		8: 1,
-		9: 1,
-		10: 1,
-		'_': 1,
-	};
+	$: matrix = defaultScoringMatrix;
 
 	window.smallData = smallData;
-
-	const handleClick = () => {
-		axios.get('/2017-film.json').then(({data}) => {
-			jso2 = JSON.stringify(
-				processListsWithRankings(
-					data.critics
-				)
-			);
-		});
-	}
 
 	year.subscribe(value => {
 		year_value = value;
@@ -57,12 +35,23 @@
 		matrix_value = value;
 	});
 
+	// @TODO
 	const changeYear = (e) => {
+		// if (OPTIONS.formats.includes(format_value)) {
 		push(`/${format_value}/${e.target.value}`);
+			window.scroll(0, 0);
+		// } else {
+		// 	push(`/${e.target.value}`);
+		// }
 	};
 
 	const changeFormat = (e) => {
+		// if (OPTIONS.years.includes(+year_value) || year_value === '2010s') {
 		push(`/${e.target.value}/${year_value}`);
+			window.scroll(0, 0);
+		// } else {
+		// 	push(`/${e.target.value}`);
+		// }
 	}
 
 	const toggle = () => {
@@ -86,16 +75,16 @@
 	
 	<div class="nav">
 		<select value={year_value} on:change={changeYear}>
-			{#each ['2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2010s'] as year}
-				<option value={year}>
+			{#each ['Year', '2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2010s'] as year}
+				<option value={year} disabled={year === 'Year'}>
 					{ year }
 				</option>
 			{/each}
 		</select>
 		<select value={format_value} on:change={changeFormat}>
-			{#each ['film', 'tv', 'album'] as year}
-				<option value={year}>
-					{ year }
+			{#each ['Format', 'film', 'tv', 'album'] as format}
+				<option value={format} disabled={format === 'Format'}>
+					{ format }
 				</option>
 			{/each}
 		</select>

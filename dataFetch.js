@@ -194,11 +194,11 @@ const dataFetch = (url, log) => {
       const data = document.querySelector('.categoryname') || document.querySelector('.criticnam')
         ? process2010([...document.querySelectorAll('tr.categoryname')], url)
         : processData(document);
-      writeJSON(`data/${year}-${format}.json`, {
-        ...data,
-        source: url,
-      });
-      writeJSON(`data/small/${year}-${format}.json`, data.critics);
+      // writeJSON(`data/${year}-${format}.json`, {
+      //   ...data,
+      //   source: url,
+      // });
+      writeJSON(`/public/data/${year}-${format}.json`, data.critics);
       dataLog[year] = (Array.isArray(dataLog[year]) ? [...dataLog[year], format] : [format]);
       dataLog[format] = (Array.isArray(dataLog[format]) ? [...dataLog[format], [year]] : [year]);
       dataLog[`${year}-${format}`] = {
