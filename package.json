@@ -2,6 +2,7 @@
   "name": "criticalReview",
   "version": "1.0.0",
   "scripts": {
+    "netlify": "node dataFetch.js && rollup -c",
     "build": "rollup -c",
     "dev": "rollup -c -w",
     "start": "sirv public"
