@@ -8,7 +8,7 @@
 	import { processListsWithRankings, defaultScoringMatrix } from './analytics';
   import { year, format, scoringMatrix, OPTIONS } from './store';
 	import data from '../data/2010-film.json';
-	import smallData from '../data2010-film.json';
+	import smallData from '../data/2010-film.json';
 
 	const routes = {
 		'/': Landing,

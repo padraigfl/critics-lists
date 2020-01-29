@@ -12,21 +12,21 @@
   import './styles.scss';
   import { year, format, scoringMatrix } from './store';
 	export let params = params;
-  let listData = [];
-  let yearData;
-  let derivedData;
+  $: listData = null;
+  $: yearData = null;
+  $: derivedData = null;
   let data;
-  let fileName = `/data/small/${params.year}-${params.format}.json`;
+  let fileName = `/data/${params.year}-${params.format}.json`;
   let matrix_value;
   
-  $: fileName = `/data/small/${params.year}-${params.format}.json`;
+  $: fileName = `/data/${params.year}-${params.format}.json`;
 	//onMount(()=>rolled=Math.floor(Math.random() * params.bound) + 1);
 	//With the onMount instead of the assignment below, when you go from a die with 7 sides to one with 15 or vice-versa, it does not update rolled. With the function below, it does, but it does not re-roll if you route from the 7-sided die back to the 7-sided die.
 
   const processFile = (json) => {
-    $: yearData = formatList(json, matrix_value);
-    $: listData = processListsWithRankings(json, matrix_value);
-    $: derivedData = deriveAdditionalDataFromProcessedList(listData, yearData);
+    yearData = formatList(json, matrix_value);
+    listData = processListsWithRankings(json, matrix_value);
+    derivedData = deriveAdditionalDataFromProcessedList(listData, yearData);
     return {
       yearData,
       listData,
@@ -74,8 +74,8 @@
       listData={listData}
     />
   {/if}
-  {#if listData.length && yearData}
-    <List listData={listData} yearData={yearData} />
+  {#if listData && listData.length && yearData}
+    <List listData={listData} yearData={yearData} format={params.format} />
   {:else}
     Loading...
   {/if}
