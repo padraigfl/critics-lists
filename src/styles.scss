@@ -144,6 +144,31 @@ body.dark {
   }
   &__links {
     padding-left: 0px;
+    display: flex;
+    align-items: center;
+    margin-top: 2px;
+  }
+  &__link {
+    font-size: 12px;
+    font-weight: bold;
+    margin: 0 4px;
+    &--icon {
+      margin: 0;
+      display: inline-flex;
+      align-items: center;
+      height: 18px;
+      padding: 0px 2px;
+      &:hover, &:focus {
+        background-color: white;
+        filter: invert(1);
+      }
+      text-decoration: none;
+      img {
+        max-height: 14px;
+        max-width: 50px;
+        filter: brightness(0);
+      }
+    }
   }
 }
 

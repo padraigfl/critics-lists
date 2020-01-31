@@ -2957,20 +2957,25 @@ var app = (function () {
     	child_ctx[15] = list[i].site;
     	child_ctx[16] = list[i].link;
     	child_ctx[17] = list[i].modify;
-    	child_ctx[19] = i;
+    	child_ctx[18] = list[i].icon;
+    	child_ctx[20] = i;
     	return child_ctx;
     }
 
-    // (43:10) {#if i !== 0}
-    function create_if_block$1(ctx) {
+    // (46:12) {:else}
+    function create_else_block(ctx) {
+    	let t_value = /*site*/ ctx[15] + "";
     	let t;
 
     	const block = {
     		c: function create() {
-    			t = text("|");
+    			t = text(t_value);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, t, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*format*/ 128 && t_value !== (t_value = /*site*/ ctx[15] + "")) set_data_dev(t, t_value);
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(t);
@@ -2979,50 +2984,116 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$1.name,
-    		type: "if",
-    		source: "(43:10) {#if i !== 0}",
+    		id: create_else_block.name,
+    		type: "else",
+    		source: "(46:12) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (42:8) {#each formats[format] as { site, link, modify }
-    function create_each_block$1(ctx) {
-    	let t0;
-    	let a;
-    	let t1_value = /*site*/ ctx[15] + "";
-    	let t1;
-    	let a_href_value;
-    	let t2_value = " " + "";
-    	let t2;
-    	let if_block = /*i*/ ctx[19] !== 0 && create_if_block$1(ctx);
+    // (44:12) {#if icon}
+    function create_if_block$1(ctx) {
+    	let img;
+    	let img_src_value;
+    	let img_alt_value;
 
     	const block = {
     		c: function create() {
-    			if (if_block) if_block.c();
-    			t0 = space();
+    			img = element("img");
+    			attr_dev(img, "class", "ListEntry__icon");
+    			if (img.src !== (img_src_value = `/icons/${/*icon*/ ctx[18]}`)) attr_dev(img, "src", img_src_value);
+    			attr_dev(img, "alt", img_alt_value = /*site*/ ctx[15]);
+    			add_location(img, file$2, 44, 14, 1916);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, img, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*format*/ 128 && img.src !== (img_src_value = `/icons/${/*icon*/ ctx[18]}`)) {
+    				attr_dev(img, "src", img_src_value);
+    			}
+
+    			if (dirty & /*format*/ 128 && img_alt_value !== (img_alt_value = /*site*/ ctx[15])) {
+    				attr_dev(img, "alt", img_alt_value);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(img);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block$1.name,
+    		type: "if",
+    		source: "(44:12) {#if icon}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (42:8) {#each formats[format] as { site, link, modify, icon }
+    function create_each_block$1(ctx) {
+    	let a;
+    	let t0;
+    	let a_class_value;
+    	let a_href_value;
+    	let t1_value = " " + "";
+    	let t1;
+
+    	function select_block_type(ctx, dirty) {
+    		if (/*icon*/ ctx[18]) return create_if_block$1;
+    		return create_else_block;
+    	}
+
+    	let current_block_type = select_block_type(ctx);
+    	let if_block = current_block_type(ctx);
+
+    	const block = {
+    		c: function create() {
     			a = element("a");
+    			if_block.c();
+    			t0 = space();
     			t1 = text(t1_value);
-    			t2 = text(t2_value);
+
+    			attr_dev(a, "class", a_class_value = /*icon*/ ctx[18]
+    			? "ListEntry__link--icon"
+    			: "ListEntry__link");
 
     			attr_dev(a, "href", a_href_value = `${/*link*/ ctx[16]}${/*modify*/ ctx[17]
 			? /*modify*/ ctx[17](/*title*/ ctx[1])
 			: /*title*/ ctx[1]}`);
 
     			attr_dev(a, "target", "_blank");
-    			add_location(a, file$2, 45, 10, 1654);
+    			add_location(a, file$2, 42, 10, 1750);
     		},
     		m: function mount(target, anchor) {
-    			if (if_block) if_block.m(target, anchor);
-    			insert_dev(target, t0, anchor);
     			insert_dev(target, a, anchor);
-    			append_dev(a, t1);
-    			insert_dev(target, t2, anchor);
+    			if_block.m(a, null);
+    			append_dev(a, t0);
+    			insert_dev(target, t1, anchor);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*format*/ 128 && t1_value !== (t1_value = /*site*/ ctx[15] + "")) set_data_dev(t1, t1_value);
+    			if (current_block_type === (current_block_type = select_block_type(ctx)) && if_block) {
+    				if_block.p(ctx, dirty);
+    			} else {
+    				if_block.d(1);
+    				if_block = current_block_type(ctx);
+
+    				if (if_block) {
+    					if_block.c();
+    					if_block.m(a, t0);
+    				}
+    			}
+
+    			if (dirty & /*format*/ 128 && a_class_value !== (a_class_value = /*icon*/ ctx[18]
+    			? "ListEntry__link--icon"
+    			: "ListEntry__link")) {
+    				attr_dev(a, "class", a_class_value);
+    			}
 
     			if (dirty & /*format, title*/ 130 && a_href_value !== (a_href_value = `${/*link*/ ctx[16]}${/*modify*/ ctx[17]
 			? /*modify*/ ctx[17](/*title*/ ctx[1])
@@ -3031,10 +3102,9 @@ var app = (function () {
     			}
     		},
     		d: function destroy(detaching) {
-    			if (if_block) if_block.d(detaching);
-    			if (detaching) detach_dev(t0);
     			if (detaching) detach_dev(a);
-    			if (detaching) detach_dev(t2);
+    			if_block.d();
+    			if (detaching) detach_dev(t1);
     		}
     	};
 
@@ -3042,7 +3112,7 @@ var app = (function () {
     		block,
     		id: create_each_block$1.name,
     		type: "each",
-    		source: "(42:8) {#each formats[format] as { site, link, modify }",
+    		source: "(42:8) {#each formats[format] as { site, link, modify, icon }",
     		ctx
     	});
 
@@ -3127,19 +3197,19 @@ var app = (function () {
     			t6 = space();
     			create_component(meter2.$$.fragment);
     			attr_dev(div0, "class", "ListEntry__placement");
-    			add_location(div0, file$2, 37, 4, 1377);
-    			add_location(strong, file$2, 39, 6, 1470);
+    			add_location(div0, file$2, 37, 4, 1519);
+    			add_location(strong, file$2, 39, 6, 1612);
     			attr_dev(ul, "class", "ListEntry__links");
-    			add_location(ul, file$2, 40, 6, 1501);
+    			add_location(ul, file$2, 40, 6, 1643);
     			attr_dev(div1, "class", "ListEntry__title");
-    			add_location(div1, file$2, 38, 4, 1433);
+    			add_location(div1, file$2, 38, 4, 1575);
     			attr_dev(div2, "class", "ListEntry__stats");
-    			add_location(div2, file$2, 49, 4, 1782);
+    			add_location(div2, file$2, 52, 4, 2104);
     			attr_dev(div3, "class", "ListEntry__data");
-    			add_location(div3, file$2, 36, 2, 1343);
+    			add_location(div3, file$2, 36, 2, 1485);
     			attr_dev(li, "class", "ListEntry");
     			attr_dev(li, "id", li_id_value = /*title*/ ctx[1].split(" ").join("_").replace(/[\[\]]/));
-    			add_location(li, file$2, 35, 0, 1268);
+    			add_location(li, file$2, 35, 0, 1410);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -3262,15 +3332,18 @@ var app = (function () {
     	const film = [
     		{
     			site: "IMDb",
-    			link: "https://www.imdb.com/find?s=tt&q="
+    			link: "https://www.imdb.com/find?s=tt&q=",
+    			icon: "imdb.png"
     		},
     		{
     			site: "RT",
-    			link: "https://www.rottentomatoes.com/search/?search="
+    			link: "https://www.rottentomatoes.com/search/?search=",
+    			icon: "rotten.png"
     		},
     		{
     			site: "Letterboxd",
-    			link: "https://letterboxd.com/search/films/"
+    			link: "https://letterboxd.com/search/films/",
+    			icon: "letterboxd.png"
     		}
     	];
 
@@ -3278,17 +3351,19 @@ var app = (function () {
     		{
     			site: "Spotify",
     			link: "https://open.spotify.com/search/",
+    			icon: "spotify.png",
     			modify: v => v.replace(/\s/g, "%20").replace(/by/g, "")
+    		},
+    		{
+    			site: "Youtube",
+    			link: "https://www.youtube.com/results?search_query=",
+    			icon: "youtube.png",
+    			modify: v => v.replace(/\s/g, "%20")
     		},
     		{
     			site: "RYM",
     			link: "https://rateyouralbum.com/search?searchtype=l&searchterm=",
     			modify: v => v.replace(/\s/g, "+").replace(/by/g, "")
-    		},
-    		{
-    			site: "Youtube",
-    			link: "https://www.youtube.com/results?search_query=",
-    			modify: v => v.replace(/\s/g, "%20")
     		}
     	];
 
@@ -3296,11 +3371,13 @@ var app = (function () {
     		{
     			site: "IMDb",
     			link: "https://www.imdb.com/find?s=tt&q=",
+    			icon: "imdb.png",
     			modify: v => v.replace(/\(.*\)/g, "%20")
     		},
     		{
     			site: "RT",
     			link: "https://www.rottentomatoes.com/search/?search=",
+    			icon: "rotten.png",
     			modify: v => v.replace(/\(.*\)/g, "%20")
     		}
     	];
@@ -4023,7 +4100,7 @@ var app = (function () {
     	function select_block_type_1(ctx, dirty) {
     		if (show_if == null || dirty & /*entry*/ 1) show_if = !!Array.isArray(/*entry*/ ctx[0].validator.data);
     		if (show_if) return create_if_block_3;
-    		return create_else_block;
+    		return create_else_block$1;
     	}
 
     	let current_block_type = select_block_type_1(ctx, -1);
@@ -4119,7 +4196,7 @@ var app = (function () {
     }
 
     // (30:8) {:else}
-    function create_else_block(ctx) {
+    function create_else_block$1(ctx) {
     	let t_value = /*entry*/ ctx[0].validator.data + "";
     	let t;
 
@@ -4140,7 +4217,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_else_block.name,
+    		id: create_else_block$1.name,
     		type: "else",
     		source: "(30:8) {:else}",
     		ctx
@@ -4861,7 +4938,7 @@ var app = (function () {
     }
 
     // (79:2) {:else}
-    function create_else_block$1(ctx) {
+    function create_else_block$2(ctx) {
     	let t;
 
     	const block = {
@@ -4881,7 +4958,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_else_block$1.name,
+    		id: create_else_block$2.name,
     		type: "else",
     		source: "(79:2) {:else}",
     		ctx
@@ -4950,7 +5027,7 @@ var app = (function () {
     	let if_block1;
     	let current;
     	let if_block0 = /*derivedData*/ ctx[3] && /*yearData*/ ctx[2] && /*listData*/ ctx[1] && create_if_block_1$1(ctx);
-    	const if_block_creators = [create_if_block$3, create_else_block$1];
+    	const if_block_creators = [create_if_block$3, create_else_block$2];
     	const if_blocks = [];
 
     	function select_block_type(ctx, dirty) {
@@ -9957,7 +10034,7 @@ var app = (function () {
     }
 
     // (118:6) {:else}
-    function create_else_block$2(ctx) {
+    function create_else_block$3(ctx) {
     	let span;
     	let t;
 
@@ -9979,7 +10056,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_else_block$2.name,
+    		id: create_else_block$3.name,
     		type: "else",
     		source: "(118:6) {:else}",
     		ctx
@@ -10030,7 +10107,7 @@ var app = (function () {
 
     	function select_block_type(ctx, dirty) {
     		if (/*entry*/ ctx[12] === "_") return create_if_block_1$2;
-    		return create_else_block$2;
+    		return create_else_block$3;
     	}
 
     	let current_block_type = select_block_type(ctx);

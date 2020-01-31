@@ -108,7 +108,28 @@ body.dark {
     flex-shrink: 0;
     margin-left: auto; }
   .ListEntry__links {
-    padding-left: 0px; }
+    padding-left: 0px;
+    display: flex;
+    align-items: center;
+    margin-top: 2px; }
+  .ListEntry__link {
+    font-size: 12px;
+    font-weight: bold;
+    margin: 0 4px; }
+    .ListEntry__link--icon {
+      margin: 0;
+      display: inline-flex;
+      align-items: center;
+      height: 18px;
+      padding: 0px 2px;
+      text-decoration: none; }
+      .ListEntry__link--icon:hover, .ListEntry__link--icon:focus {
+        background-color: white;
+        filter: invert(1); }
+      .ListEntry__link--icon img {
+        max-height: 14px;
+        max-width: 50px;
+        filter: brightness(0); }
 
 .DataList {
   padding: 8px;

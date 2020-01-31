@@ -14,20 +14,20 @@
   let derivedData;
 
   const film = [
-    { site: 'IMDb', link: 'https://www.imdb.com/find?s=tt&q=' },
-    { site: 'RT', link: 'https://www.rottentomatoes.com/search/?search=' },
-    { site: 'Letterboxd', link: 'https://letterboxd.com/search/films/' },
+    { site: 'IMDb', link: 'https://www.imdb.com/find?s=tt&q=', icon: 'imdb.png' },
+    { site: 'RT', link: 'https://www.rottentomatoes.com/search/?search=', icon: 'rotten.png' },
+    { site: 'Letterboxd', link: 'https://letterboxd.com/search/films/', icon: 'letterboxd.png' },
   ];
 
   const album = [// need to remove by
-    { site: 'Spotify', link: 'https://open.spotify.com/search/', modify: v => v.replace(/\s/g, '%20').replace(/by/g, '') },// %20
+    { site: 'Spotify', link: 'https://open.spotify.com/search/', icon: 'spotify.png', modify: v => v.replace(/\s/g, '%20').replace(/by/g, '') },// %20
+    { site: 'Youtube', link: 'https://www.youtube.com/results?search_query=', icon: 'youtube.png', modify: v => v.replace(/\s/g, '%20') }, // +
     { site: 'RYM', link: 'https://rateyouralbum.com/search?searchtype=l&searchterm=', modify: v => v.replace(/\s/g, '+').replace(/by/g, '') } , // +
-    { site: 'Youtube', link: 'https://www.youtube.com/results?search_query=', modify: v => v.replace(/\s/g, '%20') }, // +
   ];
 
   const tv = [
-    { site: 'IMDb', link: 'https://www.imdb.com/find?s=tt&q=', modify: v => v.replace(/\(.*\)/g, '%20') },
-    { site: 'RT', link: 'https://www.rottentomatoes.com/search/?search=', modify: v => v.replace(/\(.*\)/g, '%20') },
+    { site: 'IMDb', link: 'https://www.imdb.com/find?s=tt&q=', icon: 'imdb.png', modify: v => v.replace(/\(.*\)/g, '%20') },
+    { site: 'RT', link: 'https://www.rottentomatoes.com/search/?search=', icon: 'rotten.png', modify: v => v.replace(/\(.*\)/g, '%20') },
   ];
 
   const formats = { film, album, tv };
@@ -39,11 +39,14 @@
     <div class="ListEntry__title">
       <strong>{title}</strong>
       <ul class="ListEntry__links">
-        {#each formats[format] as { site, link, modify }, i}
-          {#if i !== 0}
-          |
-          {/if}
-          <a href={`${link}${modify ? modify(title) : title}`} target="_blank">{site}</a>{' '}
+        {#each formats[format] as { site, link, modify, icon }, i}
+          <a class={icon ? 'ListEntry__link--icon' : 'ListEntry__link'} href={`${link}${modify ? modify(title) : title}`} target="_blank">
+            {#if icon}
+              <img class="ListEntry__icon" src={`/icons/${icon}`} alt={site} />
+            {:else}
+              {site}
+            {/if}
+          </a>{' '}
         {/each}
       </ul>
     </div>
