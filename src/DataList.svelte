@@ -16,16 +16,18 @@
       { title: '# Lists aggregated:', data: Object.keys(yearData.critics).length },
       { title: '# Publications', data: Object.keys(yearData.publications).length },
       { title: '# Unique entries', data: Object.keys(yearData.works).length },
-      { title: 'Highest ranked with no #1', data: derivedData.biggestLoser },
+      { title: 'Highest ranked with no #1', data: derivedData.biggestLoser, dataLink: true },
       {
         title: 'Lowest ranked with a #1',
         data: derivedData.smallestWinner,
+        dataLink: true,
         validator: {
           text: 'in more than 2 lists',
           data: derivedData.smallestWinnerValidator,
+          dataLink: true,
         },
       },
-      { title: 'Highest ranked pair that share no lists', data: derivedData.divisivePair },
+      { title: 'Highest ranked pair that share no lists', data: derivedData.divisivePair, dataLink: true },
       {
         title: 'Most contrarian critic (lowest points for overall list)',
         data: derivedData.mostContrarianCritic.name,

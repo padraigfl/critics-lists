@@ -112,10 +112,16 @@ body.dark {
 }
 
 .ListEntry {
+  background-color: $bright;
   list-style-type: none;
   padding-bottom: $s;
   margin-bottom: -1px;
   border-bottom: $border;
+  transition: filter linear 0.5s;
+  &:focus-within {
+    filter: invert(1);
+    transition: filter linear 0s;
+  }
   &__data {
     display: flex;
     align-items: top;
@@ -156,15 +162,15 @@ body.dark {
       margin: 0;
       display: inline-flex;
       align-items: center;
-      height: 18px;
-      padding: 0px 2px;
+      height: 20px;
+      padding: 1px 2px;
       &:hover, &:focus {
         background-color: white;
         filter: invert(1);
       }
       text-decoration: none;
       img {
-        max-height: 14px;
+        max-height: 18px;
         max-width: 50px;
         filter: brightness(0);
       }
@@ -191,8 +197,18 @@ body.dark {
   dd {
     margin: 0px;
     margin-bottom: $s;
+    button {
+      padding: 0px;
+      border: 0px;
+      background-color: transparent;
+      display: inline-block;
+      text-align: left;;
+    }
     .DataBlock__validator {
       font-size: 0.75rem;
+    }
+    .DataBlock__data, a {
+      display: inline-block;
     }
   }
 }

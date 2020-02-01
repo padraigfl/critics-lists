@@ -1,6 +1,7 @@
 <script>
   import { onMount, beforeUpdate, afterUpdate } from 'svelte';
   import axios from 'axios';
+	import { push } from 'svelte-spa-router';
   import List from './List.svelte';
   import DataBlock from './DataBlock.svelte';
   import DataList from './DataList.svelte';
@@ -42,8 +43,15 @@
     if (priorData) {
       return processFile(JSON.parse(priorData));
     }
-    const resp = await fetch(fileName);
-    const json = await resp.json();
+    let resp;
+    let json;
+    try {
+      resp = await fetch(fileName);
+      json = await resp.json();
+    } catch {
+      push('/');
+      return;
+    }
     if (resp.ok) {
       window.localStorage.setItem(
         `${params.year}-${params.format}`,

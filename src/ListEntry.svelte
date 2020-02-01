@@ -1,6 +1,7 @@
 <script>
 
   import Meter from './Meter.svelte';
+  import {getIdFromName} from './utils';
   export let placement;
   export let title;
   export let entry;
@@ -33,7 +34,7 @@
   const formats = { film, album, tv };
 </script>
 
-<li class="ListEntry" id={title.split(' ').join('_').replace(/[\[\]]/)}>
+<li class="ListEntry" id={getIdFromName(title)}>
   <div class="ListEntry__data">
     <div class="ListEntry__placement">{placement}</div>
     <div class="ListEntry__title">

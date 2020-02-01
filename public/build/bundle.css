@@ -82,10 +82,15 @@ body.dark {
       padding-top: 0px; } }
 
 .ListEntry {
+  background-color: #eee;
   list-style-type: none;
   padding-bottom: 8px;
   margin-bottom: -1px;
-  border-bottom: 2px solid #111; }
+  border-bottom: 2px solid #111;
+  transition: filter linear 0.5s; }
+  .ListEntry:focus-within {
+    filter: invert(1);
+    transition: filter linear 0s; }
   .ListEntry__data {
     display: flex;
     align-items: top; }
@@ -120,14 +125,14 @@ body.dark {
       margin: 0;
       display: inline-flex;
       align-items: center;
-      height: 18px;
-      padding: 0px 2px;
+      height: 20px;
+      padding: 1px 2px;
       text-decoration: none; }
       .ListEntry__link--icon:hover, .ListEntry__link--icon:focus {
         background-color: white;
         filter: invert(1); }
       .ListEntry__link--icon img {
-        max-height: 14px;
+        max-height: 18px;
         max-width: 50px;
         filter: brightness(0); }
 
@@ -149,8 +154,16 @@ body.dark {
   .DataList dd {
     margin: 0px;
     margin-bottom: 8px; }
+    .DataList dd button {
+      padding: 0px;
+      border: 0px;
+      background-color: transparent;
+      display: inline-block;
+      text-align: left; }
     .DataList dd .DataBlock__validator {
       font-size: 0.75rem; }
+    .DataList dd .DataBlock__data, .DataList dd a {
+      display: inline-block; }
 
 .Modal {
   background-color: #eee;
