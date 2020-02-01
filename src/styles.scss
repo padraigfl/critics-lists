@@ -57,7 +57,7 @@ body.dark {
 
 
 .Meter {
-  width: 110px;
+  max-width: 110px;
   display: flex;
   &__icon {
     font-size: 0.5rem;
@@ -143,6 +143,9 @@ body.dark {
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+    @media (max-width: $mobile) {
+      white-space: initial;
+    }
   }
   &__stats {
     flex-shrink: 0;

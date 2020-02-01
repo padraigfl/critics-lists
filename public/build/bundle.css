@@ -37,7 +37,7 @@ body.dark {
     color: #eee; }
 
 .Meter {
-  width: 110px;
+  max-width: 110px;
   display: flex;
   font-size: 0.9rem; }
   .Meter__icon {
@@ -109,6 +109,9 @@ body.dark {
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden; }
+    @media (max-width: 640px) {
+      .ListEntry__title {
+        white-space: initial; } }
   .ListEntry__stats {
     flex-shrink: 0;
     margin-left: auto; }

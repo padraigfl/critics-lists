@@ -34,11 +34,18 @@
   const formats = { film, album, tv };
 </script>
 
-<li class="ListEntry" id={getIdFromName(title)}>
+<li class={`ListEntry ListEntry--${format}`} id={getIdFromName(title)}>
   <div class="ListEntry__data">
     <div class="ListEntry__placement">{placement}</div>
     <div class="ListEntry__title">
-      <strong>{title}</strong>
+      {#if format === 'album'}
+        <strong>
+          {title.split(' by ')[0]}
+        </strong>
+        <div>{title.split(' by ')[1]}</div>
+      {:else}
+        <strong>{title}</strong>
+      {/if}
       <ul class="ListEntry__links">
         {#each formats[format] as { site, link, modify, icon }, i}
           <a class={icon ? 'ListEntry__link--icon' : 'ListEntry__link'} href={`${link}${modify ? modify(title) : title}`} target="_blank">
