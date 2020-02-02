@@ -198,7 +198,7 @@ const dataFetch = (url, log) => {
       //   ...data,
       //   source: url,
       // });
-      writeJSON(`/public/data/${year}-${format}.json`, data.critics);
+      writeJSON(`${year}-${format}.json`, data.critics);
       dataLog[year] = (Array.isArray(dataLog[year]) ? [...dataLog[year], format] : [format]);
       dataLog[format] = (Array.isArray(dataLog[format]) ? [...dataLog[format], [year]] : [year]);
       dataLog[`${year}-${format}`] = {

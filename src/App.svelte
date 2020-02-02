@@ -7,8 +7,6 @@
 	import axios from 'axios';
 	import { processListsWithRankings, defaultScoringMatrix } from './analytics';
   import { year, format, scoringMatrix, OPTIONS } from './store';
-	import data from '../data/2010-film.json';
-	import smallData from '../data/2010-film.json';
 
 	const routes = {
 		'/': Landing,
@@ -22,7 +20,6 @@
 	let matrix_value;
 	$: matrix = defaultScoringMatrix;
 
-	window.smallData = smallData;
 
 	year.subscribe(value => {
 		year_value = value;
