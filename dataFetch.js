@@ -3,6 +3,7 @@ const curl = require('curl');
 var fs = require('fs');
 
 function writeJSON(filename, jsonData) {
+  console.log('writing:', filename);
   return fs.writeFile(filename, JSON.stringify(jsonData), function(err) {
     if (err) throw err;
   });
@@ -198,7 +199,7 @@ const dataFetch = (url, log) => {
       //   ...data,
       //   source: url,
       // });
-      writeJSON(`${year}-${format}.json`, data.critics);
+      writeJSON(`public/data/${year}-${format}.json`, data.critics);
       dataLog[year] = (Array.isArray(dataLog[year]) ? [...dataLog[year], format] : [format]);
       dataLog[format] = (Array.isArray(dataLog[format]) ? [...dataLog[format], [year]] : [year]);
       dataLog[`${year}-${format}`] = {
