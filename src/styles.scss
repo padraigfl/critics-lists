@@ -23,6 +23,7 @@ $border: 2px solid $dark;
   }
   @media (max-width: $mobile) {
     display: block;
+    flex: none;
     &__details, &__list {
       width: 100%;
       padding: $s;
@@ -40,6 +41,10 @@ body {
   flex-grow: 1;
   padding-left: $l;
   height: initial;
+
+  @media (max-width: $mobile) {
+    padding-left: 0px;
+  }
 }
 
 a, a:visited {
@@ -294,6 +299,10 @@ body.dark {
   align-content: center;
   a, a:visited {
     color: white;
+  }
+
+  @media (max-width: $mobile) {
+    display: none;
   }
 }
 
