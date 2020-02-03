@@ -236,7 +236,7 @@ const dataLog = { year: [], format: [] };
   'https://www.metacritic.com/feature/film-critics-list-the-top-10-movies-of-2017',
   'https://www.metacritic.com/feature/film-critics-list-the-top-10-movies-of-2018',
   'https://www.metacritic.com/feature/critics-pick-top-10-best-movies-of-2019',
-  'https://www.metacritic.com/feature/music-critic-top-ten-lists-best-of-2010',
+  'https://www.metacritic.com/feature/music-critic-top-ten-lists-best-of-2010?albums=1',
   'https://www.metacritic.com/feature/music-critic-top-ten-lists-best-albums-of-2011',
   'https://www.metacritic.com/feature/top-ten-lists-best-albums-of-2012',
   'https://www.metacritic.com/feature/critics-pick-top-ten-albums-of-2013',
