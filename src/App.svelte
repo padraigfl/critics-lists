@@ -32,23 +32,24 @@
 		matrix_value = value;
 	});
 
-	// @TODO
 	const changeYear = (e) => {
-		// if (OPTIONS.formats.includes(format_value)) {
-		push(`/${format_value}/${e.target.value}`);
+		if (
+			OPTIONS.formats.includes(format_value)
+			&& OPTIONS.years.includes(+e.target.value)
+		) {
+			push(`/${format_value}/${e.target.value}`);
 			window.scroll(0, 0);
-		// } else {
-		// 	push(`/${e.target.value}`);
-		// }
+		}
 	};
 
 	const changeFormat = (e) => {
-		// if (OPTIONS.years.includes(+year_value) || year_value === '2010s') {
-		push(`/${e.target.value}/${year_value}`);
+		if (
+			OPTIONS.years.includes(+year_value)
+			&& OPTIONS.formats.includes(e.target.value)
+		) {
+			push(`/${e.target.value}/${year_value}`);
 			window.scroll(0, 0);
-		// } else {
-		// 	push(`/${e.target.value}`);
-		// }
+		}
 	}
 
 	const toggle = () => {
