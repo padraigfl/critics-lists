@@ -1,6 +1,10 @@
 <script>
 	import { OPTIONS, SOURCE } from './store';
 </script>
+
+<svelte:head>
+  <title>Critics Lists: Intro</title>
+</svelte:head>
 <div class="Landing">
 	<p>This site collects data from a whole load of year end lists from over the last decade for the following purposes:</p>
 

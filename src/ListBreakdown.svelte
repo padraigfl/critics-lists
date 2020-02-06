@@ -11,7 +11,7 @@
     processListsWithRankings,
   } from './analytics';
   import './styles.scss';
-  import { year, format, scoringMatrix } from './store';
+  import { year, format, scoringMatrix, loadingPage } from './store';
 	export let params = params;
   $: listData = null;
   $: yearData = null;
@@ -19,15 +19,21 @@
   let data;
   let fileName = `/data/${params.year}-${params.format}.json`;
   let matrix_value;
+  let isLoading;
   
   $: fileName = `/data/${params.year}-${params.format}.json`;
 	//onMount(()=>rolled=Math.floor(Math.random() * params.bound) + 1);
 	//With the onMount instead of the assignment below, when you go from a die with 7 sides to one with 15 or vice-versa, it does not update rolled. With the function below, it does, but it does not re-roll if you route from the 7-sided die back to the 7-sided die.
 
+	loadingPage.subscribe(value => {
+		isLoading = value;
+	});
+
   const processFile = (json) => {
     yearData = formatList(json, matrix_value);
     listData = processListsWithRankings(json, matrix_value);
     derivedData = deriveAdditionalDataFromProcessedList(listData, yearData);
+    loadingPage.update(() => false);
     return {
       yearData,
       listData,
@@ -36,8 +42,6 @@
   }
 
   const getJsonData = async () => {
-    year.update(() => params.year);
-    format.update(() => params.format);
     const localStorageItem = `${params.year}-${params.format}`;
     const priorData = window.localStorage.getItem(localStorageItem);
     if (priorData) {
@@ -74,15 +78,18 @@
 
 </script>
 
+
+<svelte:head>
+  <title>Critics Lists: {params.format} of {params.year}</title>
+</svelte:head>
 <div class="ListBreakdown">
-  {#if derivedData && yearData && listData}
+  {#if yearData && listData && !isLoading}
     <DataList
-      derivedData={derivedData}
       yearData={yearData}
       listData={listData}
     />
   {/if}
-  {#if listData && listData.length && yearData}
+  {#if listData && listData.length && yearData && !isLoading}
     <List listData={listData} yearData={yearData} format={params.format} />
   {:else}
     Loading...

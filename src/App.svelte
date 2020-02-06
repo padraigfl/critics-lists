@@ -6,7 +6,7 @@
 	import Router, { push } from 'svelte-spa-router';
 	import axios from 'axios';
 	import { processListsWithRankings, defaultScoringMatrix } from './analytics';
-  import { year, format, scoringMatrix, OPTIONS } from './store';
+  import { loadingPage, year, format, scoringMatrix, OPTIONS } from './store';
 
 	const routes = {
 		'/': Landing,
@@ -18,6 +18,7 @@
 	let year_value = 'Year';
 	let format_value = 'Format';
 	let matrix_value;
+	let isLoading;
 	$: matrix = defaultScoringMatrix;
 
 
@@ -32,23 +33,36 @@
 		matrix_value = value;
 	});
 
+	loadingPage.subscribe(value => {
+		isLoading = value;
+	});
+
+	const loadPage = (page) => {
+		loadingPage.update(() => true);
+		push(page);
+		window.scroll(0, 0);
+	}
+
 	const changeYear = (e) => {
+		console.log(format_value, e.target.value);
+    year.update(() => e.target.value);
 		if (
 			OPTIONS.formats.includes(format_value)
-			&& OPTIONS.years.includes(+e.target.value)
+			&& OPTIONS.years.includes(e.target.value)
 		) {
-			push(`/${format_value}/${e.target.value}`);
+			loadPage(`/${format_value}/${e.target.value}`)
 			window.scroll(0, 0);
 		}
 	};
 
 	const changeFormat = (e) => {
+		console.log(year_value, e.target.value);
+    format.update(() => e.target.value);
 		if (
-			OPTIONS.years.includes(+year_value)
+			OPTIONS.years.includes(year_value)
 			&& OPTIONS.formats.includes(e.target.value)
 		) {
-			push(`/${e.target.value}/${year_value}`);
-			window.scroll(0, 0);
+			loadPage(`/${e.target.value}/${year_value}`);
 		}
 	}
 
@@ -105,7 +119,7 @@
 		{/each}
 	</div>
 
-	{#if display}
+	{#if (display)}
 		<Modal onclose={toggle}>
 			<p>Update the values to recalculate lists across the site</p>
 			<div class="matrix">
