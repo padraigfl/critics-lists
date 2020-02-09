@@ -1,8 +1,10 @@
 var fs = require('fs');
 var curl = require('curl');
 
+const years = ['2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2010s']; 
+
 function writeFile(filename, jsonData) {
-  console.log('writing:', filename);
+  // console.log('writing:', filename);
   return fs.writeFile(filename, JSON.stringify(jsonData), function(err) {
     if (err) throw err;
   });
@@ -53,69 +55,89 @@ const getFilmList = (year, bonusData) => {
   return films;
 };
 
-const getFilm = (title, year, apikey) => {
+const getFilm = (films, title, year, issueLog, errorLog, apikey = '') => {
   const url = `http://www.omdbapi.com/?t=${title}${year ? `&y=${year}` : ''}&type=movie&apikey=${apikey}`
   return new Promise((res) => {
-    curl.get(url, null, (err,resp,respBody)=>{
-      const body = JSON.parse(respBody);
-      if (body.Error) {
-        errorLog[title] = { year };
-      }
-      if (body.Year !== films[title].year) {
-        issueLog[title] = {
-          ...films[title],
-          ...body
-        };
-      }
-      if (resp && resp.statusCode == 200) {
-        films[title] = {
-          ...films[title],
-          ...body,
-        };
-      } else {
-        errorLog[title] = { year };
-        //some error handling
-        console.log("error while fetching url", url, err, resp);
-      }
-      res(body);
-    });
+    setTimeout(() => {
+      curl.get(url, null, (err,resp,respBody)=>{
+        try {
+          const body = JSON.parse(respBody);
+          if (body.Error) {
+            errorLog[title] = { year, error: body.Error };
+          }
+          if (+body.Year !== +films[title].year) {
+            issueLog[title] = {
+              ...films[title],
+              notSameYear: body.Year,
+            };
+          }
+          if (+resp.statusCode == 200) {
+            films[title] = {
+              ...films[title],
+              ...body,
+            };
+          } else {
+            errorLog[title] = { year };
+            //some error handling
+            // console.log("error while fetching url", url, err, resp);
+          }
+          res(body);
+        } catch(e) {
+          errorLog[title] = { year };
+          res();
+          // console.log(respBody);
+        }
+      });
+    }, 50);
   });
 }
 
-
-
-const films = getFilmList(2010);
-const errorLog = readFile('failures.json');
-let issueLog = readFile('issues.json');
-
-const writeFilms = () => {
-  Promise.all(Object.entries(films).map(([title]) => (
-    getFilm(title)
-  ))).then(() => {
-    console.log(films);
-    writeFile('failures.json', errorLog);
-    writeFile('issueLog', issueLog);
-    writeFile(`afilm-2011.json`, films);
-  });
-}
-
-const handleIssueLog = (yearChange = 0) => {
-  const log = Object.entries(issueLog);
+const handleIssueLog = (
+  films,
+  issues,
+  errorLog,
+  yearChange = 0,
+) => {
+  const log = Object.entries(issues);
   issueLog = {};
   Promise.all(
     log.map(([name, { year }]) => 
-      getFilm(name, year)
+      getFilm(films, name, +year + yearChange, issueLog, errorLog)
     )
   ).then(() => {
-    writeFile('failures.json', errorLog);
-    writeFile('issueLog', issueLog);
-    writeFile(`afilm-2011.json`, films);
+    writeFile(`data/${year}failures.json`, errorLog);
+    writeFile(`data/${year}issues.json`, issueLog);
+    writeFile(`data/${year}film.json`, films);
     if (!yearChange) {
-      handleIssueLog(year + 1);
-    } else if (yearChange === -1) {
-      handleIssueLog(year - 1);
+      handleIssueLog(films, issueLog, errorLog, 1);
+    } else if (yearChange === 1) {
+      handleIssueLog(films, issueLog, errorLog, -1);
     }
   });
 }
 
-writeFilms();
+const writeFilms = (films, year, errorLog, issueLog) => {
+  Promise.all(Object.entries(films).map(([title]) => (
+    getFilm(films, title, null, issueLog, errorLog)
+  ))).then(() => {
+    // console.log(films);
+    writeFile(`data/${year}failures.json`, errorLog);
+    writeFile(`data/${year}issues.json`, issueLog);
+    writeFile(`data/${year}film.json`, films);
+    // handleIssueLog(films, issueLog, errorLog);
+  });
+}
+
+
+
+const workYear = (year, bonusData) => {
+  const films = getFilmList(year, bonusData);
+  const errorLog = {};
+  let issueLog = {};
+  writeFilms(films, year, errorLog, issueLog);
+};
+
+
+years.forEach((v, idx) => {
+  setTimeout(() => workYear(v, v === '2010s' ? 'year' : undefined), idx * 10000)
+});
