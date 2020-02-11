@@ -72,9 +72,27 @@ const getFilm = (films, title, year, issueLog, errorLog, apikey = '') => {
             };
           }
           if (+resp.statusCode == 200) {
+            const {
+              Response,
+              Website,
+              DVD,
+              Type,
+              Ratings,
+              Production,
+              ...restBody
+            } = body;
             films[title] = {
               ...films[title],
-              ...body,
+              ...Ratings.reduce((acc, {Source, Value}) => {
+                if (['Internet Movie Database', 'Metacritic'].includes(Source)) {
+                  return acc;
+                }
+                return {
+                  ...acc,
+                  [Source]: Value,
+                };
+              }, {}),
+              ...restBody
             };
           } else {
             errorLog[title] = { year };
@@ -105,9 +123,9 @@ const handleIssueLog = (
       getFilm(films, name, +year + yearChange, issueLog, errorLog)
     )
   ).then(() => {
-    writeFile(`data/${year}failures.json`, errorLog);
-    writeFile(`data/${year}issues.json`, issueLog);
-    writeFile(`data/${year}film.json`, films);
+    writeFile(`filmdata/${year}failures.json`, errorLog);
+    writeFile(`filmdata/${year}issues.json`, issueLog);
+    writeFile(`filmdata/${year}film.json`, films);
     if (!yearChange) {
       handleIssueLog(films, issueLog, errorLog, 1);
     } else if (yearChange === 1) {
@@ -121,9 +139,9 @@ const writeFilms = (films, year, errorLog, issueLog) => {
     getFilm(films, title, null, issueLog, errorLog)
   ))).then(() => {
     // console.log(films);
-    writeFile(`data/${year}failures.json`, errorLog);
-    writeFile(`data/${year}issues.json`, issueLog);
-    writeFile(`data/${year}film.json`, films);
+    writeFile(`filmdata/${year}failures.json`, errorLog);
+    writeFile(`filmdata/${year}issues.json`, issueLog);
+    writeFile(`filmdata/${year}film.json`, films);
     // handleIssueLog(films, issueLog, errorLog);
   });
 }
@@ -138,6 +156,7 @@ const workYear = (year, bonusData) => {
 };
 
 
-years.forEach((v, idx) => {
-  setTimeout(() => workYear(v, v === '2010s' ? 'year' : undefined), idx * 10000)
-});
+// years.forEach((v, idx) => {
+//   setTimeout(() => workYear(v, v === '2010s' ? 'year' : undefined), idx * 10000)
+// });
+workYear(2010);
