@@ -15,6 +15,7 @@ export const tv = writable({
 
 export const format = writable('Format');
 export const year = writable('Year');
+export const filmData = writable({});
 
 export const loadingPage = writable(false);
 

@@ -11,15 +11,16 @@
     processListsWithRankings,
   } from './analytics';
   import './styles.scss';
-  import { year, format, scoringMatrix, loadingPage } from './store';
+  import { year, filmData, format, scoringMatrix, loadingPage } from './store';
 	export let params = params;
   $: listData = null;
-  $: yearData = null;
   $: derivedData = null;
   let data;
   let fileName = `/data/${params.year}-${params.format}.json`;
   let matrix_value;
   let isLoading;
+  let omdbData = {};
+  let yearData = {};
   
   $: fileName = `/data/${params.year}-${params.format}.json`;
 	//onMount(()=>rolled=Math.floor(Math.random() * params.bound) + 1);
@@ -27,13 +28,30 @@
 
 	loadingPage.subscribe(value => {
 		isLoading = value;
-	});
+  });
+
+  filmData.subscribe(value => {
+    omdbData = value;
+  });
+
+  const getFilmData = async (year) => {
+    try {
+      const resp = await fetch(`/filmdata/${year}film.json`);
+      const films = await resp.json();
+      filmData.update(() => films);
+      console.log(films);
+    } catch (e) {
+      console.log(e);
+      filmData.update({});
+    }
+  }
 
   const processFile = (json) => {
     yearData = formatList(json, matrix_value);
     listData = processListsWithRankings(json, matrix_value);
     derivedData = deriveAdditionalDataFromProcessedList(listData, yearData);
     loadingPage.update(() => false);
+    getFilmData(params.year);
     return {
       yearData,
       listData,
@@ -42,6 +60,8 @@
   }
 
   const getJsonData = async () => {
+    year.update(() => params.year);
+    format.update(() => params.format);
     const localStorageItem = `${params.year}-${params.format}`;
     const priorData = window.localStorage.getItem(localStorageItem);
     if (priorData) {
@@ -49,6 +69,7 @@
     }
     let resp;
     let json;
+    let films = {};
     try {
       resp = await fetch(fileName);
       json = await resp.json();
@@ -90,7 +111,7 @@
     />
   {/if}
   {#if listData && listData.length && yearData && !isLoading}
-    <List listData={listData} yearData={yearData} format={params.format} />
+    <List listData={listData} yearData={yearData} format={params.format} omdbData={omdbData} />
   {:else}
     Loading...
   {/if}
