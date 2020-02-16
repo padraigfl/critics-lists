@@ -6,16 +6,17 @@
   } from './analytics';
   export let yearData;
   export let listData;
-  let derivedData;
-
-  let dataList = [];
+  let prevYearData;
+  let dataList = [
+    { title: '# Lists aggregated:', data: Object.keys(yearData.critics).length },
+    { title: '# Publications', data: Object.keys(yearData.publications).length },
+    { title: '# Unique entries', data: Object.keys(yearData.works).length },
+  ];
   
   const getDerivedData = () => {
-    derivedData = deriveAdditionalDataFromProcessedList(listData, yearData);
+    let derivedData = deriveAdditionalDataFromProcessedList(listData, yearData);
     dataList = [
-      { title: '# Lists aggregated:', data: Object.keys(yearData.critics).length },
-      { title: '# Publications', data: Object.keys(yearData.publications).length },
-      { title: '# Unique entries', data: Object.keys(yearData.works).length },
+      ...dataList.slice(0, 3),
       { title: 'Highest ranked with no #1', data: derivedData.biggestLoser, dataLink: true },
       {
         title: 'Lowest ranked with a #1',
@@ -45,7 +46,14 @@
       // { title: 'Data Source', data: yearData.source }
     ];
   }
-  beforeUpdate(getDerivedData);
+
+
+  $: {
+    if (yearData !== prevYearData) {
+      prevYearData = yearData;
+      getDerivedData();
+    }
+  }
 
 </script>
 

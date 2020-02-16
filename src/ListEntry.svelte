@@ -10,9 +10,7 @@
   export let mostFirsts;
   export let mostLists;
   export let format;
-  let listData = [];
-  let yearData;
-  let derivedData;
+  export let data;
 
   const film = [
     { site: 'IMDb', link: 'https://www.imdb.com/find?s=tt&q=', icon: 'imdb.png' },

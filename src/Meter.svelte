@@ -10,7 +10,7 @@
   class={`Meter ${small ? 'Meter--small': ''}`}
 >
   <div class="Meter__text">
-    { value >= 1 ? value.toFixed(0) : (value || 0).toFixed(0)}{key || ''}
+    { value >= 1 ? (+value).toFixed(0) : (value || 0).toFixed(0)}{key || ''}
   </div>
   {#if icon}
   <div class="Meter__icon">

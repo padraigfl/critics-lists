@@ -13,8 +13,7 @@
   import './styles.scss';
   import { year, filmData, format, scoringMatrix, loadingPage } from './store';
 	export let params = params;
-  $: listData = null;
-  $: derivedData = null;
+  let listData = null;
   let data;
   let fileName = `/data/${params.year}-${params.format}.json`;
   let matrix_value;
@@ -22,7 +21,6 @@
   let omdbData = {};
   let yearData = {};
   
-  $: fileName = `/data/${params.year}-${params.format}.json`;
 	//onMount(()=>rolled=Math.floor(Math.random() * params.bound) + 1);
 	//With the onMount instead of the assignment below, when you go from a die with 7 sides to one with 15 or vice-versa, it does not update rolled. With the function below, it does, but it does not re-roll if you route from the 7-sided die back to the 7-sided die.
 
@@ -39,23 +37,23 @@
       const resp = await fetch(`/filmdata/${year}film.json`);
       const films = await resp.json();
       filmData.update(() => films);
-      console.log(films);
+      return films;
     } catch (e) {
       console.log(e);
       filmData.update({});
+      return {};
     }
   }
 
-  const processFile = (json) => {
+  const processFile = async (json) => {
+    const filmss = await getFilmData(params.year);
+    listData = processListsWithRankings(json, filmss, matrix_value);
     yearData = formatList(json, matrix_value);
-    listData = processListsWithRankings(json, matrix_value);
-    derivedData = deriveAdditionalDataFromProcessedList(listData, yearData);
     loadingPage.update(() => false);
     getFilmData(params.year);
     return {
       yearData,
       listData,
-      derivedData,
     }
   }
 
@@ -89,8 +87,14 @@
     }
   };
 
-  // $: data = getJsonData();
-  afterUpdate(getJsonData, matrix_value);
+  // getJsonData();
+
+  beforeUpdate(() => {
+    if (fileName !== `/data/${params.year}-${params.format}.json`) {
+      fileName = `/data/${params.year}-${params.format}.json`;
+      getJsonData();
+    }
+  });
 
 	scoringMatrix.subscribe(value => {
     matrix_value = value;
