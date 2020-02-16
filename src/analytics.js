@@ -32,15 +32,82 @@ const getUnrankedListValue = (list, scoringMatrix = defaultScoringMatrix) => {
   return (totalMatrixScorePoints / Object.values(list)) * unrankedCount;
 }
 
-export const processListsWithRankings = (critics, matrix = defaultScoringMatrix) => {
+const stringToNumber = val => (
+  typeof val === 'string' ? +val.replace(/[^\d.]+/g, '') : undefined
+);
+
+const formatAwards = (awards = '') => {
+  let count = {};
+  if (awards === 'N/A') {
+    return count;
+  };
+  const hasOscars = awards.includes('Oscar');
+  if (hasOscars) {
+    const oscars = awards.split('Oscar')[0];
+    if (oscars.includes('Won')) {
+      count.wins = stringToNumber(oscars);
+    } else {
+      count.noms = stringToNumber(oscars);
+    }
+  }
+  (
+    hasOscars ? 
+      awards.split('. ')[1]
+      : awards
+  ).split(' & ').forEach(v => {
+    if (v.toLowerCase().includes('win')) {
+      count.wins = (count.wins || 0) + stringToNumber(v);
+    } else if (v.toLowerCase().includes('omination')){
+      count.noms =  (count.noms || 0) + stringToNumber(v);
+    }
+  })
+  return count;
+};
+
+
+const formatOmdbData = (omdbData = {}) => {
+  const imdb = {
+    id: omdbData.imdbID || undefined,
+    rating: stringToNumber(omdbData.imdbRating),
+    votes: stringToNumber(omdbData.imdbVotes),
+  };
+  const rotten = (omdbData.Ratings || []).find(v => v.Source === 'Rotten Tomatoes');
+  const metacritic = (omdbData.Ratings || []).find(v => v.Source === 'Metacritic');
+  const boxOffice = omdbData.BoxOffice !== 'N/A' ? stringToNumber(omdbData.BoxOffice) : undefined;
+  const awards = formatAwards(omdbData.Awards);
+
+  return {
+    imdb,
+    awards,
+    boxOffice,
+    plot: omdbData.Plot,
+    rating: omdbData.Rated,
+    rotten: rotten ? stringToNumber(rotten.Value) : undefined,
+    metacritic: metacritic ? parseInt(metacritic.Value) : undefined,
+    poster: omdbData.Poster,
+    language: omdbData.Language,
+    country: omdbData.Country,
+    release: new Date(omdbData.Released),
+    runtime: stringToNumber(omdbData.Runtime),
+    genres: omdbData.Genre ? omdbData.Genre.split(', ') : undefined,
+    production: omdbData.Production,
+    cast: omdbData.Actors,
+    director: omdbData.Director,
+  }
+}
+
+export const processListsWithRankings = (critics, omdbData, matrix = defaultScoringMatrix) => {
   const films = {};
   Object.values(critics).forEach(({ list }) => {
     matrix._ = matrix._ || getUnrankedListValue(list, matrix);
     Object.entries(list).forEach(([workName, ranking]) => {
-      films[workName] = addMetricToScore(films[workName], ranking, matrix);
+      films[workName] = {
+        score: addMetricToScore(films[workName] ? films[workName].score : undefined, ranking, matrix),
+        ...formatOmdbData(omdbData[workName] || {}),
+      };
     });
   });
-  return Object.entries(films).sort((a, b) => b[1] - a[1]);
+  return Object.entries(films).sort((a, b) => b[1].score - a[1].score);
 }
 
 const getHighestWithoutNumberOne = (processedList, data) =>
@@ -125,7 +192,7 @@ const getFilmsInOneList = (data) => (
 const getMostContrarianCritic = (processedList, data, maxUniqueEntries) => {
   const processedListObj = processedList.reduce((acc, val) => ({
     ...acc,
-    [val[0]]: val[1],
+    [val[0]]: val[1].score,
   }), {});
 
   let totalVal = 0;
