@@ -45,6 +45,14 @@
       },
       // { title: 'Data Source', data: yearData.source }
     ];
+    if (derivedData.bestStudio) {
+      dataList.push(
+        {
+          title: 'Most featured production company',
+          data: derivedData.bestStudio,
+        },
+      );
+    }
   }
 
 

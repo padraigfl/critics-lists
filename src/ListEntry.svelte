@@ -44,17 +44,17 @@
       {:else}
         <strong>{title}</strong>
       {/if}
-      <ul class="ListEntry__links">
+      <div class="ListEntry__links">
         {#each formats[format] as { site, link, modify, icon }, i}
-          <a class={icon ? 'ListEntry__link--icon' : 'ListEntry__link'} href={`${link}${modify ? modify(title) : title}`} target="_blank">
-            {#if icon}
-              <img class="ListEntry__icon" src={`/icons/${icon}`} alt={site} />
-            {:else}
-              {site}
-            {/if}
-          </a>{' '}
+            <a class={icon ? 'ListEntry__link ListEntry__link--icon' : 'ListEntry__link'} href={`${link}${modify ? modify(title) : title}`} target="_blank">
+              {#if icon}
+                <img class="ListEntry__icon" src={`/icons/${icon}`} alt={site} />
+              {:else}
+                {site}
+              {/if}
+            </a>
         {/each}
-      </ul>
+      </div>
     </div>
     <div class="ListEntry__stats">
       <Meter value={points} total={highestPoints} key="pts" />
