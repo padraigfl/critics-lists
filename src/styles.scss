@@ -162,6 +162,12 @@ body.dark {
     align-items: center;
     margin-top: 2px;
   }
+  &__extra-text {
+    display: inline-block;
+    margin-left: 2px;
+    margin-right: 4px;
+    font-size: 0.7rem;
+  }
   &__link {
     font-size: 12px;
     font-weight: bold;

@@ -231,6 +231,24 @@ const getMostContrarianCritic = (processedList, data, maxUniqueEntries) => {
   };
 }
 
+const getMostSuccessfulStudio = (processedList) => {
+  const productions = processedList.reduce((acc, [title, { production}]) => {
+    if (!production || production === 'undefined' || production === 'N/A') {
+      return acc;
+    }
+    if (acc[production]) {
+      acc[production].push(title);
+    } else {
+      acc[production] = [title];
+    }
+    return acc;
+  }, []);
+  const mostSuccessfulStudio = Object.entries(productions).sort((a, b) => (
+    b[1].length - a[1].length
+  ))[0];
+  return `${mostSuccessfulStudio[0]} (${mostSuccessfulStudio[1].length})`
+}
+
 export const deriveAdditionalDataFromProcessedList = (processedList, data) => {
   const biggestLoser = getHighestWithoutNumberOne(processedList, data);
   const smallestWinner = getLowestNumberOne(processedList, data);
@@ -239,6 +257,8 @@ export const deriveAdditionalDataFromProcessedList = (processedList, data) => {
   const onlyInOneList = getFilmsInOneList(data);
   const mostContrarianCritic = getMostContrarianCritic(processedList, data);
   const mostContrarianCriticValidator = getMostContrarianCritic(processedList, data, 3);
+  const bestStudio = getMostSuccessfulStudio(processedList);
+  console.log(bestStudio);
 
   return {
     biggestLoser,
@@ -248,6 +268,7 @@ export const deriveAdditionalDataFromProcessedList = (processedList, data) => {
     onlyInOneList,
     mostContrarianCritic,
     mostContrarianCriticValidator,
+    bestStudio,
   };
 }
 

@@ -12,6 +12,19 @@
   export let format;
   export let data;
 
+  const formatVoteCount = (count) => {
+    if (count > 10 ** 6) {
+      return (count / 10**6).toFixed(0) + 'M';
+    }
+    if (count > 10 ** 5) {
+      return (count / 10**6).toFixed(1) + 'M';
+    }
+    if (count > 10 ** 3) {
+      return  (count / 10 ** 3).toFixed(0) + 'K';
+    }
+    return `<1k`
+  }
+
   const getImdbDisplay = () => {
     const imdb = {
         site: 'IMDb', 
@@ -21,8 +34,7 @@
       return {
         ...imdb,
         link: `https://www.imdb.com/title/${data.imdb.id}`,
-        rating: data.imdb.rating,
-        votes: data.imdb.votes,
+        text: `${data.imdb.rating} (${formatVoteCount(data.imdb.votes)})`,
       };
     }
     return {
@@ -37,7 +49,7 @@
       site: 'RT',
       link: `https://www.rottentomatoes.com/search/?search=${data.title}`,
       icon: 'rotten.png',
-      rating: data.rotten,
+      text: data.rotten + '%',
     },
     {
       site: 'Letterboxd',
@@ -46,10 +58,10 @@
     },
   ];
   if (data.metacritic) {
-    film.push({
+    film.splice(2, 0, {
       site: 'MC',
       link: `https://www.metacritic.com/search/movie/${data.title}/results`,
-      rating: data.metacritic,
+      text: data.metacritic + '%',
       icon: 'metacritic.png',
     });
   }
@@ -60,21 +72,24 @@
     <div class="ListEntry__placement">{placement}</div>
     <div class="ListEntry__title">
       <strong>{title}</strong>
-      <ul>
-        <li>{data.runtime}min</li>
-        <li>{data.country}</li>
-      </ul>
-      <ul class="ListEntry__links">
-        {#each film as { site, link, modify, icon }, i}
-          <a class={icon ? 'ListEntry__link--icon' : 'ListEntry__link'} href={link} target="_blank">
+      ({data.runtime}min; {data.country})
+      <div class="ListEntry__links">
+        {#each film as { site, link, modify, icon, text }, i}
+          <a class={icon ? 'ListEntry__link ListEntry__link--icon' : 'ListEntry__link'} href={link} target="_blank">
             {#if icon}
               <img class="ListEntry__icon" src={`/icons/${icon}`} alt={site} />
             {:else}
               {site}
             {/if}
-          </a>{' '}
+            {#if text}
+              <span>{text}</span>
+             {/if} 
+          </a>
+          {#if i < film.length - 1}
+            {' | '}
+          {/if}
         {/each}
-      </ul>
+      </div>
     </div>
     <div class="ListEntry__stats">
       <Meter value={points} total={highestPoints} key="pts" />
@@ -88,9 +103,9 @@
       <dt>Cast</dt> <dd>{data.cast}</dd>
       <dt>Genre</dt> <dd>{data.genres}</dd>
       <dt>Language</dt> <dd>{data.language}</dd>
+      <!-- BROKEN ATM <dt>Awards</dt> <dd>{data.awards.wins} / {(data.awards.noms + data.awards.wins)}</dd> -->
     </dl>
     <p>{data.plot}</p>
     <!-- <img src={data.poster&& data.poster.replace('300', '80')} /> -->
   </div>
-  {JSON.stringify(data)}
 </li>
