@@ -6,6 +6,7 @@
   } from './analytics';
   export let yearData;
   export let listData;
+  export let format;
   let prevYearData;
   let dataList = [
     { title: '# Lists aggregated:', data: Object.keys(yearData.critics).length },
@@ -14,7 +15,7 @@
   ];
   
   const getDerivedData = () => {
-    let derivedData = deriveAdditionalDataFromProcessedList(listData, yearData);
+    let derivedData = deriveAdditionalDataFromProcessedList(listData, yearData, format);
     dataList = [
       ...dataList.slice(0, 3),
       { title: 'Highest ranked with no #1', data: derivedData.biggestLoser, dataLink: true },

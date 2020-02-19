@@ -112,6 +112,7 @@
     <DataList
       yearData={yearData}
       listData={listData}
+      format={params.format}
     />
   {/if}
   {#if listData && listData.length && yearData && !isLoading}

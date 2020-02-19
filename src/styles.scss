@@ -134,6 +134,22 @@ body.dark {
       margin-right: $s;
     }
   }
+  &__details {
+    display: block;
+    padding-left: $s;
+    padding-top: $s;
+  }
+  &__details__data {
+    display: flex;
+
+    >:first-child {
+      font-weight: bold;
+      min-width: 100px;
+    }
+    >:nth-child(2) {
+      flex-grow: 1;
+    }
+  }
   &__placement {
     flex-shrink: 0;
     background-color: $dark;
