@@ -249,7 +249,7 @@ const getMostSuccessfulStudio = (processedList) => {
   return `${mostSuccessfulStudio[0]} (${mostSuccessfulStudio[1].length})`
 }
 
-export const deriveAdditionalDataFromProcessedList = (processedList, data) => {
+export const deriveAdditionalDataFromProcessedList = (processedList, data, format) => {
   const biggestLoser = getHighestWithoutNumberOne(processedList, data);
   const smallestWinner = getLowestNumberOne(processedList, data);
   const smallestWinnerValidator = getLowestNumberOneValidator(processedList, data);
@@ -257,8 +257,10 @@ export const deriveAdditionalDataFromProcessedList = (processedList, data) => {
   const onlyInOneList = getFilmsInOneList(data);
   const mostContrarianCritic = getMostContrarianCritic(processedList, data);
   const mostContrarianCriticValidator = getMostContrarianCritic(processedList, data, 3);
-  const bestStudio = getMostSuccessfulStudio(processedList);
-  console.log(bestStudio);
+  let bestStudio;
+  if (format === 'film') {
+    bestStudio = getMostSuccessfulStudio(processedList);
+  }
 
   return {
     biggestLoser,

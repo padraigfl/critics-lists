@@ -30,11 +30,11 @@
         site: 'IMDb', 
         icon: 'imdb.png',
     }
-    if (data.imdb) {
+    if (data.imdb && data.imdb.id) {
       return {
         ...imdb,
         link: `https://www.imdb.com/title/${data.imdb.id}`,
-        text: `${data.imdb.rating} (${formatVoteCount(data.imdb.votes)})`,
+        text: `${data.imdb.rating.toFixed(1)} (${formatVoteCount(data.imdb.votes)})`,
       };
     }
     return {
@@ -82,7 +82,7 @@
               {site}
             {/if}
             {#if text}
-              <span>{text}</span>
+              <span class="ListEntry__extra-text">{text}</span>
              {/if} 
           </a>
           {#if i < film.length - 1}
@@ -98,13 +98,13 @@
     </div>
   </div>
   <div>
-    <dl>
-      <dt>Director</dt> <dd>{data.director}</dd>
-      <dt>Cast</dt> <dd>{data.cast}</dd>
-      <dt>Genre</dt> <dd>{data.genres}</dd>
-      <dt>Language</dt> <dd>{data.language}</dd>
+    <ul class="ListEntry__details">
+      <li class="ListEntry__details__data"><div>Director</div> <div>{data.director}</div></li>
+      <li class="ListEntry__details__data"><div>Cast</div> <div>{data.cast}</div></li>
+      <li class="ListEntry__details__data"><div>Genre</div> <div>{data.genres}</div></li>
+      <li class="ListEntry__details__data"><div>Language</div> <div>{data.language}</div></li>
       <!-- BROKEN ATM <dt>Awards</dt> <dd>{data.awards.wins} / {(data.awards.noms + data.awards.wins)}</dd> -->
-    </dl>
+    </ul>
     <p>{data.plot}</p>
     <!-- <img src={data.poster&& data.poster.replace('300', '80')} /> -->
   </div>
