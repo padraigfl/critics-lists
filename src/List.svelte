@@ -23,6 +23,7 @@
       mostFirsts={yearData.works[mostFirsts].firsts.length}
       format={format}
       data={format === 'film' ? data : undefined}
+      displayAll={format === 'film' ? true : undefined }
     />
   {/each}
 </ol>

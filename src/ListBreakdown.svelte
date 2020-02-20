@@ -116,7 +116,7 @@
     />
   {/if}
   {#if listData && listData.length && yearData && !isLoading}
-    <List listData={listData} yearData={yearData} format={params.format} omdbData={omdbData} />
+    <List listData={listData} yearData={yearData} format={params.format} />
   {:else}
     Loading...
   {/if}

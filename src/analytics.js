@@ -266,6 +266,9 @@ const getMostSuccessfulStudio = (processedList) => {
     }
     return acc;
   }, []);
+  if (Object.entries(productions).length === 0) {
+    return 'N/A';
+  }
   const mostSuccessfulStudio = Object.entries(productions).sort((a, b) => (
     b[1].length - a[1].length
   ))[0];
