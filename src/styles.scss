@@ -35,11 +35,10 @@ body {
   display: flex;
   flex-direction: column;
   margin: 0px;
-  padding: 0px;
+  padding: 0px 0px 0px $l;
   background-color: $bright;
   color: $dark;
   flex-grow: 1;
-  padding-left: $l;
   height: initial;
 
   @media (max-width: $mobile) {
@@ -120,8 +119,8 @@ body.dark {
   background-color: $bright;
   list-style-type: none;
   padding-bottom: $s;
-  margin-bottom: -1px;
-  border-bottom: $border;
+  margin-top: -1px;
+  border-top: $border;
   transition: filter linear 0.5s;
   &:focus-within {
     filter: invert(1);
@@ -134,10 +133,13 @@ body.dark {
       margin-right: $s;
     }
   }
+  &__extended {
+    margin: $s;
+  }
   &__details {
     display: block;
-    padding-left: $s;
-    padding-top: $s;
+    padding-left: 0;
+    padding-top: 0;
   }
   &__details__data {
     display: flex;
@@ -156,7 +158,6 @@ body.dark {
     color: $bright;
     font-weight: bold;
     width: 28px;
-    height: 28px;
     padding: 4px;
     text-align: right;
   }

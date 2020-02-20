@@ -11,6 +11,9 @@
   export let mostLists;
   export let format;
   export let data;
+  export let displayAll;
+  $: extend = displayAll || true; // TODO handle toggle of extra data
+  $: hasData = data.director || data.cast || data.genre || data.language;
 
   const formatVoteCount = (count) => {
     if (count > 10 ** 6) {
@@ -39,7 +42,7 @@
     }
     return {
       ...imdb,
-      link: `https://www.imdb.com/find?s=tt&q=${data.title}`,
+      link: `https://www.imdb.com/find?s=tt&q=${title}`,
     };
   };
 
@@ -47,23 +50,26 @@
     getImdbDisplay(),
     {
       site: 'RT',
-      link: `https://www.rottentomatoes.com/search/?search=${data.title}`,
+      link: `https://www.rottentomatoes.com/search/?search=${title}`,
       icon: 'rotten.png',
-      text: data.rotten + '%',
+      text: data.rotten ? data.rotten + '%' : '',
     },
     {
       site: 'Letterboxd',
-      link: `https://letterboxd.com/search/films/${data.title}`,
+      link: `https://letterboxd.com/search/films/${title}`,
       icon: 'letterboxd.png'
     },
   ];
   if (data.metacritic) {
     film.splice(2, 0, {
       site: 'MC',
-      link: `https://www.metacritic.com/search/movie/${data.title}/results`,
+      link: `https://www.metacritic.com/search/movie/${title}/results`,
       text: data.metacritic + '%',
-      icon: 'metacritic.png',
+      icon: 'metacritic--text.png',
     });
+  }
+  const toggle = () => {
+    extend = !extend;
   }
 </script>
 
@@ -72,7 +78,9 @@
     <div class="ListEntry__placement">{placement}</div>
     <div class="ListEntry__title">
       <strong>{title}</strong>
-      ({data.runtime}min; {data.country})
+      {#if data.runtime || data.country}
+        ({data.runtime ? `${data.runtime}min${data.country ? '; ': ''}`: ''}{data.country ? data.country.join(', ') : ''})
+      {/if}
       <div class="ListEntry__links">
         {#each film as { site, link, modify, icon, text }, i}
           <a class={icon ? 'ListEntry__link ListEntry__link--icon' : 'ListEntry__link'} href={link} target="_blank">
@@ -89,6 +97,9 @@
             {' | '}
           {/if}
         {/each}
+        <!-- <button on:click={toggle}>
+          {extend ? '<' : '>'}
+        </button> -->
       </div>
     </div>
     <div class="ListEntry__stats">
@@ -97,15 +108,19 @@
       <Meter value={entry.critics.length} total={mostLists} small icon="📋" />
     </div>
   </div>
-  <div>
-    <ul class="ListEntry__details">
-      <li class="ListEntry__details__data"><div>Director</div> <div>{data.director}</div></li>
-      <li class="ListEntry__details__data"><div>Cast</div> <div>{data.cast}</div></li>
-      <li class="ListEntry__details__data"><div>Genre</div> <div>{data.genres}</div></li>
-      <li class="ListEntry__details__data"><div>Language</div> <div>{data.language}</div></li>
-      <!-- BROKEN ATM <dt>Awards</dt> <dd>{data.awards.wins} / {(data.awards.noms + data.awards.wins)}</dd> -->
-    </ul>
-    <p>{data.plot}</p>
-    <!-- <img src={data.poster&& data.poster.replace('300', '80')} /> -->
-  </div>
+  {#if extend && hasData }
+    <div class="ListEntry__extended">
+      <ul class="ListEntry__details">
+        <li class="ListEntry__details__data"><div>Director</div> <div>{data.director}</div></li>
+        <li class="ListEntry__details__data"><div>Cast</div> <div>{data.cast.join(', ')}</div></li>
+        <li class="ListEntry__details__data"><div>Genre</div> <div>{data.genres.join(', ')}</div></li>
+        <li class="ListEntry__details__data"><div>Language</div> <div>{data.language.join(', ')}</div></li>
+        <!-- BROKEN ATM <dt>Awards</dt> <dd>{data.awards.wins} / {(data.awards.noms + data.awards.wins)}</dd> -->
+      </ul>
+      {#if data.plot && data.plot !== 'N/A' }
+        <p><em>{data.plot}</em></p>
+      {/if}
+      <!-- <img src={data.poster&& data.poster.replace('300', '80')} /> -->
+    </div>
+  {/if}
 </li>

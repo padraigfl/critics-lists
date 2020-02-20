@@ -85,13 +85,13 @@ const formatOmdbData = (omdbData = {}) => {
     rotten: rotten ? stringToNumber(rotten.Value) : undefined,
     metacritic: metacritic ? parseInt(metacritic.Value) : undefined,
     poster: omdbData.Poster,
-    language: omdbData.Language,
-    country: omdbData.Country,
+    language: omdbData.Language ? omdbData.Language.split(', ') : undefined,
+    country: omdbData.Country ? omdbData.Country.split(', ') : undefined,
     release: new Date(omdbData.Released),
     runtime: stringToNumber(omdbData.Runtime),
     genres: omdbData.Genre ? omdbData.Genre.split(', ') : undefined,
     production: omdbData.Production,
-    cast: omdbData.Actors,
+    cast: omdbData.Actors ? omdbData.Actors.split(', ') : undefined,
     director: omdbData.Director,
   }
 }
@@ -231,6 +231,29 @@ const getMostContrarianCritic = (processedList, data, maxUniqueEntries) => {
   };
 }
 
+const getMostOfArrayValues = (processedList, values) => {
+  const accumlators = values.reduce((acc, val) => ({
+    ...acc,
+    [val]: {},
+  }), {});
+  processedList.forEach(([, entry]) => {
+    values.forEach(val => {
+      if (!Array.isArray(entry[val])) {
+        return;
+      } 
+      entry[val].forEach(dataPoint => {
+        accumlators[val][dataPoint] = (accumlators[val][dataPoint] || 0) + 1;
+      })
+    })
+  });
+  return Object.entries(accumlators).reduce((acc, [key, values]) => {
+    return ({
+      ...acc,
+      [key]: Object.entries(values).sort(([,a], [,b]) => b - a)[0],
+    });
+  }, {});
+}
+
 const getMostSuccessfulStudio = (processedList) => {
   const productions = processedList.reduce((acc, [title, { production}]) => {
     if (!production || production === 'undefined' || production === 'N/A') {
@@ -257,6 +280,7 @@ export const deriveAdditionalDataFromProcessedList = (processedList, data, forma
   const onlyInOneList = getFilmsInOneList(data);
   const mostContrarianCritic = getMostContrarianCritic(processedList, data);
   const mostContrarianCriticValidator = getMostContrarianCritic(processedList, data, 3);
+  const arrayValues = getMostOfArrayValues(processedList, ['genres', 'cast', 'country', 'language']);
   let bestStudio;
   if (format === 'film') {
     bestStudio = getMostSuccessfulStudio(processedList);
@@ -271,6 +295,7 @@ export const deriveAdditionalDataFromProcessedList = (processedList, data, forma
     mostContrarianCritic,
     mostContrarianCriticValidator,
     bestStudio,
+    arrayValues,
   };
 }
 
