@@ -37,7 +37,7 @@
       return {
         ...imdb,
         link: `https://www.imdb.com/title/${data.imdb.id}`,
-        text: `${data.imdb.rating.toFixed(1)} (${formatVoteCount(data.imdb.votes)})`,
+        text: `${data.imdb.rating && data.imdb.rating.toFixed(1)} (${formatVoteCount(data.imdb.votes)})`,
       };
     }
     return {
@@ -112,9 +112,9 @@
     <div class="ListEntry__extended">
       <ul class="ListEntry__details">
         <li class="ListEntry__details__data"><div>Director</div> <div>{data.director}</div></li>
-        <li class="ListEntry__details__data"><div>Cast</div> <div>{data.cast.join(', ')}</div></li>
-        <li class="ListEntry__details__data"><div>Genre</div> <div>{data.genres.join(', ')}</div></li>
-        <li class="ListEntry__details__data"><div>Language</div> <div>{data.language.join(', ')}</div></li>
+        <li class="ListEntry__details__data"><div>Cast</div> <div>{data.cast ? data.cast.join(', ') : 'N/A'}</div></li>
+        <li class="ListEntry__details__data"><div>Genre</div> <div>{data.genres ? data.genres.join(', ') : 'N/A'}</div></li>
+        <li class="ListEntry__details__data"><div>Language</div> <div>{data.language ? data.language.join(', ') : 'N/A'}</div></li>
         <!-- BROKEN ATM <dt>Awards</dt> <dd>{data.awards.wins} / {(data.awards.noms + data.awards.wins)}</dd> -->
       </ul>
       {#if data.plot && data.plot !== 'N/A' }
