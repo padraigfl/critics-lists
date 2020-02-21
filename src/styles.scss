@@ -122,6 +122,7 @@ body.dark {
   margin-top: -1px;
   border-top: $border;
   transition: filter linear 0.5s;
+  scroll-margin-top: 50px;
   &:focus-within {
     filter: invert(1);
     transition: filter linear 0s;
