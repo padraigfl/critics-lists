@@ -9,9 +9,10 @@
     formatList,
     deriveAdditionalDataFromProcessedList,
     processListsWithRankings,
+    getListOfArrayValues,
   } from './analytics';
   import './styles.scss';
-  import { year, filmData, format, scoringMatrix, loadingPage } from './store';
+  import { year, filmData, format, scoringMatrix, loadingPage, filterOptions, ordering, filterSelections } from './store';
 	export let params = params;
   let listData = null;
   let data;
@@ -19,7 +20,26 @@
   let matrix_value;
   let isLoading;
   let omdbData = {};
-  let yearData = {};
+  let yearData = [];
+  let fullList = [];
+  let filters;
+  let mostFirsts;
+  let mostLists;
+  let maxPoints;
+  let orderFunc = (val) => val.score;
+
+
+  ordering.subscribe(val => {
+    if (listData) {
+      listData = listData.sort(([,a], [,b]) => (
+        (val(b) || 0) - (val(a) || 0)
+      ));
+      orderFunc = val;
+    }
+  });
+  filterSelections.subscribe(val => {
+    console.log(val);
+  });
   
 	//onMount(()=>rolled=Math.floor(Math.random() * params.bound) + 1);
 	//With the onMount instead of the assignment below, when you go from a die with 7 sides to one with 15 or vice-versa, it does not update rolled. With the function below, it does, but it does not re-roll if you route from the 7-sided die back to the 7-sided die.
@@ -45,9 +65,15 @@
     }
   }
 
+  const getOptions = (listData) => getListOfArrayValues(listData, ['genres', 'language', 'country']);
+
   const processFile = async (json) => {
     const filmss = await getFilmData(params.year);
-    listData = processListsWithRankings(json, filmss, matrix_value);
+    listData = processListsWithRankings(json, filmss, matrix_value, orderFunc, );
+    fullList = listData;
+    filterOptions.update(() => ({
+      film: getOptions(listData),
+    }));
     yearData = formatList(json, matrix_value);
     loadingPage.update(() => false);
     getFilmData(params.year);

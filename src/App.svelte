@@ -3,6 +3,7 @@
 	import Landing from './Landing.svelte';
 	import ListBreakdown from './ListBreakdown.svelte';
 	import Modal from './Modal.svelte';
+	import Nav from './Nav.svelte';
 	import Router, { push } from 'svelte-spa-router';
 	import axios from 'axios';
 	import { processListsWithRankings, defaultScoringMatrix } from './analytics';
@@ -85,7 +86,8 @@
 
 <!-- In either case, if you go from Component A to Component B, it will randomly roll the die. With the 2nd method, it'll also randomly roll it if you go from component B with one parameter to component B with a different parameter. But neither way will it re-roll if you go from component B with parameter 7 back to the same exact route. -->
 	
-	<div class="nav">
+	<Nav />
+	<!-- <div class="nav">
 		<select value={year_value} on:change={changeYear}>
 			{#each ['Year', '2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2010s'] as year}
 				<option value={year} disabled={year === 'Year'}>
@@ -101,9 +103,26 @@
 			{/each}
 		</select>
 		<button on:click={toggle}>
-			Scoring Metric
+			...
 		</button>
-	</div>
+		{#if display}
+			<div class="nav__options">
+				<ul>
+					{#each options as opt}
+						<li>
+							<select on:change={updateOptions(opt.key, opt.type)} value={optionValue[opt.key]}>
+								{#each opt.options as selectOption}
+									<option value={selectOption.title} >
+										{selectOption.title}
+									</option>
+								{/each}
+							</select>
+						</li>
+					{/each}
+				</ul>
+			</div>
+		{/if}
+	</div> -->
 
 	<div class="wasAMarquee">
 		{#each [
@@ -118,25 +137,6 @@
 			<a href={`https://${link}`} target="_blank">{text}</a>
 		{/each}
 	</div>
-
-	{#if (display)}
-		<Modal onclose={toggle}>
-			<p>Update the values to recalculate lists across the site</p>
-			<div class="matrix">
-				{#each [1,2,3,4,5,6,7,8,9,10,'_'] as entry}
-					<div class={`matrix__option ${entry === '_' ? 'matrix__option--unranked':''}`}>
-						{#if entry === '_'}
-							<span class="matrix__rank ">Unranked</span>
-						{:else}
-							<span class="matrix__rank">{entry}</span>
-						{/if}
-						<input max="100" class="matrix__input" type="number" on:change={update(entry)} bind:value={matrix[entry]}/>
-					</div>
-				{/each}
-			</div>
-			<button style="float:right;" on:click={saveNewMatrix}>Update</button>
-		</Modal>
-	{/if}
 	
 	<Router {routes}/>
 	<!-- <div>
