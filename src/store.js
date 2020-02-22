@@ -21,6 +21,18 @@ export const loadingPage = writable(false);
 
 export const scoringMatrix = writable(defaultScoringMatrix);
 
+export const filterOptions = writable({
+  film: {
+    genres: [],
+    language: [],
+    country: [],
+  },
+});
+
+export const filterSelections = writable({});
+
+export const ordering = writable((v) => v.points);
+
 export const OPTIONS = {
   years: ['2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2010s'],
   formats: ['film', 'album', 'tv'],

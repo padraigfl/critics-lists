@@ -96,7 +96,7 @@ const formatOmdbData = (omdbData = {}) => {
   }
 }
 
-export const processListsWithRankings = (critics, omdbData, matrix = defaultScoringMatrix) => {
+export const processListsWithRankings = (critics, omdbData, matrix = defaultScoringMatrix, orderFunc) => {
   const films = {};
   Object.values(critics).forEach(({ list }) => {
     matrix._ = matrix._ || getUnrankedListValue(list, matrix);
@@ -107,7 +107,10 @@ export const processListsWithRankings = (critics, omdbData, matrix = defaultScor
       };
     });
   });
-  return Object.entries(films).sort((a, b) => b[1].score - a[1].score);
+  window.ord = orderFunc;
+  return Object.entries(films).sort(([,a], [, b]) => 
+    (orderFunc(b) || 0) - (orderFunc(a) || 0)
+  );
 }
 
 const getHighestWithoutNumberOne = (processedList, data) =>
@@ -231,7 +234,7 @@ const getMostContrarianCritic = (processedList, data, maxUniqueEntries) => {
   };
 }
 
-const getMostOfArrayValues = (processedList, values) => {
+export const getListOfArrayValues = (processedList, values) => {
   const accumlators = values.reduce((acc, val) => ({
     ...acc,
     [val]: {},
@@ -246,7 +249,11 @@ const getMostOfArrayValues = (processedList, values) => {
       })
     })
   });
-  return Object.entries(accumlators).reduce((acc, [key, values]) => {
+  return accumlators;
+}
+
+export const getMostOfArrayValues = (processedList, values) => {
+  return Object.entries(getListOfArrayValues(processedList, values)).reduce((acc, [key, values]) => {
     return ({
       ...acc,
       [key]: Object.entries(values).sort(([,a], [,b]) => b - a)[0],

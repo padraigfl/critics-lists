@@ -1,5 +1,5 @@
 <script>
-
+  import { beforeUpdate } from 'svelte';
   import Meter from './Meter.svelte';
   import {getIdFromName} from './utils';
   export let placement;
@@ -28,46 +28,40 @@
     return `<1k`
   }
 
-  const getImdbDisplay = () => {
-    const imdb = {
-        site: 'IMDb', 
-        icon: 'imdb.png',
-    }
-    if (data.imdb && data.imdb.id) {
-      return {
-        ...imdb,
-        link: `https://www.imdb.com/title/${data.imdb.id}`,
-        text: `${data.imdb.rating && data.imdb.rating.toFixed(1)} (${formatVoteCount(data.imdb.votes)})`,
-      };
-    }
-    return {
+  const imdb = {
+    site: 'IMDb', 
+    icon: 'imdb.png',
+  }
+
+
+  $: film = [
+    data.imdb ? {
+      ...imdb,
+      link: `https://www.imdb.com/title/${data.imdb.id}`,
+      text: data.imdb.rating ? `${data.imdb.rating && data.imdb.rating.toFixed(1)} (${formatVoteCount(data.imdb.votes)})` : undefined,
+    } : {
       ...imdb,
       link: `https://www.imdb.com/find?s=tt&q=${title}`,
-    };
-  };
-
-  const film = [
-    getImdbDisplay(),
+    },
     {
       site: 'RT',
       link: `https://www.rottentomatoes.com/search/?search=${title}`,
       icon: 'rotten.png',
       text: data.rotten ? data.rotten + '%' : '',
     },
+    ...(data.metacritic ? [{
+      site: 'MC',
+      link: `https://www.metacritic.com/search/movie/${title}/results`,
+      text: data.metacritic + '%',
+      icon: 'metacritic--text.png',
+    }] : []),
     {
       site: 'Letterboxd',
       link: `https://letterboxd.com/search/films/${title}`,
       icon: 'letterboxd.png'
     },
   ];
-  if (data.metacritic) {
-    film.splice(2, 0, {
-      site: 'MC',
-      link: `https://www.metacritic.com/search/movie/${title}/results`,
-      text: data.metacritic + '%',
-      icon: 'metacritic--text.png',
-    });
-  }
+
   const toggle = () => {
     extend = !extend;
   }
@@ -111,7 +105,7 @@
   {#if extend && hasData }
     <div class="ListEntry__extended">
       <ul class="ListEntry__details">
-        <li class="ListEntry__details__data"><div>Director</div> <div>{data.director}</div></li>
+        <li class="ListEntry__details__data"><div>Director</div> <div>{data.director || 'N/A'}</div></li>
         <li class="ListEntry__details__data"><div>Cast</div> <div>{data.cast ? data.cast.join(', ') : 'N/A'}</div></li>
         <li class="ListEntry__details__data"><div>Genre</div> <div>{data.genres ? data.genres.join(', ') : 'N/A'}</div></li>
         <li class="ListEntry__details__data"><div>Language</div> <div>{data.language ? data.language.join(', ') : 'N/A'}</div></li>
