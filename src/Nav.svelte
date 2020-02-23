@@ -166,12 +166,12 @@
                     {opt.key || opt.title}
                 </div>
                 <select class="nav__options__select" on:change={updateOptions(opt.key || opt.title, opt.type)} value={selectedOptions[opt.key || opt.title] || null}>
-                  <option value={null}>
+                  <option value={'All'}>
                     All
                   </option>
-                  {#each opt.options as selectOption}
+                  {#each opt.options.sort((a, b) => a[0] > b[0] ? 1 : -1).filter(a => a[1] > 1) as selectOption}
                     <option value={selectOption.title || selectOption[0]} >
-                      {selectOption.toString()}
+                      {`${selectOption[0]} (${selectOption[1]})`}
                     </option>
                   {/each}
                 </select>

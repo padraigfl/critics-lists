@@ -22,23 +22,34 @@
   let omdbData = {};
   let yearData = [];
   let fullList = [];
-  let filters;
+  let filters = {};
   let mostFirsts;
   let mostLists;
   let maxPoints;
   let orderFunc = (val) => val.score;
 
+  const handlingFilters = () => {
+    let iterativeList = fullList;
+    Object.entries(filters ||{}).forEach(([key, val]) => {
+      if (val && val !== 'All') {
+        iterativeList = iterativeList.filter(v => v[1][key] && v[1][key].includes(val));
+      }
+    });
+    return iterativeList.sort(([,a], [,b]) => ((orderFunc(b) || 0) - orderFunc(a) ||0))
+  }
 
   ordering.subscribe(val => {
     if (listData) {
-      listData = listData.sort(([,a], [,b]) => (
-        (val(b) || 0) - (val(a) || 0)
-      ));
       orderFunc = val;
+      listData = handlingFilters();
     }
   });
   filterSelections.subscribe(val => {
-    console.log(val);
+    if (listData) {
+      filters = val;
+      listData = handlingFilters();
+      console.log(listData)
+    }
   });
   
 	//onMount(()=>rolled=Math.floor(Math.random() * params.bound) + 1);
@@ -51,6 +62,8 @@
   filmData.subscribe(value => {
     omdbData = value;
   });
+
+
 
   const getFilmData = async (year) => {
     try {
