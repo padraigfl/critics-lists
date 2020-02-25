@@ -82,7 +82,7 @@
 
   const processFile = async (json) => {
     const filmss = await getFilmData(params.year);
-    listData = processListsWithRankings(json, filmss, matrix_value, orderFunc, );
+    listData = processListsWithRankings(json, filmss, matrix_value, orderFunc);
     fullList = listData;
     filterOptions.update(() => ({
       film: getOptions(listData),

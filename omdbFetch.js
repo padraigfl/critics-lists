@@ -30,7 +30,7 @@ const addFilm = (films, film, year, bonusData) => {
     console.log('duplicate film');
     return;
   }
-  films[filmName] = { year }
+  films[filmName] = { year, originalTitle: film }
   if (bonusData && data) {
     films[filmName][bonusData] = data;
   }
@@ -56,16 +56,17 @@ const getFilmList = (year, bonusData) => {
 };
 
 const getFilm = (films, title, year, issueLog, errorLog, apikey = '') => {
-  const url = `http://www.omdbapi.com/?t=${title}${year ? `&y=${year}` : ''}&type=movie&apikey=${apikey}`
+  const url = `http://www.omdbapi.com/?t=${title.replace(/\&/g, '%26').replace(/\s/g, '%20')}${year ? `&y=${year}` : ''}&type=movie&apikey=${apikey}`
   return new Promise((res) => {
     setTimeout(() => {
       curl.get(url, null, (err,resp,respBody)=>{
         try {
           const body = JSON.parse(respBody);
+          console.log(respBody);
           if (body.Error) {
             errorLog[title] = { year, error: body.Error };
           }
-          if (+body.Year !== +films[title].year) {
+          if (films[title] && +body.Year !== +films[title].year) {
             issueLog[title] = {
               ...films[title],
               notSameYear: body.Year,
@@ -83,7 +84,7 @@ const getFilm = (films, title, year, issueLog, errorLog, apikey = '') => {
             } = body;
             films[title] = {
               ...films[title],
-              ...Ratings.reduce((acc, {Source, Value}) => {
+              ...(Ratings || []).reduce((acc, {Source, Value}) => {
                 if (['Internet Movie Database', 'Metacritic'].includes(Source)) {
                   return acc;
                 }
@@ -103,10 +104,11 @@ const getFilm = (films, title, year, issueLog, errorLog, apikey = '') => {
         } catch(e) {
           errorLog[title] = { year };
           res();
-          // console.log(respBody);
+          console.log(e);
+          console.log(respBody);
         }
       });
-    }, 50);
+    }, 500);
   });
 }
 
@@ -139,6 +141,10 @@ const writeFilms = (films, year, errorLog, issueLog) => {
     getFilm(films, title, null, issueLog, errorLog)
   ))).then(() => {
     // console.log(films);
+    films = Object.entries(films).reduce((acc, [key,val]) => ({
+      ...acc,
+      [val.originalTitle || key]: val,
+    }), {});
     writeFile(`filmdata/${year}failures.json`, errorLog);
     writeFile(`filmdata/${year}issues.json`, issueLog);
     writeFile(`filmdata/${year}film.json`, films);
@@ -149,7 +155,7 @@ const writeFilms = (films, year, errorLog, issueLog) => {
 
 
 const workYear = (year, bonusData) => {
-  const films = getFilmList(year, bonusData);
+  let films = getFilmList(year, bonusData);
   const errorLog = {};
   let issueLog = {};
   writeFilms(films, year, errorLog, issueLog);
@@ -159,4 +165,7 @@ const workYear = (year, bonusData) => {
 // years.forEach((v, idx) => {
 //   setTimeout(() => workYear(v, v === '2010s' ? 'year' : undefined), idx * 10000)
 // });
-workYear(2010);
+
+// workYear('2010s', 'year');
+
+getFilm({}, 'Pain and Glory');
