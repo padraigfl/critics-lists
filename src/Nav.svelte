@@ -116,11 +116,13 @@
     }
 
     filterSelections.update(() => selectedOptions)
+    toggle();
   }
   const updateSort = (o) => {
     console.log(o);
     sortFunc = o.key;
     ordering.update(() => sortFunc);
+    toggle();
   };
 
 </script>
