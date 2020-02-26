@@ -12,7 +12,7 @@
   export let format;
   export let data;
   export let displayAll;
-  $: extend = displayAll || true; // TODO handle toggle of extra data
+  $: extend = true; // TODO handle toggle of extra data
   $: hasData = data.director || data.cast || data.genre || data.language;
 
   const formatVoteCount = (count) => {
@@ -102,7 +102,7 @@
       <Meter value={entry.critics.length} total={mostLists} small icon="📋" />
     </div>
   </div>
-  {#if extend && hasData }
+  {#if (displayAll || extend) && hasData }
     <div class="ListEntry__extended">
       <ul class="ListEntry__details">
         <li class="ListEntry__details__data"><div>Director</div> <div>{data.director || 'N/A'}</div></li>

@@ -354,6 +354,13 @@ body.dark {
   >* {
     min-height: 40px;
   }
+  &__main {
+    display: flex;
+    width: 100%;
+    >:first-child {
+      margin-left: auto;
+    }
+  }
 
   select, button {
     max-width: calc(33vw - 8px);
@@ -361,11 +368,28 @@ body.dark {
     padding-top: 0px;
     padding-bottom: 0px;
   };
-  >:first-child {
-    margin-left: auto;
-  }
   &__options {
-    width: 100%;
+    margin-left: auto;
+    &__title {
+      text-align: right;
+      width: 80px;
+      text-transform: capitalize;
+      margin-right: $s;
+    }
+    &__select {
+      width: 150px;
+      height: 40px;
+    }
+  }
+  ul {
+    display: block;
+    padding-left: $l;
+    li {
+      align-items: center;
+      align-content: center;
+      display: inline-flex;
+      margin-bottom: $s;
+    }
   }
 }
 
