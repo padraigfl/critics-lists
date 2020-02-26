@@ -67,6 +67,7 @@
 
   const getFilmData = async (year) => {
     try {
+      console.log(year);
       const resp = await fetch(`/filmdata/${year}film.json`);
       const films = await resp.json();
       filmData.update(() => films);

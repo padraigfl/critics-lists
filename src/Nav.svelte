@@ -130,23 +130,25 @@
 <!-- In either case, if you go from Component A to Component B, it will randomly roll the die. With the 2nd method, it'll also randomly roll it if you go from component B with one parameter to component B with a different parameter. But neither way will it re-roll if you go from component B with parameter 7 back to the same exact route. -->
 	
 	<div class="nav">
-		<select value={year_value} on:change={changeYear}>
-			{#each ['Year', '2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2010s'] as year}
-				<option value={year} disabled={year === 'Year'}>
-					{ year }
-				</option>
-			{/each}
-		</select>
-		<select value={format_value} on:change={changeFormat}>
-			{#each ['Format', 'film', 'tv', 'album'] as format}
-				<option value={format} disabled={format === 'Format'}>
-					{ format }
-				</option>
-			{/each}
-		</select>
-		<button on:click={toggle}>
-			...
-		</button>
+		<div class="nav__main">
+			<select value={year_value} on:change={changeYear}>
+				{#each ['Year', '2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2010s'] as year}
+					<option value={year} disabled={year === 'Year'}>
+						{ year }
+					</option>
+				{/each}
+			</select>
+			<select value={format_value} on:change={changeFormat}>
+				{#each ['Format', 'film', 'tv', 'album'] as format}
+					<option value={format} disabled={format === 'Format'}>
+						{ format }
+					</option>
+				{/each}
+			</select>
+			<button on:click={toggle}>
+				...
+			</button>
+		</div>
 		{#if display}
 			<div class="nav__options">
 				<ul>
