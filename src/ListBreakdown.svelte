@@ -63,8 +63,6 @@
     omdbData = value;
   });
 
-
-
   const getFilmData = async (year) => {
     try {
       console.log(year);
@@ -85,12 +83,9 @@
     const filmss = await getFilmData(params.year);
     listData = processListsWithRankings(json, filmss, matrix_value, orderFunc);
     fullList = listData;
-    filterOptions.update(() => ({
-      film: getOptions(listData),
-    }));
     yearData = formatList(json, matrix_value);
     loadingPage.update(() => false);
-    getFilmData(params.year);
+    // getFilmData(params.year);
     return {
       yearData,
       listData,
@@ -129,10 +124,13 @@
 
   // getJsonData();
 
-  beforeUpdate(() => {
+  beforeUpdate(async () => {
     if (fileName !== `/data/${params.year}-${params.format}.json`) {
       fileName = `/data/${params.year}-${params.format}.json`;
-      getJsonData();
+      await getJsonData();
+      filterOptions.update(() => ({
+        film: getOptions(listData),
+      }));
     }
   });
 

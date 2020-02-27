@@ -10,8 +10,6 @@
   export let mostFirsts;
   export let mostLists;
   export let format;
-  export let data;
-  export let displayAll;
 
   const film = [
     { site: 'IMDb', link: 'https://www.imdb.com/find?s=tt&q=', icon: 'imdb.png' },
