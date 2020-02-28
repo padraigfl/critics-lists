@@ -6,9 +6,7 @@
   export let title;
   export let entry;
   export let points;
-  export let highestPoints;
-  export let mostFirsts;
-  export let mostLists;
+
   export let format;
   export let data;
   export let displayAll;
@@ -97,9 +95,9 @@
       </div>
     </div>
     <div class="ListEntry__stats">
-      <Meter value={points} total={highestPoints} key="pts" />
-      <Meter value={entry.firsts.length} total={mostFirsts} small icon="🏆" />
-      <Meter value={entry.critics.length} total={mostLists} small icon="📋" />
+      <Meter value={points} key="pts" />
+      <Meter value={entry.firsts.length} small icon="🏆" />
+      <Meter value={entry.critics.length} small icon="📋" />
     </div>
   </div>
   {#if (displayAll || extend) && hasData }

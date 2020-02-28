@@ -15,7 +15,7 @@ $border: 2px solid $dark;
   height: calc(100% - 44px);
   width: 100%;
   max-width: 1200px;
-  margin: 0 auto;
+  margin-left: auto;
   border-right: $border;
 
   &__details {
@@ -351,6 +351,15 @@ body.dark {
   border-bottom: $border;
   overflow: hidden;
   z-index: 10;
+  &__button {
+    &--active {
+      border-color: $bright;
+      filter: invert(100%);
+    }
+    &[disabled] {
+      opacity: 0.5;
+    }
+  }
   >* {
     min-height: 40px;
   }
@@ -387,8 +396,9 @@ body.dark {
     li {
       align-items: center;
       align-content: center;
-      display: inline-flex;
+      display: flex;
       margin-bottom: $s;
+      margin-left: auto;
     }
   }
 }
