@@ -1,6 +1,6 @@
 <script>
   export let value;
-  export let total;
+  export let total = false;
   export let key = null;
   export let small = false;
   export let icon = false;
@@ -17,10 +17,12 @@
     {icon}
   </div>
   {/if}
-  <div class="Meter__graph">
-    <div
-      class="Meter__graph__value"
-      style={`width: ${(value / total) * 100}%`}
-    />
-  </div>
+  {#if total}
+    <div class="Meter__graph">
+      <div
+        class="Meter__graph__value"
+        style={`width: ${(value / total) * 100}%`}
+      />
+    </div>
+  {/if}
 </div>

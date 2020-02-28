@@ -84,7 +84,9 @@
   });
 
 	const getOptions = () => {
-    console.log(availableOptions);
+		if (format_value !== 'film') {
+			return [];
+		}
     return [
 		{
 			title: "Sort by",
@@ -145,7 +147,11 @@
 					</option>
 				{/each}
 			</select>
-			<button on:click={toggle}>
+			<button
+				on:click={toggle}
+				class={`nav__button ${display ? "nav__button--active" : ''}`}
+				disabled={format_value !== 'film'}
+			>
 				...
 			</button>
 		</div>
