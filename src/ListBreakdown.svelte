@@ -26,7 +26,8 @@
   let mostFirsts;
   let mostLists;
   let maxPoints;
-  let orderFunc = (val) => val.score;
+  let orderFunc = params.format === 'film' ? (val) => val.score : undefined;
+  let format_value = params.format;
 
   const handlingFilters = () => {
     let iterativeList = fullList;
@@ -39,8 +40,8 @@
   }
 
   ordering.subscribe(val => {
+    orderFunc = val;
     if (listData) {
-      orderFunc = val;
       listData = handlingFilters();
     }
   });
@@ -93,6 +94,9 @@
   }
 
   const getJsonData = async () => {
+    if (params.format !== 'film') {
+      ordering.update(() => (val) => val.score);
+    }
     year.update(() => params.year);
     format.update(() => params.format);
     const localStorageItem = `${params.year}-${params.format}`;
