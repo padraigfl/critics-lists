@@ -41,17 +41,21 @@ const formatAwards = (awards = '') => {
   if (awards === 'N/A') {
     return count;
   };
-  const hasOscars = awards.includes('Oscar');
-  if (hasOscars) {
-    const oscars = awards.split('Oscar')[0];
-    if (oscars.includes('Won')) {
-      count.wins = stringToNumber(oscars);
-    } else {
-      count.noms = stringToNumber(oscars);
+  let otherAwards = false;
+  ['Oscar', 'Golden Globe', 'BAFTA Film Award'].map((award) => {
+    const hasMajorAward = awards.includes(award);
+    if (hasMajorAward) {
+      otherAwards = true;
+      const oscars = awards.split(award)[0];
+      if (oscars.includes('Won')) {
+        count.wins = (count.wins || 0) + stringToNumber(oscars);
+      } else {
+        count.noms = (count.noms || 0) + stringToNumber(oscars);
+      }
     }
-  }
+  });
   (
-    hasOscars ? 
+    otherAwards ? 
       awards.split('. ')[1]
       : awards
   ).split(' & ').forEach(v => {
@@ -107,7 +111,6 @@ export const processListsWithRankings = (critics, omdbData, matrix = defaultScor
       };
     });
   });
-  window.ord = orderFunc;
   return Object.entries(films).sort(([,a], [, b]) => 
     (orderFunc(b) || 0) - (orderFunc(a) || 0)
   );
