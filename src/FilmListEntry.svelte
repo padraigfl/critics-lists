@@ -112,6 +112,15 @@
       {#if data.plot && data.plot !== 'N/A' }
         <p><em>{data.plot}</em></p>
       {/if}
+      {#if data.awards && (data.awards.wins > 0 || data.awards.noms > 0)}
+          <span>
+            {data.awards.wins || 0} win{data.awards.wins > 1 ? 's': ''}
+          </span>
+          /
+          <span>
+            {(data.awards.wins || 0) + data.awards.noms} nom{data.awards.noms + data.awards.wins > 1 ? 's': ''}
+          </span>
+      {/if}
       <!-- <img src={data.poster&& data.poster.replace('300', '80')} /> -->
     </div>
   {/if}
