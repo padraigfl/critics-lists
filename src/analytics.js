@@ -42,7 +42,7 @@ const formatAwards = (awards = '') => {
     return count;
   };
   let otherAwards = false;
-  ['Oscar', 'Golden Globe', 'BAFTA Film Award'].map((award) => {
+  ['Oscar', 'Golden Globe', 'BAFTA Film Award', 'Primetime Emmy'].map((award) => {
     const hasMajorAward = awards.includes(award);
     if (hasMajorAward) {
       otherAwards = true;
@@ -65,6 +65,7 @@ const formatAwards = (awards = '') => {
       count.noms =  (count.noms || 0) + stringToNumber(v);
     }
   })
+  console.log(awards, count);
   return count;
 };
 

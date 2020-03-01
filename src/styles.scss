@@ -61,7 +61,6 @@ body.dark {
 
 
 .Meter {
-  max-width: 110px;
   display: flex;
   &__icon {
     font-size: 0.5rem;
@@ -93,7 +92,6 @@ body.dark {
   &--small {
     font-size: 0.65rem;
     .Meter__text {
-      width: 28px;
       flex-grow: 0;
     }
   }
