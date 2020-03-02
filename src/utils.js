@@ -1,5 +1,5 @@
 export const getIdFromName = name =>
   name
-  .split(' ')
+  .split(/\s|,/)
   .join('_')
   .replace(/[\[\]()]/g, '');
