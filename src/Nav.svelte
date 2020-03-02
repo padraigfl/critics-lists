@@ -16,8 +16,16 @@
     language: [],
     country: []
   };
-  let sortFunc = val => val.points;
-  let selectedOptions = {};
+  let sortFunc = val => val.score;
+	let selectedOptions = {};
+	let listener;
+
+	const onClickOutside = (e) => {
+		const nav = document.querySelector('.nav');
+		if (!nav.contains(e.target)) {
+			toggle();
+		}
+	}
 
   filterSelections.subscribe((val) => selectedOptions = val);
 
@@ -26,6 +34,9 @@
 	});
 	format.subscribe(value => {
 		format_value = value;
+		if (value !== 'film') {
+			display = false
+		}
   });
   const changeYear = (e) => {
     year.update(() => e.target.value);
@@ -59,6 +70,11 @@
 
 
 	const toggle = () => {
+		if (display) {
+			document.removeEventListener('click', listener);
+		} else {
+			listener = document.addEventListener('click', onClickOutside);
+		}
 		display = !display;
 	}
 	scoringMatrix.subscribe(value => {
@@ -165,7 +181,8 @@
                   {opt.key || opt.title}
                 </div>
                 <select class="nav__options__select" on:change={(e) => updateSort(opt.options[e.target.value])} value={selectedOptions[opt.key || opt.title] || null}>
-                  {#each opt.options as selectOption, i}
+                  <option value="none">___</option>
+									{#each opt.options as selectOption, i}
                     <option value={i} >
                       {selectOption.title}
                     </option>

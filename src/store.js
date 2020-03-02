@@ -31,7 +31,7 @@ export const filterOptions = writable({
 
 export const filterSelections = writable({});
 
-export const ordering = writable((v) => v.points);
+export const ordering = writable((v) => v.score);
 
 export const OPTIONS = {
   years: ['2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2010s'],

@@ -26,7 +26,7 @@
   let mostFirsts;
   let mostLists;
   let maxPoints;
-  let orderFunc = params.format === 'film' ? (val) => val.score : undefined;
+  let orderFunc = (val) => val.score;
   let format_value = params.format;
 
   const handlingFilters = () => {
