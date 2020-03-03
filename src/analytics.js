@@ -65,7 +65,6 @@ const formatAwards = (awards = '') => {
       count.noms =  (count.noms || 0) + stringToNumber(v);
     }
   })
-  console.log(awards, count);
   return count;
 };
 

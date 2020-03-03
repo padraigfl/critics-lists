@@ -3,3 +3,5 @@ export const getIdFromName = name =>
   .split(/\s|,/)
   .join('_')
   .replace(/[\[\]()]/g, '');
+
+export const sortFunc = (key = 'score') => val => val[key];
