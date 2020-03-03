@@ -13,6 +13,7 @@
   } from './analytics';
   import './styles.scss';
   import { year, filmData, format, scoringMatrix, loadingPage, filterOptions, ordering, filterSelections } from './store';
+  import { sortFunc } from './utils';
 	export let params = params;
   let listData = null;
   let data;
@@ -26,7 +27,7 @@
   let mostFirsts;
   let mostLists;
   let maxPoints;
-  let orderFunc = (val) => val.score;
+  let sortBy;
   let format_value = params.format;
 
   const handlingFilters = () => {
@@ -36,11 +37,12 @@
         iterativeList = iterativeList.filter(v => v[1][key] && v[1][key].includes(val));
       }
     });
-    return iterativeList.sort(([,a], [,b]) => ((orderFunc(b) || 0) - orderFunc(a) ||0))
+    const sorter = sortFunc(sortBy);
+    return iterativeList.sort(([,a], [,b]) => ((sorter(b) || 0) - sorter(a) ||0))
   }
 
   ordering.subscribe(val => {
-    orderFunc = val;
+    sortBy = val;
     if (listData) {
       listData = handlingFilters();
     }
@@ -82,7 +84,7 @@
 
   const processFile = async (json) => {
     const filmss = await getFilmData(params.year);
-    listData = processListsWithRankings(json, filmss, matrix_value, orderFunc);
+    listData = processListsWithRankings(json, filmss, matrix_value, sortFunc(sortBy));
     fullList = listData;
     yearData = formatList(json, matrix_value);
     loadingPage.update(() => false);

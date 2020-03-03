@@ -16,9 +16,10 @@
     language: [],
     country: []
   };
-  let sortFunc = val => val.score;
 	let selectedOptions = {};
 	let listener;
+	let order = 'score';
+	let options = [];
 
 	const onClickOutside = (e) => {
 		const nav = document.querySelector('.nav');
@@ -95,10 +96,6 @@
   });
   // filterData.subscribe(value => filterOptions = value);
 
-  filterOptions.subscribe(val => {
-    availableOptions = val;
-  });
-
 	const getOptions = () => {
 		if (format_value !== 'film') {
 			return [];
@@ -108,12 +105,12 @@
 			title: "Sort by",
 			type: 'sort',
 			options: [
-        { title: 'Points', key: (val) => val.score },
-				{ title: 'Box Office', key: (val) => val.boxOffice },
-				{ title: 'Length', key: (val) => val.runtime },
+        { title: 'Points', key: 'score' },
+				{ title: 'Box Office', key: 'boxOffice' },
+				{ title: 'Length', key: 'runtime' },
 				// { title: '# lists', key: (val) => val.critics ? val.critics.length : 0 },
 				// { title: '# firsts', key: (val) => val.firsts ? val.firsts.length  : 0 },
-				{ title: 'IMDb rating', key: (val) => val.imdb ? +val.imdb.rating : 0 }
+				{ title: 'IMDb rating', key: 'imdb.rating' }
 			],
 			default: 'Points',
 		},
@@ -124,10 +121,16 @@
 		})),
 	]}
 
+  filterOptions.subscribe(val => {
+		availableOptions = val;
+		options = getOptions();
+  });
+
+
+
   // let optionValue = options.reduce((acc, opt) => ({ ...acc, [opt.title]: null }));
 
   const updateOptions = (key, type) => e => {
-    console.log(selectedOptions);
     selectedOptions = {
       ...selectedOptions,
       [key]: e.target.value,
@@ -135,11 +138,13 @@
 
     filterSelections.update(() => selectedOptions)
     toggle();
-  }
+	}
+	ordering.subscribe(val => {
+    console.log(val);
+		order = val;
+	})
   const updateSort = (o) => {
-    console.log(o);
-    sortFunc = o.key;
-    ordering.update(() => sortFunc);
+		ordering.update(() => o.key);
     toggle();
   };
 
@@ -174,15 +179,14 @@
 		{#if display}
 			<div class="nav__options">
 				<ul>
-					{#each getOptions() as opt}
+					{#each options as opt}
 						<li>
               {#if opt.type === 'sort'}
                 <div class="nav__options__title">
                   {opt.key || opt.title}
                 </div>
-                <select class="nav__options__select" on:change={(e) => updateSort(opt.options[e.target.value])} value={selectedOptions[opt.key || opt.title] || null}>
-                  <option value="none">___</option>
-									{#each opt.options as selectOption, i}
+                <select class="nav__options__select" on:change={(e) => updateSort(opt.options[e.target.value])} value={opt.options.findIndex(v => v.key === order)}>
+                  {#each opt.options as selectOption, i}
                     <option value={i} >
                       {selectOption.title}
                     </option>
@@ -193,10 +197,8 @@
                     {opt.key || opt.title}
                 </div>
                 <select class="nav__options__select" on:change={updateOptions(opt.key || opt.title, opt.type)} value={selectedOptions[opt.key || opt.title] || null}>
-                  <option value={'All'}>
-                    All
-                  </option>
-                  {#each opt.options.sort((a, b) => a[0] > b[0] ? 1 : -1).filter(a => a[1] > 1) as selectOption}
+                  <option value='All'>All</option>
+									{#each opt.options.sort((a, b) => a[0] > b[0] ? 1 : -1).filter(a => a[1] > 1) as selectOption}
                     <option value={selectOption.title || selectOption[0]} >
                       {`${selectOption[0]} (${selectOption[1]})`}
                     </option>
