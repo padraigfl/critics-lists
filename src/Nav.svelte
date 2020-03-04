@@ -10,9 +10,8 @@
 	let format_value = 'Format';
   let matrix_value;
 	let isLoading;
-  $: matrix = defaultScoringMatrix;
   let availableOptions = {
-    genres: [],
+    genre: [],
     language: [],
     country: []
   };
@@ -20,10 +19,11 @@
 	let listener;
 	let order = 'score';
 	let options = [];
+  $: matrix = defaultScoringMatrix;
 
 	const onClickOutside = (e) => {
 		const nav = document.querySelector('.nav');
-		if (!nav.contains(e.target)) {
+		if (!nav.contains(e.target) && !!display) {
 			toggle();
 		}
 	}
@@ -70,14 +70,15 @@
 	}
 
 
-	const toggle = () => {
-		if (display) {
+	const toggle = (bool) => {
+		if (bool === true ||display) {
 			document.removeEventListener('click', listener);
 		} else {
 			listener = document.addEventListener('click', onClickOutside);
 		}
 		display = !display;
 	}
+
 	scoringMatrix.subscribe(value => {
 		matrix_value = value;
 	});
@@ -94,7 +95,6 @@
 	scoringMatrix.subscribe(value => {
 		matrix_value = value;
   });
-  // filterData.subscribe(value => filterOptions = value);
 
 	const getOptions = () => {
 		if (format_value !== 'film') {
@@ -106,15 +106,15 @@
 			type: 'sort',
 			options: [
         { title: 'Points', key: 'score' },
-				{ title: 'Box Office', key: 'boxOffice' },
+				// { title: 'Box Office', key: 'boxOffice' }, seems to be buggy af
 				{ title: 'Length', key: 'runtime' },
-				// { title: '# lists', key: (val) => val.critics ? val.critics.length : 0 },
-				// { title: '# firsts', key: (val) => val.firsts ? val.firsts.length  : 0 },
+				// { title: '# lists', key: 'val.critics.length' },
+				// { title: '# firsts', key: 'val.firsts.length' },
 				{ title: 'IMDb rating', key: 'imdb.rating' }
 			],
 			default: 'Points',
 		},
-		...['genres', 'country', 'language'].map(key => ({
+		...['genre', 'country', 'language'].map(key => ({
 			title: key,
 			type: 'filter',
 			options: Object.entries(availableOptions[format_value][key]),
@@ -125,8 +125,6 @@
 		availableOptions = val;
 		options = getOptions();
   });
-
-
 
   // let optionValue = options.reduce((acc, opt) => ({ ...acc, [opt.title]: null }));
 
@@ -140,20 +138,28 @@
     toggle();
 	}
 	ordering.subscribe(val => {
-    console.log(val);
 		order = val;
 	})
   const updateSort = (o) => {
 		ordering.update(() => o.key);
     toggle();
   };
-
+ 
 </script>
 
 <!-- In either case, if you go from Component A to Component B, it will randomly roll the die. With the 2nd method, it'll also randomly roll it if you go from component B with one parameter to component B with a different parameter. But neither way will it re-roll if you go from component B with parameter 7 back to the same exact route. -->
 	
 	<div class="nav">
 		<div class="nav__main">
+			<div class="nav__main__data">
+				<div class="nav__sort-data">Ordered by {order}</div>
+				{#if Object.keys(selectedOptions).length > 0}
+					{#each Object.entries(selectedOptions) as [key, val]}
+						<div class="nav__filter-data">{key}: {val}</div>{' '}
+
+					{/each}
+				{/if}
+			</div>
 			<select value={year_value} on:change={changeYear}>
 				{#each ['Year', '2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2010s'] as year}
 					<option value={year} disabled={year === 'Year'}>

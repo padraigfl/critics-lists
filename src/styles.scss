@@ -364,8 +364,18 @@ body.dark {
   &__main {
     display: flex;
     width: 100%;
-    >:first-child {
+    >:nth-child(2) {
       margin-left: auto;
+      flex-shrink: 0;
+    }
+  }
+  &__sort-data, &__filter-data {
+    display: inline-block;
+    text-transform: capitalize;
+    &:not(:last-child) {
+      &:after {
+        content: '. ';
+      }
     }
   }
 
