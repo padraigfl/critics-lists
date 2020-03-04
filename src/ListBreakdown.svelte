@@ -13,13 +13,13 @@
   } from './analytics';
   import './styles.scss';
   import { year, filmData, format, scoringMatrix, loadingPage, filterOptions, ordering, filterSelections } from './store';
-  import { sortFunc } from './utils';
+  import { objectEntriesSort, getValuesFromObject } from './utils';
 	export let params = params;
   let listData = null;
   let data;
   let fileName = `/data/${params.year}-${params.format}.json`;
   let matrix_value;
-  let isLoading;
+  let isLoading = true;
   let omdbData = {};
   let yearData = [];
   let fullList = [];
@@ -37,8 +37,7 @@
         iterativeList = iterativeList.filter(v => v[1][key] && v[1][key].includes(val));
       }
     });
-    const sorter = sortFunc(sortBy);
-    return iterativeList.sort(([,a], [,b]) => ((sorter(b) || 0) - sorter(a) ||0))
+    return iterativeList.sort(objectEntriesSort(sortBy))
   }
 
   ordering.subscribe(val => {
@@ -51,7 +50,6 @@
     if (listData) {
       filters = val;
       listData = handlingFilters();
-      console.log(listData)
     }
   });
   
@@ -68,26 +66,23 @@
 
   const getFilmData = async (year) => {
     try {
-      console.log(year);
       const resp = await fetch(`/filmdata/${year}film.json`);
       const films = await resp.json();
       filmData.update(() => films);
       return films;
     } catch (e) {
-      console.log(e);
       filmData.update({});
       return {};
     }
   }
 
-  const getOptions = (listData) => getListOfArrayValues(listData, ['genres', 'language', 'country']);
+  const getOptions = (listData) => getListOfArrayValues(listData, ['genre', 'language', 'country']);
 
   const processFile = async (json) => {
     const filmss = await getFilmData(params.year);
-    listData = processListsWithRankings(json, filmss, matrix_value, sortFunc(sortBy));
+    listData = await processListsWithRankings(json, filmss, matrix_value, objectEntriesSort(sortBy));
     fullList = listData;
     yearData = formatList(json, matrix_value);
-    loadingPage.update(() => false);
     // getFilmData(params.year);
     return {
       yearData,
@@ -97,7 +92,7 @@
 
   const getJsonData = async () => {
     if (params.format !== 'film') {
-      ordering.update(() => (val) => val.score);
+      ordering.update(() => 'score');
     }
     year.update(() => params.year);
     format.update(() => params.format);
@@ -128,21 +123,24 @@
     }
   };
 
-  // getJsonData();
+  const processData = async () => {
+    await getJsonData();
+    loadingPage.update(() => false);
+    filterOptions.update(() => ({
+      film: getOptions(listData),
+    }));
+  }
 
   beforeUpdate(async () => {
     if (fileName !== `/data/${params.year}-${params.format}.json`) {
       fileName = `/data/${params.year}-${params.format}.json`;
-      await getJsonData();
-      filterOptions.update(() => ({
-        film: getOptions(listData),
-      }));
+      await processData();
     }
   });
 
-	scoringMatrix.subscribe(value => {
+	scoringMatrix.subscribe(async value => {
     matrix_value = value;
-    getJsonData();
+    await processData();
 	});
 
 </script>
@@ -152,6 +150,9 @@
   <title>Critics Lists: {params.format} of {params.year}</title>
 </svelte:head>
 <div class="ListBreakdown">
+  {#if isLoading}
+    <div style="width:400px; height: 500px; background-color: pink;"> Loading...</div>
+  {/if}
   {#if yearData && listData && !isLoading}
     <DataList
       yearData={yearData}
@@ -161,7 +162,7 @@
   {/if}
   {#if listData && listData.length && yearData && !isLoading}
     <List listData={listData} yearData={yearData} format={params.format} />
-  {:else}
-    Loading...
+  {:else if !isLoading}
+    No results found
   {/if}
 </div>

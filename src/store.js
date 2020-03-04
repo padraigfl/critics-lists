@@ -17,13 +17,13 @@ export const format = writable('Format');
 export const year = writable('Year');
 export const filmData = writable({});
 
-export const loadingPage = writable(false);
+export const loadingPage = writable(true);
 
 export const scoringMatrix = writable(defaultScoringMatrix);
 
 export const filterOptions = writable({
   film: {
-    genres: [],
+    genre: [],
     language: [],
     country: [],
   },

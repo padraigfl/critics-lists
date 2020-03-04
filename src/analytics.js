@@ -93,7 +93,7 @@ const formatOmdbData = (omdbData = {}) => {
     country: omdbData.Country ? omdbData.Country.split(', ') : undefined,
     release: new Date(omdbData.Released),
     runtime: stringToNumber(omdbData.Runtime),
-    genres: omdbData.Genre ? omdbData.Genre.split(', ') : undefined,
+    genre: omdbData.Genre ? omdbData.Genre.split(', ') : undefined,
     production: omdbData.Production,
     cast: omdbData.Actors ? omdbData.Actors.split(', ') : undefined,
     director: omdbData.Director,
@@ -111,9 +111,7 @@ export const processListsWithRankings = (critics, omdbData, matrix = defaultScor
       };
     });
   });
-  return Object.entries(films).sort(([,a], [, b]) => 
-    (orderFunc(b) || 0) - (orderFunc(a) || 0)
-  );
+  return Object.entries(films).sort(orderFunc || objectEntriesSort('score'));
 }
 
 const getHighestWithoutNumberOne = (processedList, data) =>
@@ -293,7 +291,7 @@ export const deriveAdditionalDataFromProcessedList = (processedList, data, forma
   const onlyInOneList = getFilmsInOneList(data);
   const mostContrarianCritic = getMostContrarianCritic(processedList, data);
   const mostContrarianCriticValidator = getMostContrarianCritic(processedList, data, 3);
-  const arrayValues = getMostOfArrayValues(processedList, ['genres', 'cast', 'country', 'language']);
+  const arrayValues = getMostOfArrayValues(processedList, ['genre', 'cast', 'country', 'language']);
   let bestStudio;
   if (format === 'film') {
     bestStudio = getMostSuccessfulStudio(processedList);

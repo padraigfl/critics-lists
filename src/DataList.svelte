@@ -8,6 +8,7 @@
   export let listData;
   export let format;
   let prevYearData;
+  let prevListData;
   let dataList = [
     { title: '# Lists aggregated:', data: Object.keys(yearData.critics).length },
     { title: '# Publications', data: Object.keys(yearData.publications).length },
@@ -58,10 +59,11 @@
 
 
   $: {
-    if (yearData !== prevYearData) {
-      prevYearData = yearData;
+    if (yearData !== prevYearData || listData !== prevListData) {
       getDerivedData();
     }
+    prevYearData = yearData;
+    prevListData = listData;
   }
 
 </script>
