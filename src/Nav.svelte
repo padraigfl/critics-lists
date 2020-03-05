@@ -53,6 +53,8 @@
 
 	const changeFormat = (e) => {
     format.update(() => e.target.value);
+		filterSelections.update(() => ({}));
+		ordering.update(() => 'score')
 		if (
 			OPTIONS.years.includes(year_value)
 			&& OPTIONS.formats.includes(e.target.value)
