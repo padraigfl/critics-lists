@@ -65,6 +65,9 @@ const formatAwards = (awards = '') => {
       count.noms =  (count.noms || 0) + stringToNumber(v);
     }
   })
+  if (count.wins || count.noms) {
+    count.combined = (count.wins || 0) + (count.noms || 0);
+  }
   return count;
 };
 
@@ -313,11 +316,12 @@ export const deriveAdditionalDataFromProcessedList = (processedList, data, forma
 export const formatList = (smallData) => {
   const publications = {};
   const works = {};
-  Object.entries(smallData).forEach(([critic, { list, publication }]) => {
-    if (publications[publication]) {
-       publications[publication].push(critic);
-    } else {
-      publications[publication] = [critic];
+  Object.entries(smallData).forEach(([critic, { list, publicationName, publication }]) => {
+    let p = publicationName || publication;
+    if (publications[p]) {
+       publications[p].push(critic);
+    } else if (p) {
+      publications[p] = [critic];
     }
     Object.entries(list).forEach(([work, rank]) => {
       if (works[work]) {

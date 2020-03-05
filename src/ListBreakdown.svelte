@@ -125,6 +125,7 @@
 
   const processData = async () => {
     await getJsonData();
+    listData = handlingFilters();
     loadingPage.update(() => false);
     filterOptions.update(() => ({
       film: getOptions(listData),
