@@ -7,7 +7,7 @@ export const getIdFromName = name =>
 export const getValueFromObject = (key = 'score') => val => {
   let soughtValue = val;
   key.split('.').forEach(key => {
-    if (typeof soughtValue[key] !== 'undefined') {
+    if (typeof soughtValue !== 'undefined') {
       soughtValue = soughtValue[key];
     }
   });
@@ -16,7 +16,20 @@ export const getValueFromObject = (key = 'score') => val => {
 
 export const objectEntriesSort = (key) => {
   const getComparisonValue = getValueFromObject(key);
-  return ([,a], [,b]) => (
-    (getComparisonValue(b) || 0) - (getComparisonValue(a) ||0)
-  );
+  return ([,a], [,b]) => {
+    const valA = getComparisonValue(a);
+    const valB = getComparisonValue(b);
+    const aUndefined = typeof valA === 'undefined';
+    const bUndefined = typeof valB === 'undefined';
+    if (aUndefined && bUndefined) {
+      return 0;
+    }
+    if (aUndefined || valA - valB < 0) {
+      return 1;
+    }
+    if (bUndefined || valB - valA < 0)  {
+      return -1;
+    }
+    return 0;
+  };
 }
