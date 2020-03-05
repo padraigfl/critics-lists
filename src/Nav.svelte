@@ -40,7 +40,8 @@
 		}
   });
   const changeYear = (e) => {
-    year.update(() => e.target.value);
+		year.update(() => e.target.value);
+		filterSelections.update(() => ({}));
 		if (
 			OPTIONS.formats.includes(format_value)
 			&& OPTIONS.years.includes(e.target.value)
@@ -110,7 +111,9 @@
 				{ title: 'Length', key: 'runtime' },
 				// { title: '# lists', key: 'val.critics.length' },
 				// { title: '# firsts', key: 'val.firsts.length' },
-				{ title: 'IMDb rating', key: 'imdb.rating' }
+				{ title: 'IMDb rating', key: 'imdb.rating' },
+				{ title: 'Awards', key: 'awards.wins' },
+				{ title: 'Nominations', key: 'awards.combined' },
 			],
 			default: 'Points',
 		},
@@ -156,7 +159,6 @@
 				{#if Object.keys(selectedOptions).length > 0}
 					{#each Object.entries(selectedOptions) as [key, val]}
 						<div class="nav__filter-data">{key}: {val}</div>{' '}
-
 					{/each}
 				{/if}
 			</div>
@@ -177,7 +179,7 @@
 			<button
 				on:click={toggle}
 				class={`nav__button ${display ? "nav__button--active" : ''}`}
-				disabled={format_value !== 'film'}
+				disabled={format_value !== 'film' || isLoading}
 			>
 				...
 			</button>

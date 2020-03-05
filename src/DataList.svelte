@@ -59,11 +59,11 @@
 
 
   $: {
-    if (yearData !== prevYearData || listData !== prevListData) {
+    if (yearData !== prevYearData) {
+      prevYearData = yearData;
+      prevListData = listData;
       getDerivedData();
     }
-    prevYearData = yearData;
-    prevListData = listData;
   }
 
 </script>
