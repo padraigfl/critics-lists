@@ -22,7 +22,7 @@
       {...(
         format === 'film' ? {
           data,
-          displayAll: true,
+          displayAll: false,
         } : {}
       )}
     />

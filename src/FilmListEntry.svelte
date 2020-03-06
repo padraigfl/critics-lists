@@ -1,6 +1,6 @@
 <script>
   import { beforeUpdate } from 'svelte';
-  import Meter from './Meter.svelte';
+  import ListEntryDataPoint from './ListEntryDataPoint.svelte';
   import {getIdFromName} from './utils';
   export let placement;
   export let title;
@@ -10,7 +10,7 @@
   export let format;
   export let data;
   export let displayAll;
-  $: extend = true; // TODO handle toggle of extra data
+  $: extend = false; // TODO handle toggle of extra data
   $: hasData = data.director || data.cast || data.genre || data.language;
 
   const formatVoteCount = (count) => {
@@ -63,63 +63,69 @@
   const toggle = () => {
     extend = !extend;
   }
+  const expand = () => { extend = true }
 </script>
 
-<li class={`ListEntry ListEntry--${format}`} id={getIdFromName(title)}>
-  <div class="ListEntry__data">
-    <div class="ListEntry__placement">{placement}</div>
-    <div class="ListEntry__title">
-      <strong>{title}</strong>
-      {#if data.runtime || data.country}
-        ({data.runtime ? `${data.runtime}min${data.country ? '; ': ''}`: ''}{data.country ? data.country.join(', ') : ''})
+<li class={`FilmListEntry FilmListEntry--${format} ${!hasData ? 'FilmListEntry--no-data' : '' }`} id={getIdFromName(title)}>
+  <div class="FilmListEntry__core">
+    <div class="FilmListEntry__placement">
+      {placement}
+
+      {#if hasData && !extend}
+        <button class="FilmListEntry__display-details" on:click={expand}>
+          ...
+        </button>
       {/if}
-      <div class="ListEntry__links">
+    </div>
+    <div class="FilmListEntry__heading">
+      <strong class="FilmListEntry__title">{title}</strong>
+      {#if data.runtime || data.country}
+        <div class="FilmListEntry__subtitle">
+        ({data.runtime ? `${data.runtime}min${data.country ? '; ': ''}`: ''}{data.country ? data.country.join(', ') : ''})
+        </div>
+      {/if}
+      <div class="FilmListEntry__links">
         {#each film as { site, link, modify, icon, text }, i}
-          <a class={icon ? 'ListEntry__link ListEntry__link--icon' : 'ListEntry__link'} href={link} target="_blank">
+          <a class={icon ? 'ExternalLink ExternalLink--icon' : 'ExternalLink'} href={link} target="_blank">
             {#if icon}
-              <img class="ListEntry__icon" src={`/icons/${icon}`} alt={site} />
+              <img class="ExternalLink__icon" src={`/icons/${icon}`} alt={site} />
             {:else}
               {site}
             {/if}
             {#if text}
-              <span class="ListEntry__extra-text">{text}</span>
-             {/if} 
+              <span class="ExternalLink__extra-text">{text}</span>
+            {/if} 
           </a>
-          {#if i < film.length - 1}
-            {' | '}
-          {/if}
         {/each}
         <!-- <button on:click={toggle}>
           {extend ? '<' : '>'}
         </button> -->
       </div>
     </div>
-    <div class="ListEntry__stats">
-      <Meter value={points} key="pts" />
-      <Meter value={entry.firsts.length} small icon="🏆" />
-      <Meter value={entry.critics.length} small icon="📋" />
+    <div class="FilmListEntry__points">
+      <ListEntryDataPoint value={points} key="pts" />
+      <ListEntryDataPoint value={entry.firsts.length} small icon="🏆" />
+      <ListEntryDataPoint value={entry.critics.length} small icon="📋" />
+      {#if hasData && data.awards}
+        <ListEntryDataPoint value={data.awards.wins} small icon="W" />
+        <ListEntryDataPoint value={data.awards.noms} small icon="N" />
+      {/if}
     </div>
   </div>
   {#if (displayAll || extend) && hasData }
-    <div class="ListEntry__extended">
-      <ul class="ListEntry__details">
-        <li class="ListEntry__details__data"><div>Director</div> <div>{data.director || 'N/A'}</div></li>
-        <li class="ListEntry__details__data"><div>Cast</div> <div>{data.cast ? data.cast.join(', ') : 'N/A'}</div></li>
-        <li class="ListEntry__details__data"><div>Genre</div> <div>{data.genre ? data.genre.join(', ') : 'N/A'}</div></li>
-        <li class="ListEntry__details__data"><div>Language</div> <div>{data.language ? data.language.join(', ') : 'N/A'}</div></li>
+    <div class="FilmListEntry__extended">
+      {#if data.poster}
+        <img class="FilmListEntry__poster" src={data.poster.replace('X300', 'X70')} alt="" />
+      {/if}
+      <ul class="FilmListEntry__details">
+        <li class="FilmListEntry__details__data"><div>Director</div> <div>{data.director || 'N/A'}</div></li>
+        <li class="FilmListEntry__details__data"><div>Cast</div> <div>{data.cast ? data.cast.join(', ') : 'N/A'}</div></li>
+        <li class="FilmListEntry__details__data"><div>Genre</div> <div>{data.genre ? data.genre.join(', ') : 'N/A'}</div></li>
+        <li class="FilmListEntry__details__data"><div>Language</div> <div>{data.language ? data.language.join(', ') : 'N/A'}</div></li>
         <!-- BROKEN ATM <dt>Awards</dt> <dd>{data.awards.wins} / {(data.awards.noms + data.awards.wins)}</dd> -->
       </ul>
       {#if data.plot && data.plot !== 'N/A' }
         <p><em>{data.plot}</em></p>
-      {/if}
-      {#if data.awards && (data.awards.wins > 0 || data.awards.noms > 0)}
-          <span>
-            {data.awards.wins || 0} win{data.awards.wins > 1 ? 's': ''}
-          </span>
-          /
-          <span>
-            {(data.awards.wins || 0) + data.awards.noms} nom{data.awards.noms + data.awards.wins > 1 ? 's': ''}
-          </span>
       {/if}
       <!-- <img src={data.poster&& data.poster.replace('300', '80')} /> -->
     </div>
