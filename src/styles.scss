@@ -60,6 +60,171 @@ body.dark {
 }
 
 
+.FilmListEntry {
+  $block: &;
+  padding-bottom: 4px;
+  background-color: $bright;
+  list-style-type: none;
+  border-top: $border;
+  transition: filter linear 0.5s;
+  scroll-margin-top: 50px;
+  &:focus-within {
+    filter: invert(1);
+    transition: filter linear 0s;
+  }
+  &--no-data {
+    padding-bottom: $s;
+  }
+  &__core {
+    display: flex;
+    > *:not(:last-child) {
+      margin-right: $s;
+    }
+  }
+  &__placement {
+    flex-shrink: 0;
+    background-color: $dark;
+    color: $bright;
+    font-weight: bold;
+    width: 28px;
+    padding: 4px;
+    text-align: right;
+    position: relative;
+  }
+  &__heading {
+    flex-grow: 1;
+    @media (max-width: $mobile) {
+      white-space: initial;
+    }
+  }
+  &__subtitle {
+    display: inline-block;
+  }
+  &__points {
+    display: flex;
+    flex-shrink: 1;
+    flex-wrap: wrap;
+    width: 80px;
+    align-content: start;
+  }
+  &__links {
+    padding-left: 0px;
+    display: flex;
+    align-items: center;
+    margin-top: 2px;
+    flex-wrap: wrap;
+  }
+  // TODO make link component
+  .ExternalLink {
+    font-size: 12px;
+    font-weight: bold;
+    margin: 2px 4px 0px 0px;
+    border-radius: 2px;
+    &--icon {
+      display: inline-flex;
+      align-items: center;
+      height: 20px;
+      padding: 1px 2px;
+      &:hover, &:focus {
+        background-color: white;
+        filter: invert(1);
+      }
+      text-decoration: none;
+      img {
+        max-height: 18px;
+        max-width: 50px;
+        filter: brightness(0);
+      }
+    }
+
+    &__extra-text {
+      display: inline-block;
+      margin-left: 2px;
+      margin-right: 4px;
+      font-size: 0.7rem;
+    }
+    @media (max-width: $mobile) {
+      max-width: 80%;
+      width: 100px;
+      border: 1px solid $dark;
+      &__extra-text {
+        margin-left: auto;
+      }
+    }
+  }
+  &__extended {
+    margin: $s;
+  }
+  &__display-details {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    margin-top: -$s;
+    font-weight: normal;
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    background-color: $bright;
+  }
+  &__details {
+    display: block;
+    padding-left: 0;
+    padding-top: 0;
+  }
+  &__poster {
+    float: right;
+    border: 2px solid $dark;
+    background-color: $dark;
+  }
+  &__details__data {
+    display: flex;
+
+    >:first-child {
+      font-weight: bold;
+      min-width: 85px;
+    }
+    >:nth-child(2) {
+      flex-grow: 1;
+    }
+    @media (max-width: $mobile) {
+      display: block;
+      >div {
+        display: block;
+      }
+    }
+  }
+}
+
+
+.ListEntryDataPoint {
+  $block: &;
+  display: flex;
+  width: 100%;
+  &__icon {
+    font-size: 0.5rem;
+    margin-right: 0px;
+    text-align: center;
+    filter: brightness(0);
+    width: 20px;
+  }
+  &__text {
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+    flex-grow: 1;
+    margin-left: auto;
+  }
+  font-size: 0.9rem;
+  &--small {
+    width: 35px;
+    display: inline-flex;
+    font-size: 0.65rem;
+    margin-left: auto;
+    #{$block}__text {
+      width: 40px;
+    }
+  }
+}
+
 .Meter {
   display: flex;
   &__icon {
@@ -344,6 +509,10 @@ body.dark {
   padding: 2px 0px;
   width: 100%;
   left: 0px;
+  @media (min-width: $mobile + 1px) {
+    width: calc(100% - 24px);
+    left: 24px;
+  }
   background-color: $bright;
   align-content: center;
   border-bottom: $border;
