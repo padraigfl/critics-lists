@@ -96,11 +96,6 @@
     }
     year.update(() => params.year);
     format.update(() => params.format);
-    const localStorageItem = `${params.year}-${params.format}`;
-    const priorData = window.localStorage.getItem(localStorageItem);
-    if (priorData) {
-      return processFile(JSON.parse(priorData));
-    }
     let resp;
     let json;
     let films = {};
@@ -112,11 +107,6 @@
       return;
     }
     if (resp.ok) {
-      window.localStorage.setItem(
-        `${params.year}-${params.format}`,
-        JSON.stringify(json),
-      );
-      window.localStorage.setItem('latest', Date.now());
       return processFile(json);
     } else {
       throw new Error('aaag');
@@ -152,7 +142,7 @@
 </svelte:head>
 <div class="ListBreakdown">
   {#if isLoading}
-    <div style="width:400px; height: 500px; background-color: pink;"> Loading...</div>
+    <div class="ListBreakdown__loading"> Loading...</div>
   {/if}
   {#if yearData && listData && !isLoading}
     <DataList
