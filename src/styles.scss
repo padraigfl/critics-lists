@@ -190,6 +190,7 @@ body.dark {
     float: right;
     border: 2px solid $dark;
     background-color: $dark;
+    margin-right: -$s;
   }
   &__details__data {
     display: flex;
