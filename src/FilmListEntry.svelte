@@ -53,12 +53,17 @@
       text: data.metacritic + '%',
       icon: 'metacritic--text.png',
     }] : []),
-    // {
-    //   site: 'Letterboxd',
-    //   link: `https://letterboxd.com/search/films/${title}`,
-    //   icon: 'letterboxd.png'
-    // },
   ];
+  $: searches = [{
+    site: 'Letterboxd',
+    link: `https://letterboxd.com/search/films/${title}`,
+    icon: 'letterboxd.png'
+  }, {
+    icon: 'google.png',
+    site: 'Google',
+    text: 'Google',
+    link: `https://www.google.com/search?q=film+${title.replace(' ', '+').replace('&', '+and+')}`,
+  }];
 
   const toggle = () => {
     extend = !extend;
@@ -127,6 +132,23 @@
       {#if data.plot && data.plot !== 'N/A' }
         <p><em>{data.plot}</em></p>
       {/if}
+      <div class="FilmListEntry__links">
+        {#each searches as { site, link, modify, icon, text }, i}
+          <a class={`ExternalLink ${ icon ? `ExternalLink--icon` : '' } ${site === 'IMDb' ? 'ExternalLink--imdb' : '' }`} href={link} target="_blank">
+            {#if icon}
+              <img class="ExternalLink__icon" src={`/icons/${icon}`} alt={site} />
+            {:else}
+              {site}
+            {/if}
+            {#if text}
+              <span class="ExternalLink__extra-text">{text}</span>
+            {/if} 
+          </a>
+        {/each}
+      </div>
+        <!-- <button on:click={toggle}>
+          {extend ? '<' : '>'}
+        </button> -->
       <!-- <img src={data.poster&& data.poster.replace('300', '80')} /> -->
     </div>
   {/if}

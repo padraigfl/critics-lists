@@ -55,7 +55,7 @@ const getFilmList = (year, bonusData) => {
   return films;
 };
 
-const getFilm = (films, title, year, issueLog, errorLog, apikey = '') => {
+const getFilm = (films, title, year, issueLog, errorLog = {}, apikey = '') => {
   const url = `http://www.omdbapi.com/?t=${title.replace(/\&/g, '%26').replace(/\s/g, '%20')}${year ? `&y=${year}` : ''}&type=movie&apikey=${apikey}`
   return new Promise((res) => {
     setTimeout(() => {
@@ -168,4 +168,32 @@ const workYear = (year, bonusData) => {
 
 // workYear('2010s', 'year');
 
-getFilm({}, 'Pain and Glory');
+
+// const cata = readFile(`./public/filmdata/${2010}sissues.json`);
+// Object.entries(cata).forEach(
+//   v => {
+//     console.log(v);
+//     //if (v[1].notSameYear && +v[1].notSameYear < 2015 && +v[1].notSameYear > 1999)
+//     if (!v[1].notSameYear)
+//       getFilm({}, v[0], +v[1].year) 
+//   } 
+// )
+
+// getFilm({}, 'My Perestroika')
+
+// workYear('2010s', 'year');
+
+// const newFile = readFile('./filmdata/2010sssfilm.json');
+// const oldFile = readFile('./public/filmdata/2010sfilm.json');
+
+// Object.entries(newFile).forEach(([k, v]) => {
+//     oldFile[k]['Ratings'] = [];
+//     if (oldFile[k] && v && v['Rotten Tomatoes']) {
+//       oldFile[k]['Ratings'].push({ Source: 'Rotten Tomatoes', Value: v['Rotten Tomatoes'] });
+//     }
+//     if (oldFile[k] && v && v['Metascore']) {
+//       oldFile[k]['Ratings'].push({ Source: 'Metacritic', Value: v['Metascore'] });
+//     }
+// });
+
+// writeFile('2010sfilm.json',oldFile);
