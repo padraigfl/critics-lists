@@ -53,11 +53,11 @@
       text: data.metacritic + '%',
       icon: 'metacritic--text.png',
     }] : []),
-    {
-      site: 'Letterboxd',
-      link: `https://letterboxd.com/search/films/${title}`,
-      icon: 'letterboxd.png'
-    },
+    // {
+    //   site: 'Letterboxd',
+    //   link: `https://letterboxd.com/search/films/${title}`,
+    //   icon: 'letterboxd.png'
+    // },
   ];
 
   const toggle = () => {
@@ -86,7 +86,7 @@
       {/if}
       <div class="FilmListEntry__links">
         {#each film as { site, link, modify, icon, text }, i}
-          <a class={icon ? 'ExternalLink ExternalLink--icon' : 'ExternalLink'} href={link} target="_blank">
+          <a class={`ExternalLink ${ icon ? `ExternalLink--icon` : '' } ${site === 'IMDb' ? 'ExternalLink--imdb' : '' }`} href={link} target="_blank">
             {#if icon}
               <img class="ExternalLink__icon" src={`/icons/${icon}`} alt={site} />
             {:else}

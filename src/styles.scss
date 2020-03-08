@@ -140,6 +140,10 @@ body.dark {
       align-items: center;
       height: 20px;
       padding: 1px 2px;
+      width: 80px;
+      &.ExternalLink--imdb {
+        width: 105px;
+      }
       &:hover, &:focus {
         background-color: white;
         filter: invert(1);
