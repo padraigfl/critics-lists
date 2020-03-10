@@ -11,7 +11,7 @@
 	<ul>
 		<li>Gathering and presenting additional data than has been provided by other aggregators</li>
 		<li>Allow custom rating metrics and modifications (e.g. omitting lists)</li>
-		<li>Wuick searching of the listed entries (links only lead to searches on other sites, not direct links, sorry...)</li>
+		<li>Quick searching of the listed entries (links only lead to searches on other sites, not direct links, sorry...)</li>
 		<li>Make it easier for me to scroll down through it for some oddities</li>
 		<li>Excuse to use Svelte kinda recklessly (I've done about 95% of this offline so been kinda guessing stuff from READMEs and the library source code)</li>
 	</ul>
@@ -32,16 +32,33 @@
 
 	<p>
 		Other suggestions are extremely welcome, bear in mind that I only have access to the names and their rankings on lists here at the moment.<br/>
-		Some of the data points could undoubtedly be cleaned up but I have no real interest in trying to (e.g. `(Rock list)View metal albums list (not included in combined standings)` is obviously not a critic)
+		Some of the data points could undoubtedly be cleaned up but I have no real interest in trying to (e.g. "<em>[Rock list]View metal albums list [not included in combined standings]</em>" is obviously not a critic)
 	</p>
 
 	<p>
-		Lists contain a very rudimentary set of bar charts, tbh they're probably not needed or should be weighted to prevent the list being so top heavy in terms of observable data from them. I dunno.
+		Lists display amount of number ones, amount of mentions, amount of awards won and nominations without an award.
 	</p>
 
 	<p>
-		Oh, and sorry about the obnoxious marquee element on the side.
+		Film data is pulled from OMDb, some of it is going to be inaccurate and it was not all grabbed at the same time. It's mostly about giving some extra info without having to search.
 	</p>
+
+	<p>
+		Oh, and sorry about the obnoxious marquee element on the side. If you're on mobile you cant see it so here are the links.
+		{#each [
+			{ link: 'github.com/padraigfl', text: 'Github' },
+			{ link: 'github.com/padraigfl/critic-lists', text: 'Source code'},
+			{ link: 'packard-belle.netlify.com', text: 'Windows98 Clone' },
+			{ link: 'react-coursebuilder.netlify.com', text: 'Youtube App thing' },
+		] as {link, text}, i}
+			{#if i > 0}
+				{' '}—
+			{/if}
+			<a href={`https://${link}`} target="_blank">{text}</a>
+		{/each}
+	</p>
+
+	<p>Also sorry about the styles, I was mostly just messing around with stuff to see what I could make work, wanted to limit myself to two colors as well, for no reason whatsoever.</p>
 
 
 	<div>
