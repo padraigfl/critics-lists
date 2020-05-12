@@ -1,9 +1,10 @@
 <script>
 	import Modal from './Modal.svelte';
+	import NavOptions from './NavOptions.svelte';
 	import axios from 'axios';
 	import { push } from 'svelte-spa-router';
 	import { processListsWithRankings, defaultScoringMatrix } from './analytics';
-  import { loadingPage, year, format, scoringMatrix, OPTIONS, filterOptions, filterSelections, ordering } from './store';
+  import { loadingPage, year, format, scoringMatrix, OPTIONS, filterOptions, filterSelections, ordering, viewUninterested } from './store';
 
 	let display;
 	let year_value = 'Year';
@@ -19,6 +20,7 @@
 	let listener;
 	let order = 'score';
 	let options = [];
+	let seeUninterested = false;
   $: matrix = defaultScoringMatrix;
 
 	const onClickOutside = (e) => {
@@ -27,6 +29,9 @@
 			toggle();
 		}
 	}
+
+
+	viewUninterested.subscribe((val) => seeUninterested = val);
 
   filterSelections.subscribe((val) => selectedOptions = val);
 
@@ -50,6 +55,11 @@
 			window.scroll(0, 0);
 		}
 	};
+
+	const toggleUninterested = () => {
+		debugger;
+		viewUninterested.update(() => !seeUninterested);
+	}
 
 	const changeFormat = (e) => {
     format.update(() => e.target.value);
@@ -187,38 +197,15 @@
 			</button>
 		</div>
 		{#if display}
-			<div class="nav__options">
-				<ul>
-					{#each options as opt}
-						<li>
-              {#if opt.type === 'sort'}
-                <div class="nav__options__title">
-                  {opt.key || opt.title}
-                </div>
-                <select class="nav__options__select" on:change={(e) => updateSort(opt.options[e.target.value])} value={opt.options.findIndex(v => v.key === order)}>
-                  {#each opt.options as selectOption, i}
-                    <option value={i} >
-                      {selectOption.title}
-                    </option>
-                  {/each}
-                </select>
-              {:else}
-                <div class="nav__options__title">
-                    {opt.key || opt.title}
-                </div>
-                <select class="nav__options__select" on:change={updateOptions(opt.key || opt.title, opt.type)} value={selectedOptions[opt.key || opt.title] || null}>
-                  <option value='All'>All</option>
-									{#each opt.options.sort((a, b) => a[0] > b[0] ? 1 : -1).filter(a => a[1] > 1) as selectOption}
-                    <option value={selectOption.title || selectOption[0]} >
-                      {`${selectOption[0]} (${selectOption[1]})`}
-                    </option>
-                  {/each}
-                </select>
-              {/if}
-						</li>
-					{/each}
-				</ul>
-			</div>
+			<NavOptions
+				getOptions={getOptions}
+				selectedOptions={selectedOptions}
+				updateSort={updateSort}
+				updateOptions={updateOptions}
+				toggleUninterested={toggleUninterested}
+				seeUninterested={seeUninterested}
+				order={order}
+			/>
 		{/if}
 	</div>
 <!-- 
