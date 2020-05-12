@@ -5,6 +5,7 @@
 	import Nav from './Nav.svelte';
 	import Router, { push } from 'svelte-spa-router';
 	import axios from 'axios';
+	import './styles.scss';
 
 	const routes = {
 		'/': Landing,

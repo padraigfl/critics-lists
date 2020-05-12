@@ -152,7 +152,7 @@
     />
   {/if}
   {#if listData && listData.length && yearData && !isLoading}
-    <List listData={listData} yearData={yearData} format={params.format} />
+    <List listData={listData} yearData={yearData} format={params.format} year={params.year} />
   {:else if !isLoading}
     No results found
   {/if}

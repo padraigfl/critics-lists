@@ -26,6 +26,18 @@
     return `<1k`
   }
 
+  const markAsUninterested = () => {
+    const uninterested = JSON.parse(window.localStorage.getItem('uninterested') || '[]');
+    window.localStorage.setItem(
+      'uninterested',
+      JSON.stringify(
+        uninterested.includes(title)
+          ? uninterested.filter(v => v !== title)
+          : [...uninterested, title],
+      ),
+    );
+  };
+
   const imdb = {
     site: 'IMDb', 
     icon: 'imdb.png',
@@ -146,6 +158,13 @@
           </a>
         {/each}
       </div>
+      <input
+        name={`${title}__uninterested`}
+        type="checkbox"
+        checked={JSON.parse(window.localStorage.getItem('uninterested') || '[]').includes(title)}
+        on:change={markAsUninterested}
+      />
+
         <!-- <button on:click={toggle}>
           {extend ? '<' : '>'}
         </button> -->
