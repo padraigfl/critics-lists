@@ -2,18 +2,20 @@
   import { onMount, beforeUpdate, afterUpdate } from 'svelte';
   import axios from 'axios';
 	import { push } from 'svelte-spa-router';
-  import List from './List.svelte';
-  import DataBlock from './DataBlock.svelte';
-  import DataList from './DataList.svelte';
+  import List from './List/List.svelte';
+  import DataBlock from './DerivedData/DataBlock.svelte';
+  import DataList from './DerivedData/DataList.svelte';
 	import {
     formatList,
     deriveAdditionalDataFromProcessedList,
     processListsWithRankings,
     getListOfArrayValues,
-  } from './analytics';
-  import './styles.scss';
-  import { year, filmData, format, scoringMatrix, loadingPage, filterOptions, ordering, filterSelections } from './store';
-  import { objectEntriesSort, getValuesFromObject } from './utils';
+  } from '../analytics';
+  import '../styles.scss';
+  import {
+    year, filmData, format, scoringMatrix, loadingPage, filterOptions, ordering, filterSelections,
+  } from '../store';
+  import { objectEntriesSort, getValuesFromObject } from '../utils';
 	export let params = params;
   let listData = null;
   let data;

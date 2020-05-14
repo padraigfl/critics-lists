@@ -1,7 +1,6 @@
 <script>
-  import ListEntry from './ListEntry.svelte';
-  import FilmListEntry from './FilmListEntry.svelte';
-  import { viewUninterested } from './store';
+  import Entry from './Entry.svelte';
+  import { viewUninterested } from '../../store';
   export let listData;
   export let yearData;  
   export let format;
@@ -16,7 +15,6 @@
     return JSON.parse(window.localStorage.getItem('uninterested') || '[]')
   }
 
-  $: Entry = format === 'film' ? FilmListEntry : ListEntry;
 </script>
 
 <ol class="List">
@@ -28,12 +26,8 @@
         points={data.score}
         entry={yearData.works[key]}
         format={format}
-        {...(
-          format === 'film' ? {
-            data,
-            displayAll: false,
-          } : {}
-        )}
+        data={data}
+        displayAll={false}
       />
     {/if}
   {/each}

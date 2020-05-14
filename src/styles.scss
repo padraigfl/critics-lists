@@ -9,6 +9,33 @@ $xl: 32px;
 $mobile: 640px;
 $border: 2px solid $dark;
 
+body {
+  display: flex;
+  flex-direction: column;
+  margin: 0px;
+  padding: 0px 0px 0px $l;
+  background-color: $bright;
+  color: $dark;
+  flex-grow: 1;
+  height: initial;
+
+  @media (max-width: $mobile) {
+    padding-left: 0px;
+  }
+}
+
+a, a:visited {
+  color: $dark;
+  text-decoration: underline;
+}
+
+body.dark {
+  background-color: $dark;
+  color: $bright;
+  a, a:visited {
+    color: $bright;
+  }
+}
 
 .ListBreakdown {
   display: flex;
@@ -47,36 +74,23 @@ $border: 2px solid $dark;
   }
 }
 
-body {
-  display: flex;
-  flex-direction: column;
+.List {
   margin: 0px;
-  padding: 0px 0px 0px $l;
-  background-color: $bright;
-  color: $dark;
+  padding: 0;
+  padding-top: 44px;
+  overflow-y: auto;
+  margin-left: $s;
+  border-left: $border;
   flex-grow: 1;
-  height: initial;
+  margin-left: 320px;
 
   @media (max-width: $mobile) {
-    padding-left: 0px;
+    margin-left: 0px;
+    padding-top: 0px;
   }
 }
 
-a, a:visited {
-  color: $dark;
-  text-decoration: underline;
-}
-
-body.dark {
-  background-color: $dark;
-  color: $bright;
-  a, a:visited {
-    color: $bright;
-  }
-}
-
-
-.FilmListEntry {
+.Entry {
   $block: &;
   padding-bottom: 4px;
   background-color: $bright;
@@ -88,12 +102,9 @@ body.dark {
     filter: invert(1);
     transition: filter linear 0s;
   }
-  &--no-data {
-    padding-bottom: $s;
-  }
   &__core {
     display: flex;
-    > *:not(:last-child) {
+    > * {
       margin-right: $s;
     }
   }
@@ -117,11 +128,12 @@ body.dark {
     display: inline-block;
   }
   &__points {
-    display: flex;
-    flex-shrink: 1;
-    flex-wrap: wrap;
-    width: 80px;
-    align-content: start;
+    min-height: 56px;
+    display: grid;
+    grid: 20px 18px 18px / repeat(2, 40px);
+    @media (max-width: $mobile) {
+      grid: auto / repeat(1, 60px);
+    }
   }
   &__links {
     padding-left: 0px;
@@ -141,7 +153,7 @@ body.dark {
       align-items: center;
       height: 20px;
       padding: 1px 2px;
-      width: 80px;
+      width: 100px;
       &.ExternalLink--imdb {
         width: 105px;
       }
@@ -152,7 +164,7 @@ body.dark {
       text-decoration: none;
       img {
         max-height: 18px;
-        max-width: 50px;
+        max-width: 70px;
         filter: brightness(0);
       }
     }
@@ -173,7 +185,8 @@ body.dark {
     }
   }
   &__extended {
-    margin: $s;
+    padding: $s;
+    border-top: 2px dashed $dark;
   }
   &__display-details {
     width: 100%;
@@ -218,178 +231,30 @@ body.dark {
 
 
 .ListEntryDataPoint {
-  $block: &;
-  display: flex;
-  width: 100%;
-  &__icon {
-    font-size: 0.5rem;
-    margin-right: 0px;
-    text-align: center;
-    filter: brightness(0);
-    width: 20px;
-  }
-  &__text {
-    font-variant-numeric: tabular-nums;
-    text-align: right;
-    flex-grow: 1;
-    margin-left: auto;
-  }
-  font-size: 0.9rem;
-  &--small {
-    width: 35px;
-    display: inline-flex;
-    font-size: 0.65rem;
-    margin-left: auto;
-    #{$block}__text {
-      width: 40px;
-    }
-  }
-}
-
-.Meter {
-  display: flex;
-  &__icon {
-    font-size: 0.5rem;
-    margin-right: 0px;
-    filter: brightness(0);
-  }
-  &__text {
-    font-variant-numeric: tabular-nums;
-    text-align: right;
-    flex-grow: 1;
-    margin-left: auto;
-  }
-  &:first-child .Meter__graph {
-    border-top: none;
-  }
-  &__graph {
-    width: 40px;
-    flex-grow: 0;
-    flex-shrink: 0;
-    border: 2px solid $dark;
-    border-right: none;
-    margin-bottom: 1px;
-    &__value {
-      background-color: $dark;
-      height: 100%;
-    }
-  }
-  font-size: 0.9rem;
-  &--small {
-    font-size: 0.65rem;
-    .Meter__text {
-      flex-grow: 0;
-    }
-  }
-}
-
-.List {
-  margin: 0px;
-  padding: 0;
-  padding-top: 44px;
-  overflow-y: auto;
-  margin-left: $s;
-  border-left: $border;
-  flex-grow: 1;
-  margin-left: 320px;
-
-  @media (max-width: $mobile) {
-    margin-left: 0px;
-    padding-top: 0px;
-  }
-}
-
-.ListEntry {
+  display: inline-block;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
   background-color: $bright;
-  list-style-type: none;
-  padding-bottom: $s;
-  margin-top: -1px;
-  border-top: $border;
-  transition: filter linear 0.5s;
-  scroll-margin-top: 50px;
-  &:focus-within {
-    filter: invert(1);
-    transition: filter linear 0s;
-  }
-  &__data {
-    display: flex;
-    align-items: top;
-    > *:not(:last-child) {
-      margin-right: $s;
-    }
-  }
-  &__extended {
-    margin: $s;
-  }
-  &__details {
-    display: block;
-    padding-left: 0;
-    padding-top: 0;
-  }
-  &__details__data {
-    display: flex;
-
-    >:first-child {
-      font-weight: bold;
-      min-width: 100px;
-    }
-    >:nth-child(2) {
-      flex-grow: 1;
-    }
-  }
-  &__placement {
-    flex-shrink: 0;
-    background-color: $dark;
-    color: $bright;
-    font-weight: bold;
-    width: 28px;
-    padding: 4px;
-    text-align: right;
-  }
-  &__title {
+  font-size: 0.9rem;
+  &--small {
+    font-size: 0.65rem;
     white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    @media (max-width: $mobile) {
-      white-space: initial;
+    &::after {
+        display: inline-block;
+        font-size: 0.5rem;
+        margin-right: 0px;
+        text-align: right;
+        filter: brightness(0);
+        width: 12px;
+        content: attr(icon);
+        font-weight: bold;
     }
   }
-  &__stats {
-    flex-shrink: 0;
-    margin-left: auto;
-  }
-  &__links {
-    padding-left: 0px;
-    display: flex;
-    align-items: center;
-    margin-top: 2px;
-  }
-  &__extra-text {
-    display: inline-block;
-    margin-left: 2px;
-    margin-right: 4px;
-    font-size: 0.7rem;
-  }
-  &__link {
-    font-size: 12px;
-    font-weight: bold;
-    margin: 0 4px;
-    &--icon {
-      margin: 0;
-      display: inline-flex;
-      align-items: center;
-      height: 20px;
-      padding: 1px 2px;
-      &:hover, &:focus {
-        background-color: white;
-        filter: invert(1);
-      }
-      text-decoration: none;
-      img {
-        max-height: 18px;
-        max-width: 50px;
-        filter: brightness(0);
-      }
+  &--heading {
+    grid-column: 1/3;
+    text-align: right;
+    @media (max-width: $mobile) {
+      grid-column: 1;
     }
   }
 }
@@ -609,8 +474,4 @@ button, select, input {
 button, select {
   font-weight: bold;
   margin-bottom: 0px;
-}
-
-.tabularNumber {
-  font-variant-numeric: tabular-nums;
 }

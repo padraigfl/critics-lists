@@ -3,8 +3,10 @@
 	import NavOptions from './NavOptions.svelte';
 	import axios from 'axios';
 	import { push } from 'svelte-spa-router';
-	import { processListsWithRankings, defaultScoringMatrix } from './analytics';
-  import { loadingPage, year, format, scoringMatrix, OPTIONS, filterOptions, filterSelections, ordering, viewUninterested } from './store';
+	import { processListsWithRankings, defaultScoringMatrix } from '../../analytics';
+  import {
+		loadingPage, year, format, scoringMatrix, OPTIONS, filterOptions, filterSelections, ordering, viewUninterested,
+	} from '../../store';
 
 	let display;
 	let year_value = 'Year';

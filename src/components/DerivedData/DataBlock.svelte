@@ -1,5 +1,5 @@
 <script>
-  import {getIdFromName} from './utils';
+  import {getIdFromName} from '../../utils';
   export let entry;
   $: data = Array.isArray(entry.data) ? entry.data : [entry.data];
 

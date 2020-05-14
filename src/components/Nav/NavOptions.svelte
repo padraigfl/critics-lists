@@ -2,14 +2,15 @@
 	import Modal from './Modal.svelte';
 	import axios from 'axios';
 	import { push } from 'svelte-spa-router';
-	import { processListsWithRankings, defaultScoringMatrix } from './analytics';
-  import { loadingPage, year, format, scoringMatrix, OPTIONS, filterOptions, filterSelections, ordering, viewUninterested } from './store';
+	import { processListsWithRankings, defaultScoringMatrix } from '../../analytics';
+  import {
+    loadingPage, year, format, scoringMatrix, OPTIONS, filterOptions, filterSelections, ordering, viewUninterested
+  } from '../../store';
 
   export let getOptions;
   export let updateSort;
   export let updateOptions;
   export let selectedOptions;
-  export let seeUninterested;
   export let toggleUninterested;
   export let order;
 
@@ -48,9 +49,10 @@
       </li>
     {/each}
     <li>
-      <button on:click={toggleUninterested}>
-        { seeUninterested ? 'Hide' : 'Show'} Uninterested
-      </button>
+      <input name="display_uninterested" type="checkbox" on:change={toggleUninterested} />
+      <label for="display_uninterested">
+        Hide uninteresting
+      </label>
     </li>
   </ul>
   <p class="nav__options__link"><a href="/">About</a></p>

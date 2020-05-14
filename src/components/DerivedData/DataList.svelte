@@ -3,7 +3,7 @@
   import DataBlock from './DataBlock.svelte';
 	import {
     deriveAdditionalDataFromProcessedList,
-  } from './analytics';
+  } from '../../analytics';
   export let yearData;
   export let listData;
   export let format;

@@ -1,8 +1,8 @@
 <script>
-	import ComponentA from './ComponentA.svelte';
-	import Landing from './Landing.svelte';
-	import ListBreakdown from './ListBreakdown.svelte';
-	import Nav from './Nav.svelte';
+	import ComponentA from './components/ComponentA.svelte';
+	import Landing from './components/Landing.svelte';
+	import ListBreakdown from './components/ListPage.svelte';
+	import Nav from './components/Nav/Nav.svelte';
 	import Router, { push } from 'svelte-spa-router';
 	import axios from 'axios';
 	import './styles.scss';
