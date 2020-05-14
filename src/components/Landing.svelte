@@ -1,5 +1,5 @@
 <script>
-	import { OPTIONS, SOURCE } from './store';
+	import { OPTIONS, SOURCE } from '../store';
 </script>
 
 <svelte:head>
@@ -68,7 +68,7 @@
 			<ul>
 				{#each OPTIONS.years as year}
 					<li>
-						<a class="tabularNumber" href={`/#/${format}/${year}`}>
+						<a  tyle={{ fontVariantNumeric: 'tabular-number' }} href={`/#/${format}/${year}`}>
 							{year}
 						</a> – [<a href={`/${format}/${year}.json`}>JSON</a>,
 						<a href={SOURCE[format][year]} target="_blank">Source</a>]
