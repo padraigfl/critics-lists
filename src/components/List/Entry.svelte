@@ -102,7 +102,7 @@
   const toggle = () => {
     extend = !extend;
   }
-  const expand = () => { extend = true }
+  const expand = (e) => { extend = !extend; e.currentTarget.blur(); }
 
 </script>
 
@@ -112,9 +112,9 @@
   >
     <div class="Entry__placement">
       {placement}
-      {#if hasData && !extend}
+      {#if hasData}
         <button class="Entry__display-details" on:click={expand}>
-          🔽
+          { extend ? '^' : '🔽' }
         </button>
       {/if}
     </div>
@@ -191,6 +191,7 @@
         <p><em>{data.plot}</em></p>
       {/if}
       <div class="Entry__links">
+        Search: 
         {#each searches as { site, link, modify, icon, text }, i}
           <a class={`ExternalLink ${ icon ? `ExternalLink--icon` : '' } ${site === 'IMDb' ? 'ExternalLink--imdb' : '' }`} href={link} target="_blank">
             {#if icon}

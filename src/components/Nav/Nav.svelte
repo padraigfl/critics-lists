@@ -168,18 +168,30 @@
 	
 	<div class="nav">
 		<div class="nav__main">
+			<a class="nav__main__home" href="/" on:change={() => push('/')}>
+				<span>🏚️</span>
+			</a>
 			<div class="nav__main__data">
-				<div class="nav__sort-data">Ordered by {order}</div>
-				{#if Object.keys(selectedOptions).length > 0}
-					{#each Object.entries(selectedOptions) as [key, val]}
-						<div class="nav__filter-data">{key}: {val}</div>{' '}
-					{/each}
-				{/if}
+				<div class="nav__data">
+					<strong>Order</strong>: {order}
+				</div>
+				<div class="nav__data">
+					{#if Object.keys(selectedOptions).length > 0}
+						<strong>Filters: </strong>
+						{#each Object.entries(selectedOptions) as [key, val]}
+							{#if val.toLowerCase() !== 'all'}
+								<span class="nav__data__filter">
+									{val}
+								</span>
+							{/if}
+						{/each}
+					{/if}
+				</div>
 			</div>
 			<select value={year_value} on:change={changeYear}>
 				{#each ['Year', '2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2010s'] as year}
 					<option value={year} disabled={year === 'Year'}>
-						{ year }
+						{year !== 'Year' ? `'${year.substr(2)}` : 'Year' }
 					</option>
 				{/each}
 			</select>
