@@ -48,10 +48,16 @@
         {/if}
       </li>
     {/each}
-    <li>
+    <li class="nav__options__toggle">
       <input name="display_uninterested" type="checkbox" on:change={toggleUninterested} />
       <label for="display_uninterested">
         Hide uninteresting
+      </label>
+    </li>
+    <li class="nav__options__toggle">
+      <input name="display_uninterested" type="checkbox" on:change={toggleUninterested} />
+      <label for="display_uninterested">
+        Hide watched
       </label>
     </li>
   </ul>

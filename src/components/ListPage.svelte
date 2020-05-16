@@ -144,16 +144,16 @@
 </svelte:head>
 <div class="ListBreakdown">
   {#if isLoading}
-    <div class="ListBreakdown__loading"> Loading...</div>
+    <div class="ListBreakdown__loading">Loading...</div>
   {/if}
-  {#if yearData && listData && !isLoading}
+  {#if yearData && listData}
     <DataList
       yearData={yearData}
       listData={listData}
       format={params.format}
     />
   {/if}
-  {#if listData && listData.length && yearData && !isLoading}
+  {#if listData && listData.length && yearData}
     <List listData={listData} yearData={yearData} format={params.format} year={params.year} />
   {:else if !isLoading}
     No results found
