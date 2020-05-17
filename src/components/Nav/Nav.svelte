@@ -5,7 +5,17 @@
 	import { push } from 'svelte-spa-router';
 	import { processListsWithRankings, defaultScoringMatrix } from '../../analytics';
   import {
-		loadingPage, year, format, scoringMatrix, OPTIONS, filterOptions, filterSelections, ordering, viewUninterested,
+		loadingPage,
+		year,
+		format,
+		scoringMatrix,
+		OPTIONS,
+		filterOptions,
+		filterSelections,
+		ordering,
+		viewUninterested,
+		viewKnown,
+		viewInterested,
 	} from '../../store';
 
 	let display;
@@ -23,6 +33,8 @@
 	let order = 'score';
 	let options = [];
 	let seeUninterested = false;
+	let seeInterested = false;
+	let seeKnown = true;
   $: matrix = defaultScoringMatrix;
 
 	const onClickOutside = (e) => {
@@ -34,6 +46,8 @@
 
 
 	viewUninterested.subscribe((val) => seeUninterested = val);
+	viewKnown.subscribe((val) => seeKnown = val);
+	viewInterested.subscribe((val) => seeInterested = val);
 
   filterSelections.subscribe((val) => selectedOptions = val);
 
@@ -59,8 +73,13 @@
 	};
 
 	const toggleUninterested = () => {
-		debugger;
 		viewUninterested.update(() => !seeUninterested);
+	}
+	const toggleInterested = () => {
+		viewUninterested.update(() => !seeInterested);
+	}
+	const toggleKnown = () => {
+		viewKnown.update(() => !seeKnown);
 	}
 
 	const changeFormat = (e) => {
@@ -175,18 +194,18 @@
 				<div class="nav__data">
 					<strong>Order</strong>: {order}
 				</div>
-				<div class="nav__data">
 					{#if Object.keys(selectedOptions).length > 0}
-						<strong>Filters: </strong>
-						{#each Object.entries(selectedOptions) as [key, val]}
-							{#if val.toLowerCase() !== 'all'}
-								<span class="nav__data__filter">
-									{val}
-								</span>
-							{/if}
-						{/each}
+						<div class="nav__data">
+							<strong>Filters: </strong>
+							{#each Object.entries(selectedOptions) as [key, val]}
+								{#if val.toLowerCase() !== 'all'}
+									<span class="nav__data__filter">
+										{val}
+									</span>
+								{/if}
+							{/each}
+						</div>
 					{/if}
-				</div>
 			</div>
 			<select value={year_value} on:change={changeYear}>
 				{#each ['Year', '2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2010s'] as year}
@@ -216,9 +235,12 @@
 				selectedOptions={selectedOptions}
 				updateSort={updateSort}
 				updateOptions={updateOptions}
-				toggleUninterested={toggleUninterested}
-				seeUninterested={seeUninterested}
 				order={order}
+				checkboxes={[
+					{ title: 'Hide Uninteresed', toggle: toggleUninterested, checked: !seeUninterested },
+					{ title: 'Hide Interested', toggle: toggleInterested, checked: !seeInterested },
+					{ title: 'Hide Known', toggle: toggleKnown, checked: !seeKnown },	
+				]}
 			/>
 		{/if}
 	</div>

@@ -62,6 +62,7 @@
 			{ link: 'github.com/padraigfl/critic-lists', text: 'Source code'},
 			{ link: 'packard-belle.netlify.com', text: 'Windows98 Clone' },
 			{ link: 'react-coursebuilder.netlify.com', text: 'Youtube App thing' },
+			{ link: 'dvd-rom.netlify.app/', text: 'DVD menu recreations' }
 		] as {link, text}, i}
 			{#if i > 0}
 				{' '}—

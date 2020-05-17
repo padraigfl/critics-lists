@@ -151,6 +151,7 @@
       yearData={yearData}
       listData={listData}
       format={params.format}
+      year={params.year}
     />
   {/if}
   {#if listData && listData.length && yearData}
