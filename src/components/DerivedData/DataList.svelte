@@ -4,16 +4,26 @@
 	import {
     deriveAdditionalDataFromProcessedList,
   } from '../../analytics';
+  import { SOURCE } from '../../store'; 
   export let yearData;
   export let listData;
   export let format;
+  export let year;
   let prevYearData;
   let prevListData;
+
+  const formatNameFromLink = (link) => {
+    const name = 'Metacritic: ' + link.split('/').pop().replace(/\-/g, ' ');
+    return name.includes(year) ? name : `${name} (year)`;
+  }
+
   let dataList = [
+    { title: 'Source', data: formatNameFromLink(SOURCE[format][year]), link: SOURCE[format][year] },
     { title: '# Lists aggregated:', data: Object.keys(yearData.critics).length },
     { title: '# Publications', data: Object.keys(yearData.publications).length },
     { title: '# Unique entries', data: Object.keys(yearData.works).length },
   ];
+
   
   const getDerivedData = () => {
     let derivedData = deriveAdditionalDataFromProcessedList(listData, yearData, format);

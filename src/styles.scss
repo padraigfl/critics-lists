@@ -46,8 +46,8 @@ body.dark {
   flex: 1 1 0;
   height: calc(100% - 52px);
   overflow: auto;
-  width: 100%;
-  max-width: 1200px;
+  min-width: 66vw;
+  max-width: 1400px;
   margin-left: auto;
   border-right: $border;
 
@@ -71,6 +71,7 @@ body.dark {
   }
   @media (max-width: $mobile) {
     display: block;
+    margin-left: 0px;
     &__details, &__list {
       width: 100%;
       padding: $s;
@@ -85,11 +86,12 @@ body.dark {
   margin-left: $s;
   border-left: $border;
   flex-grow: 1;
-  margin-left: 320px;
+  max-width: 66vw;
 
   @media (max-width: $mobile) {
     margin-left: 0px;
     padding-top: 0px;
+    max-width: 100%;
   }
 }
 
@@ -271,15 +273,14 @@ body.dark {
   padding: $s;
   padding-right: 0px;
   margin-top: 0px;
-  width: 300px;
-  flex-shrink: 0;
-  position: fixed;
+  max-width: 400px;
 
   @media (max-width: $mobile) {
     position: relative;
     flex-shrink: 0;
     width: initial;
     padding-right: $s;
+    width: 100%;
   }
   dd {
     margin: 0px;
@@ -393,19 +394,17 @@ body.dark {
 }
 
 .nav {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   flex-shrink: 0;
   padding: 0px;
-  left: 0px;
   @media (min-width: $mobile + 1px) {
-    left: 24px;
     padding: $xs;
   }
   background-color: $bright;
   align-content: center;
   border-bottom: $border;
-  overflow: hidden;
   z-index: 10;
   &__button {
     &--active {
@@ -430,6 +429,7 @@ body.dark {
       font-weight: bold;
       padding: $s;
       margin-right: $xs;
+      text-decoration: none;
       span {
         filter: brightness(0) invert(1);
       }
@@ -440,7 +440,9 @@ body.dark {
     }
     &__data {
       margin-right: auto;
-      font-size: 12px;
+      @media (max-width: $mobile) {
+        font-size: 12px;
+      }
     }
   }
   &__data{
@@ -458,8 +460,8 @@ body.dark {
     }
   };
   &__options {
-    position: fixed;
-    top: 50px;
+    position: absolute;
+    top: 100%;
     right: 0px;
     text-align: right;
     background-color: $bright;

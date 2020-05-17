@@ -11,8 +11,8 @@
   export let updateSort;
   export let updateOptions;
   export let selectedOptions;
-  export let toggleUninterested;
   export let order;
+  export let checkboxes;
 
   $: options = getOptions();
 </script>
@@ -48,18 +48,14 @@
         {/if}
       </li>
     {/each}
-    <li class="nav__options__toggle">
-      <input name="display_uninterested" type="checkbox" on:change={toggleUninterested} />
-      <label for="display_uninterested">
-        Hide uninteresting
-      </label>
-    </li>
-    <li class="nav__options__toggle">
-      <input name="display_uninterested" type="checkbox" on:change={toggleUninterested} />
-      <label for="display_uninterested">
-        Hide watched
-      </label>
-    </li>
+    {#each checkboxes as { title, toggle, checked }}
+      <li class="nav__options__toggle">
+        <input name={title} type="checkbox" on:change={toggle} checked={checked} />
+        <label for={title}>
+          {title}
+        </label>
+      </li>
+    {/each}
   </ul>
   <p class="nav__options__link"><a href="/">About</a></p>
 </div>

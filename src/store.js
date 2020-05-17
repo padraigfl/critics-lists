@@ -34,7 +34,7 @@ export const filterSelections = writable({});
 export const ordering = writable('score');
 
 export const viewUninterested = writable(true);
-export const viewSeen = writable(true);
+export const viewKnown = writable(true);
 export const viewInterested = writable(true);
 
 export const OPTIONS = {

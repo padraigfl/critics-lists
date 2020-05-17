@@ -10,6 +10,8 @@
   export let format;
   export let data;
   export let displayAll;
+  export let lists;
+  export let update
   $: optionsVisible = false;
   $: extend = false; // TODO handle toggle of extra data
   $: hasData = data.director || data.cast || data.genre || data.language;
@@ -27,17 +29,6 @@
     return `<1k`
   }
 
-  const markAsUninterested = () => {
-    const uninterested = JSON.parse(window.localStorage.getItem('uninterested') || '[]');
-    window.localStorage.setItem(
-      'uninterested',
-      JSON.stringify(
-        uninterested.includes(title)
-          ? uninterested.filter(v => v !== title)
-          : [...uninterested, title],
-      ),
-    );
-  };
 
   const imdb = {
     site: 'IMDb', 
@@ -104,6 +95,12 @@
   }
   const expand = (e) => { extend = !extend; e.currentTarget.blur(); }
 
+  const listActions = [
+    { icon: '+', action: update.seen, isChecked: lists.seen.includes},
+    { icon: '?', action: update.interested, isChecked: (title) => lists.interested[title]},
+    { icon: 'x', action: update.uninterested, isChecked: lists.uninterested.includes},
+  ]
+
 </script>
 
 <li class={`Entry Entry--${format} ${!hasData ? 'Entry--no-data' : '' }`} id={getIdFromName(title)}>
@@ -159,26 +156,19 @@
         <img class="Entry__poster" src={data.poster.replace('X300', 'X70')} alt="" />
       {/if}
       <div class="Entry__options">
-        <div>
-          <input
-            class="Entry__options"
-            name={`${title}__uninterested`}
-            type="checkbox"
-            checked={JSON.parse(window.localStorage.getItem('uninterested') || '[]').includes(title)}
-            on:change={markAsUninterested}
-          />
-          <lable for={`${title}__uninterested`}>Hide list</lable>
-        </div>
-        <div>
-          <input
-            class="Entry__options"
-            name={`${title}__uninterested`}
-            type="checkbox"
-            checked={JSON.parse(window.localStorage.getItem('uninterested') || '[]').includes(title)}
-            on:change={markAsUninterested}
-          />
-          <lable for={`${title}__uninterested`}>Watch list</lable>
-        </div>
+        {#each listActions as { icon, action, isChecked }}
+          <div>
+            <input
+              class="Entry__options"
+              name={`${title}__${icon}`}
+              value={title}
+              type="checkbox"
+              checked={isChecked(title)}
+              on:change={action}
+            />
+            <lable class={isChecked(title) ? 'active' : undefined} for={`${title}__${icon}`}>{icon}</lable>
+          </div>
+        {/each}
       </div>
       <ul class="Entry__details">
         <li class="Entry__details__data"><div>Director</div> <div>{data.director || 'N/A'}</div></li>
