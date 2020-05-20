@@ -7,8 +7,9 @@
     document.getElementById(id)
       .scrollIntoView({ behavior: 'smooth', position: 'center' });
     // window.scrollBy(0, -50)
-    document.querySelector(`#${id} a`).focus();
-    document.querySelector(`#${id} a`).blur();
+    const focusEl = document.querySelector(`#${id} input`);
+    focusEl.focus();
+    setTimeout(() => focusEl.blur(), 1000);
   }
 </script>
 
@@ -32,7 +33,7 @@
     <em class="DataBlock__descriptor">{entry.descriptor}</em>
   {/if}  
   {#if entry.link}
-    <a href={entry.link} target="_blank">*</a>
+    [<a href={entry.link} target="_blank">*</a>]
   {/if}
   {#if entry.validator && entry.validator.data !== entry.data}
     <div class="DataBlock__validator">
@@ -49,7 +50,7 @@
           <em class="DataBlock__descriptor">{entry.validator.descriptor}</em>
         {/if}
         {#if entry.validator.link}
-          <a href={entry.validator.link} target="_blank">*</a>
+          [<a href={entry.validator.link} target="_blank">*</a>]
         {/if}
       ]
     </div>

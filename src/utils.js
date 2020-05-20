@@ -1,4 +1,5 @@
 export const getIdFromName = name =>
+  '_' +
   name
   .split(/\s|,/)
   .join('_')
