@@ -2,6 +2,7 @@
 	import ComponentA from './components/ComponentA.svelte';
 	import Landing from './components/Landing.svelte';
 	import ListBreakdown from './components/ListPage.svelte';
+	import InterestedPage from './components/InterestedPage.svelte';
 	import Nav from './components/Nav/Nav.svelte';
 	import Router, { push } from 'svelte-spa-router';
 	import axios from 'axios';
@@ -9,6 +10,7 @@
 
 	const routes = {
 		'/': Landing,
+		'/interested/:format': InterestedPage,
 		'/:format': ComponentA,
 		'/:format/:year': ListBreakdown,
     '*': ComponentA,

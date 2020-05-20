@@ -8,6 +8,7 @@ $l: 24px;
 $xl: 32px;
 
 $mobile: 800px;
+$mobilePortrait: 400px;
 $border: 2px solid $dark;
 
 @keyframes flash {
@@ -144,11 +145,19 @@ body.dark {
     @media (max-width: $mobile) {
       white-space: initial;
     }
+    &-row--title {
+      margin-top: $s;
+      margin-bottom: $s;
+    }
     &-row--actions {
       display: flex;
       flex-wrap: wrap;
       margin-top: auto;
-      align-items: center;;
+      align-items: center;
+      @media (max-width: $mobilePortrait) {
+        display: block;
+        > * { margin: $xs 0; }
+      }
     }
   }
   &__subtitle {
@@ -169,6 +178,9 @@ body.dark {
     align-items: center;
     margin-right: auto;
     flex-wrap: wrap;
+    @media (max-width: $mobilePortrait) {
+      display: block;
+    }
   }
   &__checkboxes {
     display: inline-flex;
@@ -222,12 +234,12 @@ body.dark {
           left: 50%;
           transform: translate(-50%, 10%);
           padding: 4px;
-          border: 2px dashed #111;
+          outline: 2px dashed $dark;
           background: $bright;
           font-size: 0.7rem;
           content: attr(data-hover);
           z-index: 10;
-          height: calc(100% + 15px);
+          height: 36px;
         }
       }
     }
@@ -244,6 +256,7 @@ body.dark {
       height: 20px;
       padding: $xs;
       width: 100px;
+      border: 1px dashed $dark;
       &.ExternalLink--imdb {
         width: 105px;
       }
@@ -259,6 +272,7 @@ body.dark {
       }
     }
 
+
     &__extra-text {
       display: inline-block;
       margin-left: 2px;
@@ -272,6 +286,12 @@ body.dark {
       &__extra-text {
         margin-left: auto;
       }
+    }
+
+    @media (max-width: $mobilePortrait) {
+      display: flex;
+      width: 115px !important;
+      max-width: initial;
     }
   }
   &__extended {
@@ -338,6 +358,12 @@ body.dark {
         width: 12px;
         content: attr(icon);
         font-weight: bold;
+        @media (max-width: $mobilePortrait) {
+          display: block;
+          margin-left: auto;
+          width: initial;
+          content: attr(data-description);
+        }
     }
   }
   &--heading {
