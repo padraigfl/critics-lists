@@ -1,6 +1,7 @@
 <script>
   import { beforeUpdate } from 'svelte';
   import ListEntryDataPoint from './ListEntryDataPoint.svelte';
+  import Checkbox from './Checkbox.svelte';
   import {getIdFromName} from '../../utils';
   export let placement;
   export let title;
@@ -96,9 +97,27 @@
   const expand = (e) => { extend = !extend; e.currentTarget.blur(); }
 
   const listActions = [
-    { icon: '+', action: update.seen, isChecked: lists.seen.includes},
-    { icon: '?', action: update.interested, isChecked: (title) => lists.interested[title]},
-    { icon: 'x', action: update.uninterested, isChecked: lists.uninterested.includes},
+    {
+      icon: '+',
+      action: update.seen,
+      isChecked: (v) => lists.seen.includes(v),
+      description: 'yep',
+      key: 'seen',
+    },
+    {
+      icon: '?',
+      action: update.interested,
+      isChecked: (title) => lists.interested[title],
+      description: 'ooh',
+      key: 'interested',
+    },
+    {
+      icon: 'x',
+      action: update.uninterested,
+      isChecked: (v) => lists.uninterested.includes(v),
+      description: 'meh',
+      key: 'uninterested',
+    },
   ]
 
 </script>
@@ -115,29 +134,44 @@
         </button>
       {/if}
     </div>
-    <div class="Entry__heading">
-      <strong class="Entry__title">{title}</strong>
-      {#if data.runtime || data.country}
-        <div class="Entry__subtitle">
-        ({data.runtime ? `${data.runtime}min${data.country ? '; ': ''}`: ''}{data.country ? data.country.join(', ') : ''})
+    <div class="Entry__body">
+      <div class="Entry__body-row--title">
+        <strong class="Entry__title">{title}</strong>
+        {#if data.runtime || data.country}
+          <div class="Entry__subtitle">
+          ({data.runtime ? `${data.runtime}min${data.country ? '; ': ''}`: ''}{data.country ? data.country.join(', ') : ''})
+          </div>
+        {/if}
+      </div>
+      <div class="Entry__body-row--actions">
+        <div class="Entry__links">
+          {#each links as { site, link, modify, icon, text }, i}
+            <a class={`ExternalLink ${ icon ? `ExternalLink--icon` : '' } ${site === 'IMDb' ? 'ExternalLink--imdb' : '' }`} href={link} target="_blank">
+              {#if icon}
+                <img class="ExternalLink__icon" src={`/icons/${icon}`} alt={site} />
+              {:else}
+                {site}
+              {/if}
+              {#if text}
+                <span class="ExternalLink__extra-text">{text}</span>
+              {/if} 
+            </a>
+          {/each}
+          <!-- <button on:click={toggle}>
+            {extend ? '<' : '>'}
+          </button> -->
         </div>
-      {/if}
-      <div class="Entry__links">
-        {#each links as { site, link, modify, icon, text }, i}
-          <a class={`ExternalLink ${ icon ? `ExternalLink--icon` : '' } ${site === 'IMDb' ? 'ExternalLink--imdb' : '' }`} href={link} target="_blank">
-            {#if icon}
-              <img class="ExternalLink__icon" src={`/icons/${icon}`} alt={site} />
-            {:else}
-              {site}
-            {/if}
-            {#if text}
-              <span class="ExternalLink__extra-text">{text}</span>
-            {/if} 
-          </a>
-        {/each}
-        <!-- <button on:click={toggle}>
-          {extend ? '<' : '>'}
-        </button> -->
+        <div class="Entry__checkboxes">
+          {#each listActions as { icon, action, isChecked, description }}
+            <Checkbox
+              checked={isChecked(title)}
+              action={action}
+              title={title}
+              icon={icon}
+              description={description}
+            />
+          {/each}
+        </div>
       </div>
     </div>
     <div class="Entry__points">
@@ -155,21 +189,6 @@
       {#if data.poster}
         <img class="Entry__poster" src={data.poster.replace('X300', 'X70')} alt="" />
       {/if}
-      <div class="Entry__options">
-        {#each listActions as { icon, action, isChecked }}
-          <div>
-            <input
-              class="Entry__options"
-              name={`${title}__${icon}`}
-              value={title}
-              type="checkbox"
-              checked={isChecked(title)}
-              on:change={action}
-            />
-            <lable class={isChecked(title) ? 'active' : undefined} for={`${title}__${icon}`}>{icon}</lable>
-          </div>
-        {/each}
-      </div>
       <ul class="Entry__details">
         <li class="Entry__details__data"><div>Director</div> <div>{data.director || 'N/A'}</div></li>
         <li class="Entry__details__data"><div>Cast</div> <div>{data.cast ? data.cast.join(', ') : 'N/A'}</div></li>

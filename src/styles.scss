@@ -7,8 +7,20 @@ $m: 16px;
 $l: 24px;
 $xl: 32px;
 
-$mobile: 640px;
+$mobile: 800px;
 $border: 2px solid $dark;
+
+@keyframes flash {
+  0% {
+    filter: invert(0);
+  }
+  50% {
+    filter: invert(1);
+  }
+  100% {
+    filter: invert(0);
+  }
+}
 
 body {
   display: flex;
@@ -21,7 +33,6 @@ body {
   height: 100vh;
   max-height: 100vh;
   overflow: auto;
-
 
   @media (max-width: $mobile) {
     padding-left: 0px;
@@ -43,10 +54,9 @@ body.dark {
 
 .ListBreakdown {
   display: flex;
-  flex: 1 1 0;
   height: calc(100% - 52px);
   overflow: auto;
-  min-width: 66vw;
+  width: 100%;
   max-width: 1400px;
   margin-left: auto;
   border-right: $border;
@@ -84,7 +94,6 @@ body.dark {
   padding: 0;
   overflow-y: auto;
   margin-left: $s;
-  border-left: $border;
   flex-grow: 1;
   max-width: 66vw;
 
@@ -109,8 +118,8 @@ body.dark {
     }
   }
   &:focus-within {
-    filter: invert(1);
     transition: filter linear 0s;
+    animation: 1s flash;
   }
   &__core {
     display: flex;
@@ -128,10 +137,18 @@ body.dark {
     text-align: right;
     position: relative;
   }
-  &__heading {
+  &__body{
     flex-grow: 1;
+    display: flex;
+    flex-direction: column;
     @media (max-width: $mobile) {
       white-space: initial;
+    }
+    &-row--actions {
+      display: flex;
+      flex-wrap: wrap;
+      margin-top: auto;
+      align-items: center;;
     }
   }
   &__subtitle {
@@ -141,28 +158,91 @@ body.dark {
     min-height: 56px;
     display: grid;
     grid: 20px 18px 18px / repeat(2, 40px);
+    margin-right: $m;
     @media (max-width: $mobile) {
       grid: auto / repeat(1, 60px);
     }
   }
   &__links {
     padding-left: 0px;
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    margin-top: 2px;
+    margin-right: auto;
     flex-wrap: wrap;
+  }
+  &__checkboxes {
+    display: inline-flex;
+    .Checkbox {
+      position: relative;
+      width: 20px;
+      height: 20px;
+      input[type=checkbox] { opacity: 0; }
+      label {
+        position: absolute;
+        display: block;
+        height: 100%;
+        width: 100%;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: contain;
+        top:0px;
+        left: 0px;
+        z-index: 15;
+      }
+      &.ooh {
+        padding: 0px 2px;
+        border: 2px solid $dark;
+        height: 18px;
+        width: 20px;
+        label {
+          background-image: url('/icons/list-add.svg');
+          background-size: 24px;
+          background-color: $bright;
+        }
+        :checked + label {
+          filter: invert(1);
+        }
+      }
+      &.meh {
+        label { background-image: url('/icons/cross-outline.png'); }
+        :checked + label { background-image: url('/icons/cross-fill.png'); }
+      }
+      &.yep {
+        label { background-image: url('/icons/tick-outline.png'); }
+        :checked + label { background-image: url('/icons/tick-fill.png'); }
+      }
+      &:not(:last-child) {
+        margin-right: $m;
+      }
+      &:hover {
+        &::after {
+          position: absolute;
+          bottom: 0px;
+          padding-bottom: 100%;
+          left: 50%;
+          transform: translate(-50%, 10%);
+          padding: 4px;
+          border: 2px dashed #111;
+          background: $bright;
+          font-size: 0.7rem;
+          content: attr(data-hover);
+          z-index: 10;
+          height: calc(100% + 15px);
+        }
+      }
+    }
   }
   // TODO make link component
   .ExternalLink {
     font-size: 12px;
     font-weight: bold;
-    margin: 2px 4px 0px 0px;
+    margin: 2px 2px 2px 0px;
     border-radius: 2px;
     &--icon {
       display: inline-flex;
       align-items: center;
       height: 20px;
-      padding: 1px 2px;
+      padding: $xs;
       width: 100px;
       &.ExternalLink--imdb {
         width: 105px;
@@ -195,7 +275,7 @@ body.dark {
     }
   }
   &__extended {
-    padding: $s;
+    padding: $s $m $m 0px;
     border-top: 2px dashed $dark;
   }
   &__display-details {
@@ -280,7 +360,7 @@ body.dark {
     flex-shrink: 0;
     width: initial;
     padding-right: $s;
-    width: 100%;
+    max-width: 100%;
   }
   dd {
     margin: 0px;
@@ -399,9 +479,6 @@ body.dark {
   flex-wrap: wrap;
   flex-shrink: 0;
   padding: 0px;
-  @media (min-width: $mobile + 1px) {
-    padding: $xs;
-  }
   background-color: $bright;
   align-content: center;
   border-bottom: $border;
@@ -428,20 +505,24 @@ body.dark {
       font-size: 20px;
       font-weight: bold;
       padding: $s;
-      margin-right: $xs;
+      margin-left: $xs;
       text-decoration: none;
       span {
         filter: brightness(0) invert(1);
       }
       @media (max-width: $mobile) {
         margin: 0px;
-        margin-right: $xs;
       }
     }
     &__data {
-      margin-right: auto;
+      margin-right: $s;
+      margin-left: auto;
+      text-align: right;
       @media (max-width: $mobile) {
         font-size: 12px;
+        text-align: left;
+        margin-left: $xs;
+        margin-right: auto;
       }
     }
   }
@@ -454,8 +535,11 @@ body.dark {
   select, button {
     padding-top: 0px;
     padding-bottom: 0px;
+    margin-right: $s;
+    min-width: 35px;
   
     @media (max-width: $mobile) {
+      margin-right: $xs;
       font-size: 12px;
     }
   };

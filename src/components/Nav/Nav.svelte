@@ -187,9 +187,6 @@
 	
 	<div class="nav">
 		<div class="nav__main">
-			<a class="nav__main__home" href="/" on:change={() => push('/')}>
-				<span>🏚️</span>
-			</a>
 			<div class="nav__main__data">
 				<div class="nav__data">
 					<strong>Order</strong>: {order}
@@ -228,6 +225,9 @@
 			>
 				...
 			</button>
+			<a class="nav__main__home" href="/" on:change={() => push('/')}>
+				<span>🏚️</span>
+			</a>
 		</div>
 		{#if display}
 			<NavOptions
