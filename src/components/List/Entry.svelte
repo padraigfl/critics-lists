@@ -12,7 +12,7 @@
   export let data;
   export let displayAll;
   export let lists;
-  export let update
+  export let update;
   $: optionsVisible = false;
   $: extend = false; // TODO handle toggle of extra data
   $: hasData = data.director || data.cast || data.genre || data.language;
@@ -96,11 +96,11 @@
   }
   const expand = (e) => { extend = !extend; e.currentTarget.blur(); }
 
-  const listActions = [
+  const listActions = lists ? [
     {
       icon: '+',
-      action: update.seen,
-      isChecked: (v) => lists.seen.includes(v),
+      action: update.know,
+      isChecked: (v) => lists.know.includes(v),
       description: 'yep',
       key: 'seen',
     },
@@ -118,7 +118,7 @@
       description: 'meh',
       key: 'uninterested',
     },
-  ]
+  ] : [];
 
 </script>
 
@@ -161,26 +161,29 @@
             {extend ? '<' : '>'}
           </button> -->
         </div>
-        <div class="Entry__checkboxes">
-          {#each listActions as { icon, action, isChecked, description }}
-            <Checkbox
-              checked={isChecked(title)}
-              action={action}
-              title={title}
-              icon={icon}
-              description={description}
-            />
-          {/each}
-        </div>
+        {#if lists}
+          <div class="Entry__checkboxes">
+            {#each listActions as { icon, action, isChecked, description, key }}
+              <Checkbox
+                checked={isChecked(title)}
+                action={action}
+                title={title}
+                icon={icon}
+                description={description}
+                key={key}
+              />
+            {/each}
+          </div>
+        {/if}
       </div>
     </div>
     <div class="Entry__points">
       <ListEntryDataPoint value={points} key="pts" />
-      <ListEntryDataPoint value={entry.firsts.length} small icon="🏆" />
-      <ListEntryDataPoint value={entry.critics.length} small icon="📋" />
+      <ListEntryDataPoint value={entry.firsts.length} small icon="🏆" description="#1's"/>
+      <ListEntryDataPoint value={entry.critics.length} small icon="📋" description="Lists" />
       {#if hasData && data.awards}
-        <ListEntryDataPoint value={data.awards.wins} small icon="W" />
-        <ListEntryDataPoint value={data.awards.noms} small icon="N" />
+        <ListEntryDataPoint value={data.awards.wins} small icon="W" description="Awards"/>
+        <ListEntryDataPoint value={data.awards.noms} small icon="N" description="Noms"/>
       {/if}
     </div>
   </div>
