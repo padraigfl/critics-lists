@@ -27,11 +27,18 @@
     ...acc,
     [role]: generateListUpdater(role, format, year, listData, yearData),
   }), {});
+  console.log(canSeeKnown);
 </script>
 
 <ol class="List">
   {#each listData as [ key, data ], i}
-    {#if canSeeUninterested || !lists || !lists.uninterested.includes(key)}
+    {#if !lists
+      || (
+        (canSeeUninterested || !lists.uninterested.includes(key))
+        && (canSeeKnown || !lists.know.includes(key))
+        && (canSeeInterested || !lists.interested[key])
+      )
+    }
       <Entry
         placement={i+1}
         title={key}
