@@ -73,7 +73,7 @@ export const generateListUpdater = (role, format, year, listData, yearData) => (
   const key = e.target.value;
   let tempList = getLocalStorageList(role, format, year);
   if (tempList.includes(key)) {
-    setLocalStorageList(list, tempList.filter(v => v !== key));
+    setLocalStorageList(role, format, year)(tempList.filter(v => v !== key));
   } else {
     setLocalStorageList(role, format, year)([...tempList, key]);
   }
