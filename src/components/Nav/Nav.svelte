@@ -32,8 +32,8 @@
 	let listener;
 	let order = 'score';
 	let options = [];
-	let seeUninterested = false;
-	let seeInterested = false;
+	let seeUninterested = true;
+	let seeInterested = true;
 	let seeKnown = true;
   $: matrix = defaultScoringMatrix;
 
@@ -63,20 +63,22 @@
   const changeYear = (e) => {
 		year.update(() => e.target.value);
 		filterSelections.update(() => ({}));
-		if (
-			OPTIONS.formats.includes(format_value)
-			&& OPTIONS.years.includes(e.target.value)
-		) {
-			loadPage(`/${format_value}/${e.target.value}`)
-			window.scroll(0, 0);
+		if (!OPTIONS.formats.includes(format_value)) {
+			return;
 		}
+		if (OPTIONS.years.includes(e.target.value)) {
+			loadPage(`/${format_value}/${e.target.value}`)
+		} else if (e.target.value === 'List') {
+			loadPage(`/interested/${format_value}`)
+		}
+		window.scroll(0, 0);
 	};
 
 	const toggleUninterested = () => {
 		viewUninterested.update(() => !seeUninterested);
 	}
 	const toggleInterested = () => {
-		viewUninterested.update(() => !seeInterested);
+		viewInterested.update(() => !seeInterested);
 	}
 	const toggleKnown = () => {
 		viewKnown.update(() => !seeKnown);
@@ -208,9 +210,9 @@
 					{/if}
 			</div>
 			<select value={year_value} on:change={changeYear}>
-				{#each ['Year', '2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2010s'] as year}
+				{#each ['Year', '2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2010s', 'List'] as year}
 					<option value={year} disabled={year === 'Year'}>
-						{year !== 'Year' ? `'${year.substr(2)}` : 'Year' }
+						{year.match(/\d{4}/) ? `'${year.substr(2)}` : year }
 					</option>
 				{/each}
 			</select>
@@ -237,9 +239,9 @@
 				updateOptions={updateOptions}
 				order={order}
 				checkboxes={[
-					{ title: 'Hide Uninterested', toggle: toggleUninterested, checked: !seeUninterested },
-					{ title: 'Hide Interested', toggle: toggleInterested, checked: !seeInterested },
-					{ title: 'Hide Known', toggle: toggleKnown, checked: !seeKnown },	
+					{ goal: 'Hide', title: 'meh', toggle: toggleUninterested, checked: !seeUninterested },
+					{ goal: 'Hide', title: 'ooh', toggle: toggleInterested, checked: !seeInterested },
+					{ goal: 'Hide', title: 'yep', toggle: toggleKnown, checked: !seeKnown },	
 				]}
 			/>
 		{/if}

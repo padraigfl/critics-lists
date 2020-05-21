@@ -13,21 +13,24 @@
   let canSeeUninterested = false;
   let canSeeKnown = true;
   let canSeeInterested = true;
+  const updateLists = () => customLists.reduce((acc, role) => ({
+    ...acc,
+    [role]: getLocalStorageList(role, format, year),
+  }), {});
 
   viewUninterested.subscribe((val) => canSeeUninterested = val);
   viewKnown.subscribe((val) => canSeeKnown = val);
   viewInterested.subscribe((val) => canSeeInterested = val);
 
-  $:lists = customLists.reduce((acc, role) => ({
-    ...acc,
-    [role]: getLocalStorageList(role, format, year),
-  }), {});
+  let lists = updateLists();
 
-  const update = customLists.reduce((acc, role) => ({
+  $: update = customLists.reduce((acc, role) => ({
     ...acc,
-    [role]: generateListUpdater(role, format, year, listData, yearData),
+    [role]: (e) => {
+      generateListUpdater(role, format, year, listData, yearData)(e);
+      lists = updateLists();
+    },
   }), {});
-  console.log(canSeeKnown);
 </script>
 
 <ol class="List">

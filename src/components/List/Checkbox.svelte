@@ -10,8 +10,6 @@
 
 <div
   class={`Checkbox ${isChecked ? 'checked' : ''} ${description.toLowerCase()}`}
-  data-description-action={`${checked ? 'Add to ' : 'Remove from'} ${key} list`}
-  data-hover={description}
 >
   <input
     class="Entry__options"
@@ -22,5 +20,9 @@
     checked={checked ? 'checked' : ''}
     on:change={action}
   />
-  <label for={`${title}__${icon}`} />
+  <label
+    for={`${title}__${icon}`} 
+    data-description-action={`${checked ? 'Add to ' : 'Remove from'} ${key} list`}
+    data-hover={description}
+  />
 </div>

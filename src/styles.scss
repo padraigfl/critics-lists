@@ -155,9 +155,9 @@ body.dark {
       flex-wrap: wrap;
       margin-top: auto;
       align-items: center;
+      > * { margin: $s 0 0; }
       @media (max-width: $mobilePortrait) {
         display: block;
-        > * { margin: $s 0 0; }
       }
     }
   }
@@ -167,8 +167,9 @@ body.dark {
   &__points {
     min-height: 56px;
     display: grid;
-    grid: 20px 18px 18px / repeat(2, 40px);
+    grid: auto 18px auto / repeat(2, 40px);
     margin-right: $m;
+    margin-top: $s;
     @media (max-width: $mobile) {
       grid: auto / repeat(1, 60px);
     }
@@ -228,19 +229,22 @@ body.dark {
         margin-right: $m;
       }
       &:hover {
-        &::after {
+        label::after {
           position: absolute;
           bottom: 0px;
           padding-bottom: 100%;
           left: 50%;
           transform: translate(-50%, 10%);
-          padding: 4px;
-          outline: 2px dashed $dark;
-          background: $bright;
+          padding: $s;
+          outline: $borderDash;
+          background: linear-gradient(to bottom, $bright, $bright 20px, transparent 20px);
           font-size: 0.7rem;
           content: attr(data-hover);
           z-index: 10;
           height: 36px;
+        }
+        &.ooh :checked + label::after{
+          filter: invert(1);
         }
       }
     }
@@ -346,17 +350,15 @@ body.dark {
 
 .InterestedList {
   $gutters: $m;
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: row-reverse;
-  margin: $gutters;
+  display: grid;
+  grid: auto /repeat(3, minmax(200px, 1fr));
+  margin: $m;
   padding: 0px;
-  justify-content: space-between;
+  grid-gap: $gutters;
   .InterestedCard {
     position: relative;
-    width: calc(33% - #{$gutters * 5 / 2} - #{$borderWidth * 2});
-    border: 2px dashed $dark;
-    margin-bottom: $m;
+    border: none;
+    outline: 2px dashed $dark;
     padding: $m;
     &__heading {
       display: block;
@@ -654,9 +656,37 @@ body.dark {
     &__toggle {
       display: flex;
       flex-direction: row-reverse;
+      margin: $m 0 $m;
       input {
         margin-bottom: 0px;
         margin-left: $xs;
+      }
+      label {
+        display: flex;
+        align-items: center;
+      }
+      label::after {
+        content: '';
+        margin: 0px $xs;
+        background-size: 16px 16px;
+        background-position: center;
+        width: 20px;
+        height: 18px;
+        background-repeat: no-repeat;
+      }
+      &--yep label::after {
+          background-image: url('/icons/tick-fill.png');
+      }
+      &--meh label::after {
+        background-image: url('/icons/cross-fill.png');
+      }
+      &--ooh label::after {
+        background-image: url('/icons/list-add.svg');
+        background-size: 20px 20px;
+        background-position: 0px 0px;
+        background-color: $bright;
+        outline: 2px solid $bright;
+        filter: invert(1);
       }
     }
   }
