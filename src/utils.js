@@ -59,6 +59,7 @@ const updateInterestedList = (format, year, listData = [], yearData = {}) => (e)
       oldList[key] = {
         ...val[1],
         ...yearData.works[key],
+        listYear: year,
       };
     }
   }

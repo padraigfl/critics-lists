@@ -9,7 +9,9 @@ $xl: 32px;
 
 $mobile: 800px;
 $mobilePortrait: 400px;
-$border: 2px solid $dark;
+$borderWidth : 2px;
+$border: $borderWidth solid $dark;
+$borderDash: $borderWidth dashed $dark;
 
 @keyframes flash {
   0% {
@@ -60,7 +62,6 @@ body.dark {
   width: 100%;
   max-width: 1400px;
   margin-left: auto;
-  border-right: $border;
 
   &__loading {
     position: absolute;
@@ -73,7 +74,7 @@ body.dark {
     background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), white 99%);
     box-shadow: inset 0 0 50px 10px $bright;
     backdrop-filter: blur(2px);
-    z-index: 10;
+    z-index: 100;
     font-size: 2rem;
     font-weight: bold;
   }
@@ -156,7 +157,7 @@ body.dark {
       align-items: center;
       @media (max-width: $mobilePortrait) {
         display: block;
-        > * { margin: $xs 0; }
+        > * { margin: $s 0 0; }
       }
     }
   }
@@ -249,7 +250,6 @@ body.dark {
     font-size: 12px;
     font-weight: bold;
     margin: 2px 2px 2px 0px;
-    border-radius: 2px;
     &--icon {
       display: inline-flex;
       align-items: center;
@@ -261,8 +261,9 @@ body.dark {
         width: 105px;
       }
       &:hover, &:focus {
-        background-color: white;
-        filter: invert(1);
+        border-color: transparent;
+        outline: $borderDash;
+        outline-offset: -1px;
       }
       text-decoration: none;
       img {
@@ -295,8 +296,12 @@ body.dark {
     }
   }
   &__extended {
-    padding: $s $m $m 0px;
+    margin-top: $xs;
+    padding: $s $m $m 42px;
     border-top: 2px dashed $dark;
+    @media (max-width: $mobile) {
+      padding: $s $m $m;
+    }
   }
   &__display-details {
     width: 100%;
@@ -337,6 +342,85 @@ body.dark {
       }
     }
   }
+}
+
+.InterestedList {
+  $gutters: $m;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row-reverse;
+  margin: $gutters;
+  padding: 0px;
+  justify-content: space-between;
+  .InterestedCard {
+    position: relative;
+    width: calc(33% - #{$gutters * 5 / 2} - #{$borderWidth * 2});
+    border: 2px dashed $dark;
+    margin-bottom: $m;
+    padding: $m;
+    &__heading {
+      display: block;
+    }
+    &__subtitle, &__title {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      display: block;
+      margin-bottom: $s;
+    }
+    &__remove {
+      float: right;
+      overflow: hidden;
+      width: 40px;
+      height: 40px;
+      margin-top: -$m - $borderWidth;
+      margin-right: -$m - $borderWidth;
+    }
+    &__details {
+      margin-top: $m;
+      list-style-type: none;
+      padding: 0px;
+      li {
+        display: flex;
+        
+        strong {
+          display: inline-block;
+          width: 80px;
+          flex-shrink: 0;
+        }
+        span {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          flex-grow: 1;
+        }
+      }
+    }
+    &__undo-wrapper {
+      position: absolute;
+      background-color: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(2px);
+      top: -$borderWidth;
+      left: -$borderWidth;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      border: $border;
+      p {
+        margin-top: 0px;
+        padding: $m;
+        background-color: $bright;
+        box-shadow: 0px 0px 5px $bright;
+      }
+    }
+  }
+  @media (max-width: $mobile) {
+    display: block;
+    .InterestedCard {
+      width: calc(100% - #{$gutters * 2});
+    }
+  }
+
 }
 
 
@@ -380,6 +464,7 @@ body.dark {
   padding-right: 0px;
   margin-top: 0px;
   max-width: 400px;
+  margin-left: auto;
 
   @media (max-width: $mobile) {
     position: relative;
@@ -439,33 +524,6 @@ body.dark {
   }
 }
 
-.matrix {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  &__option {
-    width: 85px;
-  }
-  &__option--unranked {
-    margin-left: auto;
-    text-align: left;
-    .matrix__rank {
-      width: initial;
-    }
-    width: 135px;
-  }
-  &__rank, &__input {
-    display: inline-block;
-    text-align: right;
-    font-variant-numeric: tabular-nums;
-    width: 20px;
-  }
-  &__input {
-    width: 60px;
-  }
-
-}
-
 .wasAMarquee {
   position: fixed;
   width: 140vh;
@@ -475,7 +533,7 @@ body.dark {
   transform-origin: $l/2;
   transform: rotate(-90deg);
   background-color: #111;
-  z-index: 15;
+  z-index: 150;
   color: white;
   overflow: scroll;
   white-space: nowrap;
@@ -508,7 +566,7 @@ body.dark {
   background-color: $bright;
   align-content: center;
   border-bottom: $border;
-  z-index: 10;
+  z-index: 90;
   &__button {
     &--active {
       border-color: $bright;
@@ -524,6 +582,7 @@ body.dark {
   &__main {
     display: flex;
     width: 100%;
+    height: 50px;
     &__home {
       display: block;
       background-color: $dark;
@@ -544,6 +603,7 @@ body.dark {
       margin-right: $s;
       margin-left: auto;
       text-align: right;
+      align-self: center;
       @media (max-width: $mobile) {
         font-size: 12px;
         text-align: left;
@@ -561,7 +621,8 @@ body.dark {
   select, button {
     padding-top: 0px;
     padding-bottom: 0px;
-    margin-right: $s;
+    margin: $xs $s $xs 0;
+    background-color: $bright;
     min-width: 35px;
   
     @media (max-width: $mobile) {
