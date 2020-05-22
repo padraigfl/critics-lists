@@ -239,9 +239,9 @@
 				updateOptions={updateOptions}
 				order={order}
 				checkboxes={[
-					{ goal: 'Hide', title: 'meh', toggle: toggleUninterested, checked: !seeUninterested },
+					{ goal: 'Hide', title: 'yep', toggle: toggleKnown, checked: !seeKnown },
 					{ goal: 'Hide', title: 'ooh', toggle: toggleInterested, checked: !seeInterested },
-					{ goal: 'Hide', title: 'yep', toggle: toggleKnown, checked: !seeKnown },	
+					{ goal: 'Hide', title: 'meh', toggle: toggleUninterested, checked: !seeUninterested },
 				]}
 			/>
 		{/if}
