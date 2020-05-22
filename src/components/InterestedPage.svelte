@@ -4,7 +4,8 @@
   import {
     getLocalStorageList,
   } from '../utils';
-  export let format = 'film';
+  export let params;
+  let { format } = params;
   let allInterested = {};
 
   OPTIONS.years.forEach((year) => {

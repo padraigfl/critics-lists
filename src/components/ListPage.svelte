@@ -39,7 +39,7 @@
         iterativeList = iterativeList.filter(v => v[1][key] && v[1][key].includes(val));
       }
     });
-    return iterativeList.sort(objectEntriesSort(sortBy))
+    return [...iterativeList.sort(objectEntriesSort(sortBy))]
   }
 
   ordering.subscribe(val => {
@@ -142,7 +142,7 @@
 <svelte:head>
   <title>Critics Lists: {params.format} of {params.year}</title>
 </svelte:head>
-<div class="ListBreakdown">
+<div class={`ListBreakdown ${params.format}`}>
   {#if isLoading}
     <div class="ListBreakdown__loading">Loading...</div>
   {/if}

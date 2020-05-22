@@ -1,6 +1,7 @@
 <script>
   import { beforeUpdate } from 'svelte';
   import ListEntryDataPoint from './ListEntryDataPoint.svelte';
+  import ExternalLink from './ExternalLink.svelte';
   import Checkbox from './Checkbox.svelte';
   import {getIdFromName} from '../../utils';
   export let placement;
@@ -37,11 +38,11 @@
   }
 
   
-  const getFilm = () => ([
-    data.imdb ? {
+  const getFilm = (content) => ([
+    content.imdb ? {
       ...imdb,
-      link: `https://www.imdb.com/title/${data.imdb.id}`,
-      text: data.imdb.rating ? `${data.imdb.rating && data.imdb.rating.toFixed(1)} (${formatVoteCount(data.imdb.votes)})` : undefined,
+      link: `https://www.imdb.com/title/${content.imdb.id}`,
+      text: content.imdb.rating ? `${content.imdb.rating && content.imdb.rating.toFixed(1)} (${formatVoteCount(content.imdb.votes)})` : undefined,
     } : {
       ...imdb,
       link: `https://www.imdb.com/find?s=tt&q=${title}`,
@@ -50,12 +51,12 @@
       site: 'RT',
       link: `https://www.rottentomatoes.com/search/?search=${title}`,
       icon: 'rotten.png',
-      text: data.rotten ? data.rotten + '%' : '',
+      text: content.rotten ? content.rotten + '%' : '',
     },
-    ...(data.metacritic ? [{
+    ...(content.metacritic ? [{
       site: 'MC',
       link: `https://www.metacritic.com/search/movie/${title}/results`,
-      text: data.metacritic + '%',
+      text: content.metacritic + '%',
       icon: 'metacritic--text.png',
     }] : []),
   ]);
@@ -63,23 +64,22 @@
   const album = [// need to remove by
     { site: 'Spotify', link: 'https://open.spotify.com/search/', icon: 'spotify.png', modify: v => v.replace(/\s/g, '%20').replace(/by/g, '') },// %20
     { site: 'Youtube', link: 'https://www.youtube.com/results?search_query=', icon: 'youtube.png', modify: v => v.replace(/\s/g, '%20') }, // +
-    { site: 'RYM', link: 'https://rateyourmusic.com/search?searchtype=l&searchterm=', modify: v => v.replace(/\s/g, '+').replace(/by/g, '') } , // +
   ];
 
   const tv = [
-    { site: 'IMDb', link: 'https://www.imdb.com/find?s=tt&q=', icon: 'imdb.png', modify: v => v.replace(/\(.*\)/g, '%20') },
-    { site: 'RT', link: 'https://www.rottentomatoes.com/search/?search=', icon: 'rotten.png', modify: v => v.replace(/\(.*\)/g, '%20') },
+    { site: 'IMDbTv', link: 'https://www.imdb.com/find?s=tt&q=', icon: 'imdb.png', modify: v => v.replace(/\(.*\)/g, '%20') },
+    { site: 'RTTv', link: 'https://www.rottentomatoes.com/search/?search=', icon: 'rotten.png', modify: v => v.replace(/\(.*\)/g, '%20') },
   ];
 
-  const mediaLinkSets = {
-    film: getFilm(),
+  $: mediaLinkSets = {
+    film: getFilm(data),
     album,
     tv,
   };
 
-  const getFormat = format => mediaLinkSets[format] || [];
+  const getFormat = format => [...mediaLinkSets[format]] || [];
 
-  $: links = getFormat(format);
+  $: links = getFormat(format, data);
   $: searches = [{
     site: 'Letterboxd',
     link: `https://letterboxd.com/search/films/${title}`,
@@ -87,7 +87,6 @@
   }, {
     icon: 'google.png',
     site: 'Google',
-    text: 'Google',
     link: `https://www.google.com/search?q=film+${title.replace(' ', '+').replace('&', '+and+')}`,
   }];
 
@@ -129,9 +128,7 @@
     <div class="Entry__placement">
       {placement}
       {#if hasData}
-        <button class="Entry__display-details" on:click={expand}>
-          { extend ? '^' : '🔽' }
-        </button>
+        <button class={`Entry__display-details ${extend ? 'extend' : ''}`} on:click={expand} />
       {/if}
     </div>
     <div class="Entry__body">
@@ -146,16 +143,12 @@
       <div class="Entry__body-row--actions">
         <div class="Entry__links">
           {#each links as { site, link, modify, icon, text }, i}
-            <a class={`ExternalLink ${ icon ? `ExternalLink--icon` : '' } ${site === 'IMDb' ? 'ExternalLink--imdb' : '' }`} href={link} target="_blank">
-              {#if icon}
-                <img class="ExternalLink__icon" src={`/icons/${icon}`} alt={site} />
-              {:else}
-                {site}
-              {/if}
-              {#if text}
-                <span class="ExternalLink__extra-text">{text}</span>
-              {/if} 
-            </a>
+            <ExternalLink
+              site={site}
+              icon={icon}
+              text={text}
+              link={link}
+            />
           {/each}
           <!-- <button on:click={toggle}>
             {extend ? '<' : '>'}
@@ -179,6 +172,9 @@
     </div>
     <div class="Entry__points">
       <ListEntryDataPoint value={points} key="pts" />
+      {#if !hasData || !data.award}
+        <div/> <div />
+      {/if}
       <ListEntryDataPoint value={entry.firsts.length} small icon="🏆" description="#1's"/>
       <ListEntryDataPoint value={entry.critics.length} small icon="📋" description="Lists" />
       {#if hasData && data.awards}
@@ -202,19 +198,15 @@
       {#if data.plot && data.plot !== 'N/A' }
         <p><em>{data.plot}</em></p>
       {/if}
-      <div class="Entry__links">
+      <div class="Entry__links Entry__links--search">
         Search: 
         {#each searches as { site, link, modify, icon, text }, i}
-          <a class={`ExternalLink ${ icon ? `ExternalLink--icon` : '' } ${site === 'IMDb' ? 'ExternalLink--imdb' : '' }`} href={link} target="_blank">
-            {#if icon}
-              <img class="ExternalLink__icon" src={`/icons/${icon}`} alt={site} />
-            {:else}
-              {site}
-            {/if}
-            {#if text}
-              <span class="ExternalLink__extra-text">{text}</span>
-            {/if} 
-          </a>
+          <ExternalLink
+            site={site}
+            icon={icon}
+            text={text}
+            link={link}
+          />
         {/each}
       </div>
         <!-- <button on:click={toggle}>
