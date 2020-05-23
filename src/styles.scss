@@ -55,6 +55,8 @@ body.dark {
   }
 }
 
+$dataListWidth: 400px;
+
 .ListBreakdown {
   display: flex;
   height: calc(100% - 52px);
@@ -84,9 +86,44 @@ body.dark {
   @media (max-width: $mobile) {
     display: block;
     margin-left: 0px;
+    padding-left: 0px;
     &__details, &__list {
       width: 100%;
       padding: $s;
+    }
+  }
+}
+
+.DataList {
+  padding: $s;
+  padding-right: 0px;
+  margin-top: 0px;
+  position: fixed;
+  max-width: $dataListWidth;
+  margin-left: auto;
+
+  @media (max-width: $mobile) {
+    position: relative;
+    flex-shrink: 0;
+    width: initial;
+    padding-right: $s;
+    max-width: 100%;
+  }
+  dd {
+    margin: 0px;
+    margin-bottom: $s;
+    button {
+      padding: 0px;
+      border: 0px;
+      background-color: transparent;
+      display: inline-block;
+      text-align: left;;
+    }
+    .DataBlock__validator {
+      font-size: 0.75rem;
+    }
+    .DataBlock__data, a {
+      display: inline-block;
     }
   }
 }
@@ -98,10 +135,12 @@ body.dark {
   margin-left: $s;
   flex-grow: 1;
   max-width: 66vw;
+  padding-left: $dataListWidth;
 
   @media (max-width: $mobile) {
     margin-left: 0px;
     padding-top: 0px;
+    padding-left: 0px;
     max-width: 100%;
   }
 }
@@ -480,39 +519,6 @@ body.dark {
   }
 }
 
-.DataList {
-  padding: $s;
-  padding-right: 0px;
-  margin-top: 0px;
-  max-width: 400px;
-  margin-left: auto;
-
-  @media (max-width: $mobile) {
-    position: relative;
-    flex-shrink: 0;
-    width: initial;
-    padding-right: $s;
-    max-width: 100%;
-  }
-  dd {
-    margin: 0px;
-    margin-bottom: $s;
-    button {
-      padding: 0px;
-      border: 0px;
-      background-color: transparent;
-      display: inline-block;
-      text-align: left;;
-    }
-    .DataBlock__validator {
-      font-size: 0.75rem;
-    }
-    .DataBlock__data, a {
-      display: inline-block;
-    }
-  }
-}
-
 .Modal {
   background-color: $bright;
   border: $border;
@@ -572,10 +578,24 @@ body.dark {
 
 .Landing {
   padding-top: 50px;
-  width: 95%;
-  max-width: 800px;
-  margin: 0 auto;
+  padding: 20px;
+  h2, p, div, ul, ol {
+    max-width: 800px;
+  }
   overflow: scroll;
+  .yearList {
+    font-variant-numeric: tabular-nums;
+    display: inline-block;
+    width: 240px;
+    ul {
+      padding-left: $m;
+      margin-top: 0;
+    }
+    .yearLink {
+      display: inline-block;
+      width: 50px;
+    }
+  }
 }
 
 .nav {
