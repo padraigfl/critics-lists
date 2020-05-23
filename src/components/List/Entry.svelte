@@ -14,6 +14,9 @@
   export let displayAll;
   export let lists;
   export let update;
+  export let isKnown;
+  export let isInterested;
+  export let isUninterested;
   $: optionsVisible = false;
   $: extend = false; // TODO handle toggle of extra data
   $: hasData = data.director || data.cast || data.genre || data.language;
@@ -95,25 +98,34 @@
   }
   const expand = (e) => { extend = !extend; e.currentTarget.blur(); }
 
-  const listActions = lists ? [
+  $: listActions = lists ? [
     {
       icon: '+',
-      action: update.know,
-      isChecked: (v) => lists.know.includes(v),
+      action: (e) => {
+        update.know(e);
+        isKnown = !isKnown;
+      },
+      isChecked: isKnown,
       description: 'yep',
       key: 'seen',
     },
     {
       icon: '?',
-      action: update.interested,
-      isChecked: (title) => lists.interested[title],
+      action: (e) => {
+        update.interested(e);
+        isInterested = !isInterested;
+      },
+      isChecked: isInterested,
       description: 'ooh',
       key: 'interested',
     },
     {
       icon: 'x',
-      action: update.uninterested,
-      isChecked: (v) => lists.uninterested.includes(v),
+      action:  (e) => {
+        update.uninterested(e);
+        isUninterested = !isUninterested;
+      },
+      isChecked: isUninterested,
       description: 'meh',
       key: 'uninterested',
     },
@@ -121,7 +133,17 @@
 
 </script>
 
-<li class={`Entry Entry--${format} ${!hasData ? 'Entry--no-data' : '' }`} id={getIdFromName(title)}>
+<li 
+  class={`Entry Entry--${format} ${
+    !hasData ? 'Entry--no-data' : '' 
+    } ${
+      isKnown ? 'Entry--known' : ''
+    } ${
+      isInterested ? 'Entry--interested' : ''
+    } ${
+      isUninterested ? 'Entry--uninterested' : ''
+    }`}
+  id={getIdFromName(title)}>
   <div
     class="Entry__core"
   >
@@ -158,7 +180,7 @@
           <div class="Entry__checkboxes">
             {#each listActions as { icon, action, isChecked, description, key }}
               <Checkbox
-                checked={isChecked(title)}
+                checked={isChecked}
                 action={action}
                 title={title}
                 icon={icon}

@@ -22,38 +22,42 @@
   viewKnown.subscribe((val) => canSeeKnown = val);
   viewInterested.subscribe((val) => canSeeInterested = val);
 
-  let lists = updateLists();
+  $: lists = updateLists(format, year);
 
   $: update = customLists.reduce((acc, role) => ({
     ...acc,
     [role]: (e) => {
       generateListUpdater(role, format, year, listData, yearData)(e);
-      lists = updateLists();
     },
   }), {});
 
 </script>
 
-<ol class="List">
+<ol
+  class={
+    `List${
+      canSeeInterested ? '' : ' List--hide-interested'
+    }${
+      canSeeUninterested ? '' : ' List--hide-uninterested'
+    }${
+      canSeeKnown ? '' : ' List--hide-known'
+    }`
+  }
+>
   {#each listData as [ key, data ], i}
-    {#if !lists
-      || (
-        (canSeeUninterested || !lists.uninterested.includes(key))
-        && (canSeeKnown || !lists.know.includes(key))
-        && (canSeeInterested || !lists.interested[key])
-      )
-    }
-      <Entry
-        placement={i+1}
-        title={key}
-        points={data.score}
-        entry={yearData.works[key]}
-        format={format}
-        data={data}
-        displayAll={false}
-        update={update}
-        lists={lists}
-      />
-    {/if}
+    <Entry
+      placement={i+1}
+      title={key}
+      points={data.score}
+      entry={yearData.works[key]}
+      format={format}
+      data={data}
+      displayAll={false}
+      update={update}
+      lists={lists}
+      isKnown={lists.know.includes(key)}
+      isInterested={lists.interested[key]}
+      isUninterested={lists.uninterested[key]}
+    />
   {/each}
 </ol>
