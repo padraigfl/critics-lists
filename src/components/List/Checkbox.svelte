@@ -17,12 +17,12 @@
     id={`${title}__${icon}`}
     value={title}
     type="checkbox"
-    checked={checked ? 'checked' : ''}
+    checked={isChecked ? 'checked' : ''}
     on:change={action}
   />
   <label
     for={`${title}__${icon}`} 
-    data-description-action={`${checked ? 'Add to ' : 'Remove from'} ${key} list`}
+    data-description-action={`${isChecked ? 'Add to ' : 'Remove from'} ${key} list`}
     data-hover={description}
   />
 </div>
