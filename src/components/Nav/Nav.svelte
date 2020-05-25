@@ -56,6 +56,7 @@
 	});
 	format.subscribe(value => {
 		format_value = value;
+		console.log(value);
 		if (value !== 'film') {
 			display = false
 		}
@@ -130,7 +131,13 @@
 	}
 	scoringMatrix.subscribe(value => {
 		matrix_value = value;
-  });
+	});
+
+	const getFilters = () => ['genre', 'country', 'language'].map(key => ({
+			title: key,
+			type: 'filter',
+			options: Object.entries(availableOptions[format_value][key]),
+		}));
 
 	const getOptions = () => {
 		if (format_value !== 'film') {
@@ -140,23 +147,23 @@
 		{
 			title: "Sort by",
 			type: 'sort',
-			options: [
-        { title: 'Points', key: 'score' },
-				// { title: 'Box Office', key: 'boxOffice' }, seems to be buggy af
-				{ title: 'Length', key: 'runtime' },
-				// { title: '# lists', key: 'val.critics.length' },
-				// { title: '# firsts', key: 'val.firsts.length' },
-				{ title: 'IMDb rating', key: 'imdb.rating' },
-				{ title: 'Awards', key: 'awards.wins' },
-				{ title: 'Nominations', key: 'awards.combined' },
-			],
-			default: 'Points',
+			options: year_value !== 'List'
+				? [
+					{ title: 'Points', key: 'score' },
+					// { title: 'Box Office', key: 'boxOffice' }, seems to be buggy af
+					{ title: 'Length', key: 'runtime' },
+					// { title: '# lists', key: 'val.critics.length' },
+					// { title: '# firsts', key: 'val.firsts.length' },
+					{ title: 'IMDb rating', key: 'imdb.rating' },
+					{ title: 'Awards', key: 'awards.wins' },
+					{ title: 'Nominations', key: 'awards.combined' },
+				] : [
+					{ title: 'Release', key: 'release' },
+					{ title: 'Length', key: 'runtime' },
+				],
+			default: year_value !== 'List' ? 'Points' : 'Release',
 		},
-		...['genre', 'country', 'language'].map(key => ({
-			title: key,
-			type: 'filter',
-			options: Object.entries(availableOptions[format_value][key]),
-		})),
+		...getFilters(),
 	]}
 
   filterOptions.subscribe(val => {
@@ -193,9 +200,10 @@
 				<span>🏚️</span>
 			</a>
 			<div class="nav__main__data">
-				<div class="nav__data">
-					<strong>Order</strong>: {order}
-				</div>
+				{#if format_value !== 'Format' && year_value !== 'Year'}
+					<div class="nav__data">
+						<strong>Order</strong>: {order}
+					</div>
 					{#if Object.keys(selectedOptions).length > 0}
 						<div class="nav__data">
 							<strong>Filters: </strong>
@@ -208,6 +216,7 @@
 							{/each}
 						</div>
 					{/if}
+				{/if}
 			</div>
 			<select value={year_value} on:change={changeYear}>
 				{#each ['Year', '2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2010s', 'List'] as year}
@@ -226,7 +235,7 @@
 			<button
 				on:click={toggle}
 				class={`nav__button ${display ? "nav__button--active" : ''}`}
-				disabled={format_value !== 'film' || isLoading}
+				disabled={format_value !== 'film'}
 			>
 				...
 			</button>
@@ -238,11 +247,15 @@
 				updateSort={updateSort}
 				updateOptions={updateOptions}
 				order={order}
-				checkboxes={[
-					{ goal: 'Hide', title: 'yep', toggle: toggleKnown, checked: !seeKnown },
-					{ goal: 'Hide', title: 'ooh', toggle: toggleInterested, checked: !seeInterested },
-					{ goal: 'Hide', title: 'meh', toggle: toggleUninterested, checked: !seeUninterested },
-				]}
+				checkboxes={
+					year_value !== 'List'
+					? [
+						{ goal: 'Hide', title: 'yep', toggle: toggleKnown, checked: !seeKnown },
+						{ goal: 'Hide', title: 'ooh', toggle: toggleInterested, checked: !seeInterested },
+						{ goal: 'Hide', title: 'meh', toggle: toggleUninterested, checked: !seeUninterested },
+					]
+					: []
+				}
 			/>
 		{/if}
 	</div>
