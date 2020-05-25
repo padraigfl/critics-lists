@@ -25,10 +25,10 @@ export const objectEntriesSort = (key) => {
     if (aUndefined && bUndefined) {
       return 0;
     }
-    if (aUndefined || valA - valB < 0) {
+    if (aUndefined || valA - valB < 0 || valA < valB) {
       return 1;
     }
-    if (bUndefined || valB - valA < 0)  {
+    if (bUndefined || valB - valA < 0 || valA > valB)  {
       return -1;
     }
     return 0;

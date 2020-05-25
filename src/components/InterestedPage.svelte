@@ -1,29 +1,75 @@
 <script>
-  import { OPTIONS } from '../store';
+  import {beforeUpdate} from 'svelte';
+  import { OPTIONS, year, format, filterOptions, filterSelections, ordering } from '../store';
   import InterestedCard from './InterestedCard/InterestedCard.svelte';
   import {
     getLocalStorageList,
+    objectEntriesSort,
   } from '../utils';
+  import {
+    getListOfArrayValues,
+  } from '../analytics';
   export let params;
-  let { format } = params;
   let allInterested = {};
+  let filteredList = {};
+  let filters = {};
+  let sortBy;
+
+  const handlingFilters = (fullList) => {
+    let iterativeList = fullList;
+    Object.entries(filters ||{}).forEach(([key, val]) => {
+      if (val && val !== 'All') {
+        iterativeList = iterativeList.filter(v => v[1][key] && v[1][key].includes(val));
+      }
+    });
+    return [...iterativeList.sort(objectEntriesSort(sortBy))]
+  }
 
   OPTIONS.years.forEach((year) => {
-    allInterested[year] = getLocalStorageList('interested', format, year);
+    allInterested[year] = getLocalStorageList('interested', params.format, year);
+  });
+  const flattened = Object.entries(
+    Object.entries(allInterested).reduce((acc, [year, data]) => {
+      return {
+        ...acc,
+        ...data,
+      }
+    }, {})
+  );
+
+  const getOptions = data => getListOfArrayValues(data, ['genre', 'language', 'country']);
+
+
+  ordering.subscribe(val => {
+    sortBy = val;
+    if (filteredList) {
+      filteredList = handlingFilters(flattened);
+    }
+  });
+  filterSelections.subscribe(val => {
+    if (filteredList) {
+      filters = val;
+      filteredList = handlingFilters(flattened);
+    }
   });
 
-  const flattened = Object.entries(allInterested).reduce((acc, [year, data]) => {
-    return {
-      ...acc,
-      ...data,
-    }
-  }, {});
+  year.update(() => 'List');
+  format.update(() => params.format);
+  if (!['release', 'runtime'].includes(sortBy)) {
+    ordering.update(() => 'release');
+  }
+  filteredList = handlingFilters(flattened);
+  if (params.format === 'film') {
+    filterOptions.update(() => ({
+      film: getOptions(filteredList),
+    }));
+  }
 </script>
-{#if Object.keys(flattened).length === 0}
+{#if filteredList.length === 0}
   You haven't added anything to your {format} list.
 {:else}
   <ul class="InterestedList">
-    {#each Object.entries(flattened) as [ key, data ], i}
+    {#each filteredList as [ key, data ], i}
       <InterestedCard
         title={key}
         format={format}
