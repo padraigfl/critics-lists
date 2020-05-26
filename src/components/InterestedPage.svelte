@@ -14,6 +14,7 @@
   let filteredList = {};
   let filters = {};
   let sortBy;
+  let currentFormat = params.format;
 
   const handlingFilters = (fullList) => {
     let iterativeList = fullList;
@@ -28,7 +29,7 @@
   OPTIONS.years.forEach((year) => {
     allInterested[year] = getLocalStorageList('interested', params.format, year);
   });
-  const flattened = Object.entries(
+  let flattened = Object.entries(
     Object.entries(allInterested).reduce((acc, [year, data]) => {
       return {
         ...acc,
@@ -58,21 +59,29 @@
   if (!['release', 'runtime'].includes(sortBy)) {
     ordering.update(() => 'release');
   }
-  filteredList = handlingFilters(flattened);
+  filteredList = handlingFilters(flattened, params);
   if (params.format === 'film') {
     filterOptions.update(() => ({
       film: getOptions(filteredList),
     }));
   }
+
+  beforeUpdate(() => {
+    // @todo hack hack hack hack, resolve
+    if (currentFormat && params.format !== currentFormat) {
+      currentFormat = params.format;
+      window.location.reload();
+    }
+  })
 </script>
 {#if filteredList.length === 0}
-  You haven't added anything to your {format} list.
+  You haven't added anything to your {currentFormat} list.
 {:else}
   <ul class="InterestedList">
     {#each filteredList as [ key, data ], i}
       <InterestedCard
         title={key}
-        format={format}
+        format={currentFormat}
         data={data}
         year={data.listYear || data.year}
       />

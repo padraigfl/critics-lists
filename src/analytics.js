@@ -295,6 +295,7 @@ export const deriveAdditionalDataFromProcessedList = (processedList, data, forma
   const mostContrarianCritic = getMostContrarianCritic(processedList, data);
   const mostContrarianCriticValidator = getMostContrarianCritic(processedList, data, 3);
   const arrayValues = getMostOfArrayValues(processedList, ['genre', 'cast', 'country', 'language']);
+  const count = processedList.length;
   let bestStudio;
   if (format === 'film') {
     bestStudio = getMostSuccessfulStudio(processedList);
@@ -310,6 +311,7 @@ export const deriveAdditionalDataFromProcessedList = (processedList, data, forma
     mostContrarianCriticValidator,
     bestStudio,
     arrayValues,
+    count,
   };
 }
 

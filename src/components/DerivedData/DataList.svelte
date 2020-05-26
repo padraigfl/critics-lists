@@ -29,6 +29,13 @@
     let derivedData = deriveAdditionalDataFromProcessedList(listData, yearData, format);
     dataList = [
       ...dataList.slice(0, 3),
+      {
+        title: 'Total entries', data: derivedData.count,
+        validator: {
+          text: 'On more than one list',
+          data: derivedData.count - derivedData.onlyInOneList.length,
+        }
+      },
       { title: 'Highest ranked with no #1', data: derivedData.biggestLoser, dataLink: true },
       {
         title: 'Lowest ranked with a #1',

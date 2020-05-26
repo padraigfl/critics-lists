@@ -6,22 +6,12 @@
   export let data;
   export let title;
   export let lists = [];
-  export let links = [];
   let interested = true;
+  let known = false;
 
   $: hasData = data.director || data.cast || data.genre || data.language;
   $: extend = false; // TODO handle toggle of extra data
 
-
-  const listActions = lists ? [
-    {
-      icon: '?',
-      action: update.interested,
-      isChecked: (title) => lists.interested[title],
-      description: 'ooh',
-      key: 'interested',
-    },
-  ] : [];
 
   const update = () => {
     const listNow = getLocalStorageList('interested', format, year);
@@ -35,13 +25,40 @@
     setLocalStorageList('interested', format, year)(listNow);
   }
 
+  const listActions = lists ? [
+    {
+      icon: '?',
+      action: update.interested,
+      isChecked: (title) => lists.interested[title],
+      description: 'ooh',
+      key: 'interested',
+    },
+  ] : [];
+
+
+  const markAsKnown = () => {
+    let listNow = getLocalStorageList('know', format, year);
+    if (listNow.includes(title)) {
+      listNow = listNow.filter(v => v !== title);
+      known = false;
+    } else {
+      listNow.push(title);
+      known = true;
+      update();
+    }
+    setLocalStorageList('know', format, year)(listNow);
+  }
+
 </script>
 
 <li class={`Entry InterestedCard`}>
   <div class="InterestedCard__heading">
-    {#if interested}
-      <button class="InterestedCard__remove" on:click={update} disabled={!interested}>X</button>
-    {/if}
+    <div class="InterestedCard__actions">
+      {#if interested}
+        <button class="InterestedCard__remove InterestedCard__remove--list" on:click={update} disabled={!interested} />
+      {/if}
+      <button class={`InterestedCard__remove InterestedCard__remove--known ${known ? 'marked' : ''}`} on:click={markAsKnown} />
+    </div>
     <strong class="InterestedCard__title">{title}</strong>
     {#if data.runtime || data.country}
       <div class="InterestedCard__subtitle">
@@ -79,8 +96,26 @@
   {/if}
   {#if !interested} 
     <div class="InterestedCard__undo-wrapper">
-      <p><strong>{title}</strong>: Removed from list</p>
-      <button on:click={update}>Undo</button>
+      <p>
+        <strong>{title}</strong>:
+        Removed from list
+        {#if known}
+          (marked as <img src="/icons/tick-fill.png" style="display: inline-black; width: 20px; margin-left: 2px; margin-bottom: -4px;" alt="known" />)
+        {/if}
+      </p>
+      {#if !known}
+        <button on:click={update}>Undo</button>
+      {:else}
+        <button on:click={update}>Keep on list</button>
+        <button
+          on:click={() => {
+            markAsKnown();
+            update();
+          }}
+        >
+          Undo
+        </button>
+      {/if}
     </div>
   {/if}
 </li>

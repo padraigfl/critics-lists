@@ -56,7 +56,6 @@
 	});
 	format.subscribe(value => {
 		format_value = value;
-		console.log(value);
 		if (value !== 'film') {
 			display = false
 		}
@@ -89,6 +88,12 @@
     format.update(() => e.target.value);
 		filterSelections.update(() => ({}));
 		ordering.update(() => 'score')
+		if (year_value === 'List' 
+			&& OPTIONS.formats.includes(e.target.value)
+		) {
+			loadPage(`/interested/${e.target.value}`);
+			return;
+		}
 		if (
 			OPTIONS.years.includes(year_value)
 			&& OPTIONS.formats.includes(e.target.value)

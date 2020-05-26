@@ -25,6 +25,15 @@ $borderDash: $borderWidth dashed $dark;
   }
 }
 
+@mixin list-add-bg {
+  background-image: url('/icons/list-add.svg');
+  background-size: 20px 20px;
+  background-position: 0px 0px;
+  background-color: $bright;
+  outline: 2px solid $bright;
+  filter: invert(1);
+}
+
 body {
   display: flex;
   flex-direction: column;
@@ -438,13 +447,42 @@ $dataListWidth: 400px;
       display: block;
       margin-bottom: $s;
     }
-    &__remove {
+    &__actions {
       float: right;
       overflow: hidden;
       width: 40px;
-      height: 40px;
       margin-top: -$m - $borderWidth;
       margin-right: -$m - $borderWidth;
+    }
+    &__remove {
+      width: 40px;
+      height: 40px;
+      background-color: $bright;
+      background-position: center;
+      background-size: 22px;
+      background-repeat: no-repeat;
+      &:hover {
+        border-style: dashed;
+      }
+      &--list {
+        background-image: url('/icons/list-add.svg');
+        background-size: 20px 20px;
+        border-color: $bright;
+        filter: invert(1);
+        &:hover {
+          filter: invert(0);
+          border-color: $dark;
+        }
+      }
+      &--known {
+        background-image: url(/icons/tick-outline.png);
+        &:hover, &.marked {
+          background-image: url(/icons/tick-fill.png);
+        }
+      }
+      + * {
+        margin-top: -$borderWidth;
+      }
     }
     &__details {
       margin-top: $m;
@@ -730,12 +768,7 @@ $dataListWidth: 400px;
         background-image: url('/icons/cross-fill.png');
       }
       &--ooh label::after {
-        background-image: url('/icons/list-add.svg');
-        background-size: 20px 20px;
-        background-position: 0px 0px;
-        background-color: $bright;
-        outline: 2px solid $bright;
-        filter: invert(1);
+        @include list-add-bg;
       }
     }
   }
