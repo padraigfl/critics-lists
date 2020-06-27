@@ -5,6 +5,7 @@
   export let action;
   export let description;
   export let key;
+  export let a11y;
   $:isChecked = checked;
 </script>
 
@@ -25,6 +26,6 @@
     data-description-action={`${isChecked ? 'Add to ' : 'Remove from'} ${key} list`}
     data-hover={description}
   >
-    <p class="a11y">{`${isChecked ? 'Add to ' : 'Remove from'} ${key} list`}</p>
+    <p class="a11y">{a11y}</p>
   </label>
 </div>

@@ -87,8 +87,9 @@
 			{ link: 'github.com/padraigfl', text: 'Github' },
 			{ link: 'github.com/padraigfl/critic-lists', text: 'Source code'},
 			{ link: 'dvd-rom.netlify.app', text: 'DVD Menu Simulator' },
-			{ link: 'packard-belle.netlify.com', text: 'Windows98 Clone' },
-			{ link: 'react-coursebuilder.netlify.com', text: 'Youtube App thing' },
+			{ link: 'packard-belle.netlify.app', text: 'Windows98 Clone' },
+			{ link: 'react-coursebuilder.netlify.app', text: 'Youtube App thing' },
+			{ link: 'padraig-operator.netlify.app', text: 'Mobile-browser focused music sequencer experiment (very messy)' },
 		] as {link, text}, i}
 			{#if i > 0}
 				{' '}—
@@ -98,4 +99,8 @@
 	</p>
 
 	<p>If you're actually using this and have some feedback, I'd love to hear it, try my Github ^</p>
+	<p>
+		On the super off-chance you think any of these things are neat and would like to get me enthusiastic about one of them again, please consider donating some money.
+		I'll forward it on to a charity of my choosing whenever I notice I get it, I just want the ego rub and the encouragement tbh. <a href="https://www.buymeacoffee.com/padraig" target="_blank">Link</a>
+	</p>
 </div>

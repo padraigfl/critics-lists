@@ -64,7 +64,7 @@
 			{ link: 'github.com/padraigfl/critic-lists', text: 'Source code'},
 			{ link: 'packard-belle.netlify.com', text: 'Windows98 Clone' },
 			{ link: 'react-coursebuilder.netlify.com', text: 'Youtube App thing' },
-			{ link: 'dvd-rom.netlify.app/', text: 'DVD menu recreations' }
+			{ link: 'dvd-rom.netlify.app/', text: 'DVD menu recreations (Shrek, Matrix)' }
 		] as {link, text}, i}
 			{#if i > 0}
 				{' '}—
