@@ -50,12 +50,13 @@
 		<li>Style improvements (e.g. cleaner navigation)</li>
 		<li>Performance issue resolutions</li>
 		<li>Data fixes</li>
+		<li>Clean up the code, I hadn't a clue how Svelte works at the start and it really shows. The CSS needs to be restructured too</li>
 	</ul>
 
 	<h2>Things I won't do</h2>
 	<ul>
-		<li>Album data: the hassle in sanitizing the data would be absolutely huge due</li>
-		<li>Display images on load: would involve loading so many assets at once</li>
+		<li>Album data: the hassle in sanitizing the data would be absolutely huge due to only having a string to work from</li>
+		<li>Display images on load: would involve loading so many assets at once that I'm not hosting, seems douchey</li>
 		<li>Save lists between devices: using local storage of browser, there is no server involved</li>
 		<li>Up to date data: Again, due to no server being involved. Although I might be able to throw together a script to occasionally update this.</li>
 	</ul>

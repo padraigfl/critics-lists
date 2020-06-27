@@ -11,5 +11,6 @@
   icon={icon}
   data-description={description}
 >
+  <p class="a11y invisible">{description}</p>
   { value >= 1 ? (+value).toFixed(0) : (value || 0).toFixed(0)}{key || ''}
 </div>

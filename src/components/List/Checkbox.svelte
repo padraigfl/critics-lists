@@ -24,5 +24,7 @@
     for={`${title}__${icon}`} 
     data-description-action={`${isChecked ? 'Add to ' : 'Remove from'} ${key} list`}
     data-hover={description}
-  />
+  >
+    <p class="a11y">{`${isChecked ? 'Add to ' : 'Remove from'} ${key} list`}</p>
+  </label>
 </div>
