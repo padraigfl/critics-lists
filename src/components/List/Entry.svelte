@@ -107,6 +107,7 @@
       },
       isChecked: isKnown,
       description: 'yep',
+      a11y: 'Already known',
       key: 'seen',
     },
     {
@@ -117,6 +118,7 @@
       },
       isChecked: isInterested,
       description: 'ooh',
+      a11y: 'Add to interested list',
       key: 'interested',
     },
     {
@@ -127,6 +129,7 @@
       },
       isChecked: isUninterested,
       description: 'meh',
+      a11y: 'Mark as uninterested',
       key: 'uninterested',
     },
   ] : [];
@@ -178,7 +181,7 @@
         </div>
         {#if lists}
           <div class="Entry__checkboxes">
-            {#each listActions as { icon, action, isChecked, description, key }}
+            {#each listActions as { icon, action, isChecked, description, key, a11y }}
               <Checkbox
                 checked={isChecked}
                 action={action}
@@ -186,6 +189,7 @@
                 icon={icon}
                 description={description}
                 key={key}
+                a11y={a11y}
               />
             {/each}
           </div>
@@ -197,11 +201,11 @@
       {#if !hasData || !data.award}
         <div/> <div />
       {/if}
-      <ListEntryDataPoint value={entry.firsts.length} small icon="🏆" description="#1's"/>
-      <ListEntryDataPoint value={entry.critics.length} small icon="📋" description="Lists" />
+      <ListEntryDataPoint value={entry.firsts.length} small icon="🏆" description="Number of first place entries"/>
+      <ListEntryDataPoint value={entry.critics.length} small icon="📋" description="Numeber of lists featured on" />
       {#if hasData && data.awards}
-        <ListEntryDataPoint value={data.awards.wins} small icon="W" description="Awards"/>
-        <ListEntryDataPoint value={data.awards.noms} small icon="N" description="Noms"/>
+        <ListEntryDataPoint value={data.awards.wins} small icon="W" description="Awards won"/>
+        <ListEntryDataPoint value={data.awards.noms} small icon="N" description="Awards nominated for (excluding wins)"/>
       {/if}
     </div>
   </div>

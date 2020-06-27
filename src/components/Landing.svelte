@@ -50,12 +50,13 @@
 		<li>Style improvements (e.g. cleaner navigation)</li>
 		<li>Performance issue resolutions</li>
 		<li>Data fixes</li>
+		<li>Clean up the code, I hadn't a clue how Svelte works at the start and it really shows. The CSS needs to be restructured too</li>
 	</ul>
 
 	<h2>Things I won't do</h2>
 	<ul>
-		<li>Album data: the hassle in sanitizing the data would be absolutely huge due</li>
-		<li>Display images on load: would involve loading so many assets at once</li>
+		<li>Album data: the hassle in sanitizing the data would be absolutely huge due to only having a string to work from</li>
+		<li>Display images on load: would involve loading so many assets at once that I'm not hosting, seems douchey</li>
 		<li>Save lists between devices: using local storage of browser, there is no server involved</li>
 		<li>Up to date data: Again, due to no server being involved. Although I might be able to throw together a script to occasionally update this.</li>
 	</ul>
@@ -86,8 +87,9 @@
 			{ link: 'github.com/padraigfl', text: 'Github' },
 			{ link: 'github.com/padraigfl/critic-lists', text: 'Source code'},
 			{ link: 'dvd-rom.netlify.app', text: 'DVD Menu Simulator' },
-			{ link: 'packard-belle.netlify.com', text: 'Windows98 Clone' },
-			{ link: 'react-coursebuilder.netlify.com', text: 'Youtube App thing' },
+			{ link: 'packard-belle.netlify.app', text: 'Windows98 Clone' },
+			{ link: 'react-coursebuilder.netlify.app', text: 'Youtube App thing' },
+			{ link: 'padraig-operator.netlify.app', text: 'Mobile-browser focused music sequencer experiment (very messy)' },
 		] as {link, text}, i}
 			{#if i > 0}
 				{' '}—
@@ -97,4 +99,8 @@
 	</p>
 
 	<p>If you're actually using this and have some feedback, I'd love to hear it, try my Github ^</p>
+	<p>
+		On the super off-chance you think any of these things are neat and would like to get me enthusiastic about one of them again, please consider donating some money.
+		I'll forward it on to a charity of my choosing whenever I notice I get it, I just want the ego rub and the encouragement tbh. <a href="https://www.buymeacoffee.com/padraig" target="_blank">Link</a>
+	</p>
 </div>

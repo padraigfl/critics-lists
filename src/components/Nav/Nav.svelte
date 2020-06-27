@@ -209,7 +209,7 @@
 					<div class="nav__data">
 						<strong>Order</strong>: {order}
 					</div>
-					{#if Object.keys(selectedOptions).length > 0}
+					{#if Object.keys(selectedOptions).length > 0 || !seeKnown || !seeInterested || !seeUninterested}
 						<div class="nav__data">
 							<strong>Filters: </strong>
 							{#each Object.entries(selectedOptions) as [key, val]}
@@ -219,6 +219,15 @@
 									</span>
 								{/if}
 							{/each}
+							{#if !seeKnown}
+								<div class="nav__data__filter nav__data__filter--known" />
+							{/if}
+							{#if !seeInterested}
+								<div class="nav__data__filter nav__data__filter--interested" />
+							{/if}
+							{#if !seeUninterested}
+								<div class="nav__data__filter nav__data__filter--uninterested" />
+							{/if}
 						</div>
 					{/if}
 				{/if}

@@ -161,6 +161,7 @@ $dataListWidth: 400px;
     padding-top: 0px;
     padding-left: 0px;
     max-width: 100%;
+    overflow-y: hidden;
   }
 }
 
@@ -290,7 +291,7 @@ $dataListWidth: 400px;
       &:not(:last-child) {
         margin-right: $m;
       }
-      &:hover {
+      &:hover, &:focus {
         label::after {
           position: absolute;
           bottom: 0px;
@@ -705,6 +706,18 @@ $dataListWidth: 400px;
     span:not(:last-child)::after {
       content: '/ ';
     }
+
+    div.nav__data__filter {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      background-position: center;
+      background-size: 14px;
+      background-repeat: no-repeat;
+      &--interested { @include list-add-bg(); background-size: 14px; }
+      &--uninterested { background-image: url('/icons/cross-fill.png');}
+      &--known { background-image: url('/icons/tick-fill.png'); }
+    }
   }
 
   select, button {
@@ -794,4 +807,11 @@ button, select, input {
 button, select {
   font-weight: bold;
   margin-bottom: 0px;
+}
+
+// hacky means to include text where icons are used as bg img
+.a11y {
+  display: block;
+  position: absolute;
+  left: -10000px;
 }
