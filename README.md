@@ -22,3 +22,6 @@ Lord knows when I'll get to most of these
 - Aggregate individual lists from 2010 to 2019, compare against 2010s decade lists
 - TV data from omdb
 - Fix all the bad Svelte bits (this'll never happen, lets be real)
+
+
+Please see landing page for more detailed rambling
