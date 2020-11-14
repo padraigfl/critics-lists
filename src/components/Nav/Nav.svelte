@@ -3,7 +3,7 @@
 	import NavOptions from './NavOptions.svelte';
 	import axios from 'axios';
 	import { push } from 'svelte-spa-router';
-	import { processListsWithRankings, defaultScoringMatrix } from '../../analytics';
+	import { processListsWithRankings, SCORING_MATRICES } from '../../analytics';
   import {
 		loadingPage,
 		year,
@@ -35,7 +35,7 @@
 	let seeUninterested = true;
 	let seeInterested = true;
 	let seeKnown = true;
-  $: matrix = defaultScoringMatrix;
+  $: matrix = SCORING_MATRICES.default;
 
 	const onClickOutside = (e) => {
 		const nav = document.querySelector('.nav');
@@ -49,7 +49,7 @@
 	viewKnown.subscribe((val) => seeKnown = val);
 	viewInterested.subscribe((val) => seeInterested = val);
 
-  filterSelections.subscribe((val) => selectedOptions = val);
+	filterSelections.subscribe((val) => selectedOptions = val);
 
 	year.subscribe(value => {
 		year_value = value;
@@ -111,7 +111,6 @@
 		window.scroll(0, 0);
 	}
 
-
 	const toggle = (bool) => {
 		if (bool === true ||display) {
 			document.removeEventListener('click', listener);
@@ -121,19 +120,6 @@
 		display = !display;
 	}
 
-	scoringMatrix.subscribe(value => {
-		matrix_value = value;
-	});
-	const updateMatrix = key => e => {
-		matrix = {
-			...matrix,
-			[key]: +e.target.value,
-		}
-	}
-	const saveNewMatrix = () => {
-		scoringMatrix.update(() => matrix);
-		toggle();
-	}
 	scoringMatrix.subscribe(value => {
 		matrix_value = value;
 	});
@@ -196,8 +182,6 @@
   };
  
 </script>
-
-<!-- In either case, if you go from Component A to Component B, it will randomly roll the die. With the 2nd method, it'll also randomly roll it if you go from component B with one parameter to component B with a different parameter. But neither way will it re-roll if you go from component B with parameter 7 back to the same exact route. -->
 	
 	<div class="nav">
 		<div class="nav__main">

@@ -1,24 +1,83 @@
 
-export const defaultScoringMatrix = {
-  1: 10,
-  2: 9,
-  3: 8,
-  4: 7,
-  5: 6,
-  6: 5,
-  7: 4,
-  8: 3,
-  9: 2,
-  10: 1,
-  '_': 0.5,
-};
+export const SCORING_MATRICES = {
+  default: {
+    1: 10,
+    2: 9,
+    3: 8,
+    4: 7,
+    5: 6,
+    6: 5,
+    7: 4,
+    8: 3,
+    9: 2,
+    10: 1,
+    '_': 0.5,
+    description: 'Strongly favours entries high in lists'
+  },
+  metacritic: {
+    1: 3,
+    2: 2,
+    3: 1,
+    4: 1,
+    5: 1,
+    6: 1,
+    7: 1,
+    8: 1,
+    9: 1,
+    10: 1,
+    '_': 0.5,
+    description: 'Approximation of metacritic scoring system',
+  },
+  flat: {
+    1: 1,
+    2: 1,
+    3: 1,
+    4: 1,
+    5: 1,
+    6: 1,
+    7: 1,
+    8: 1,
+    9: 1,
+    10: 1,
+    '_': 1,
+    description: '1 point regardless of ranking',
+  },
+  defaultInverted: {
+    1: 1,
+    2: 2,
+    3: 3,
+    4: 4,
+    5: 5,
+    6: 6,
+    7: 7,
+    8: 8,
+    9: 9,
+    10: 10,
+    '_': 5,
+    description: 'Inversion of default scoring system, priotises lower ranked entries.',
+  },
+  flatTop5: {
+    1: 3,
+    2: 2,
+    3: 1,
+    4: 1,
+    5: 1,
+    6: 0.1,
+    7: 0.1,
+    8: 0.1,
+    9: 0.1,
+    10: 0.1,
+    '_': 0.1,
+    description: '1 point for any 1-5, .1 point for other ratings',
+  },
+}
 
-const addMetricToScore = (val, rank, scoringMatrix = defaultScoringMatrix) => {
+const addMetricToScore = (val, rank, scoringMatrix = SCORING_MATRICES.default) => {
   const score = scoringMatrix[rank];
   return val ? val + score : score;
 }
 
-const getUnrankedListValue = (list, scoringMatrix = defaultScoringMatrix) => {
+const getUnrankedListValue = (list, scoringMatrix = SCORING_MATRICES.default) => {
   const rankedCount = Object.values(list).filter(v => typeof v === 'number').length;
   const unrankedCount = Object.values(list).length - rankedCount;
   const totalMatrixScorePoints = Object.entries(scoringMatrix).reduce(
@@ -103,7 +162,7 @@ const formatOmdbData = (omdbData = {}) => {
   }
 }
 
-export const processListsWithRankings = (critics, omdbData, matrix = defaultScoringMatrix, orderFunc) => {
+export const processListsWithRankings = (critics, omdbData, matrix = SCORING_MATRICES.default, orderFunc) => {
   const films = {};
   Object.values(critics).forEach(({ list }) => {
     matrix._ = matrix._ || getUnrankedListValue(list, matrix);

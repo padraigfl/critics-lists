@@ -5,8 +5,7 @@
 
   const goToFilm = (id) => {
     document.getElementById(id)
-      .scrollIntoView({ behavior: 'smooth', position: 'center' });
-    // window.scrollBy(0, -50)
+      .scrollIntoView();
     const focusEl = document.querySelector(`#${id} input`);
     focusEl.focus();
     setTimeout(() => focusEl.blur(), 1000);

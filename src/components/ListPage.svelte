@@ -157,6 +157,8 @@
   {#if listData && listData.length && yearData}
     <List listData={listData} yearData={yearData} format={params.format} year={params.year} />
   {:else if !isLoading}
-    No results found
+    <div class="List">
+      No results found (most likely reason if you have more than one filter enabled: filter counts represent the overall list)
+    </div>
   {/if}
 </div>

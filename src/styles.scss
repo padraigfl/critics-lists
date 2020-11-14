@@ -35,16 +35,10 @@ $borderDash: $borderWidth dashed $dark;
 }
 
 body {
-  display: flex;
-  flex-direction: column;
   margin: 0px;
   padding: 0px 0px 0px $l;
   background-color: $bright;
   color: $dark;
-  flex-grow: 1;
-  height: 100vh;
-  max-height: 100vh;
-  overflow: auto;
 
   @media (max-width: $mobile) {
     padding-left: 0px;
@@ -68,9 +62,8 @@ $dataListWidth: 400px;
 
 .ListBreakdown {
   display: flex;
-  height: calc(100% - 52px);
-  overflow: auto;
-  width: 100%;
+  margin-top: 52px;
+  flex-direction: row;
   max-width: 1400px;
   margin-left: auto;
 
@@ -107,9 +100,13 @@ $dataListWidth: 400px;
   padding: $s;
   padding-right: 0px;
   margin-top: 0px;
-  position: fixed;
   max-width: $dataListWidth;
   margin-left: auto;
+
+  dl {
+    position: sticky;
+    top: 54px;
+  }
 
   @media (max-width: $mobile) {
     position: relative;
@@ -118,6 +115,7 @@ $dataListWidth: 400px;
     padding-right: $s;
     max-width: 100%;
   }
+
   dd {
     margin: 0px;
     margin-bottom: $s;
@@ -126,7 +124,7 @@ $dataListWidth: 400px;
       border: 0px;
       background-color: transparent;
       display: inline-block;
-      text-align: left;;
+      text-align: left;
     }
     .DataBlock__validator {
       font-size: 0.75rem;
@@ -140,11 +138,9 @@ $dataListWidth: 400px;
 .List {
   margin: 0px;
   padding: 0;
-  overflow-y: auto;
   margin-left: $s;
   flex-grow: 1;
   max-width: 66vw;
-  padding-left: $dataListWidth;
 
   &--hide-known .Entry--known {
     display: none;
@@ -173,6 +169,7 @@ $dataListWidth: 400px;
   border-top: $border;
   transition: filter linear 0.5s;
   scroll-margin-top: 50px;
+  box-shadow: inset 2px 0px 0px $dark;
   &:first-child {
     @media (min-width: $mobile + 1px) {
       border-top: none;
@@ -626,8 +623,8 @@ $dataListWidth: 400px;
 }
 
 .Landing {
-  padding-top: 50px;
   padding: 20px;
+  padding-top: 52px;
   h2, p, div, ul, ol {
     max-width: 800px;
   }
@@ -648,7 +645,8 @@ $dataListWidth: 400px;
 }
 
 .nav {
-  position: relative;
+  position: fixed;
+  top: 0px;
   display: flex;
   flex-wrap: wrap;
   flex-shrink: 0;
@@ -657,6 +655,10 @@ $dataListWidth: 400px;
   align-content: center;
   border-bottom: $border;
   z-index: 90;
+  width: calc(100vw - #{$l});
+  @media (max-width: $mobile) {
+    width: 100%;
+  }
   &__button {
     &--active {
       border-color: $bright;
@@ -680,7 +682,8 @@ $dataListWidth: 400px;
       font-size: 20px;
       font-weight: bold;
       padding: $s;
-      margin-left: $xs;
+      margin-left: auto;
+      margin-right: $xs;
       text-decoration: none;
       span {
         filter: brightness(0) invert(1);
@@ -691,7 +694,7 @@ $dataListWidth: 400px;
     }
     &__data {
       margin-right: $s;
-      margin-left: auto;
+      margin-left: $xs;
       text-align: right;
       align-self: center;
       @media (max-width: $mobile) {

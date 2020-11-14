@@ -85,11 +85,13 @@
 
 </script>
 
-<dl class="DataList">
-  {#each dataList as entry
-  }
-    <DataBlock
-      entry={entry}
-    />
-  {/each}
-</dl>
+<div class="DataList">
+  <dl>
+    {#each dataList as entry
+    }
+      <DataBlock
+        entry={entry}
+      />
+    {/each}
+  </dl>
+</div>

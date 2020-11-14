@@ -1,4 +1,5 @@
 var jsdom = require('jsdom');
+const process = require('process');
 const curl = require('curl');
 var fs = require('fs');
 
@@ -192,9 +193,17 @@ const dataFetch = (url, log) => {
   curl.get(url, null, (err,resp,body)=>{
     if(resp && resp.statusCode == 200){
       const document = parseDom(body);
-      const data = document.querySelector('.categoryname') || document.querySelector('.criticnam')
+      const data = document.querySelector('.categoryname') || document.querySelector('.criticname')
         ? process2010([...document.querySelectorAll('tr.categoryname')], url)
         : processData(document);
+      const validData = Object.values(data).some((criticData) => (
+        Object.values(criticData.list) && Object.values(criticData.list).length > 9
+      ));
+
+      if (!validData) {
+        throw Error('request fetched invalid data structure');
+      }
+
       // writeJSON(`data/${year}-${format}.json`, {
       //   ...data,
       //   source: url,
@@ -213,6 +222,7 @@ const dataFetch = (url, log) => {
 
     if (log) {
       writeJSON('dataLog.json', dataLog);
+      process.exit();
     }
   });
 };

@@ -2,7 +2,7 @@
 	import Modal from './Modal.svelte';
 	import axios from 'axios';
 	import { push } from 'svelte-spa-router';
-	import { processListsWithRankings, defaultScoringMatrix } from '../../analytics';
+	import { processListsWithRankings } from '../../analytics';
   import {
     loadingPage, year, format, scoringMatrix, OPTIONS, filterOptions, filterSelections, ordering, viewUninterested
   } from '../../store';
