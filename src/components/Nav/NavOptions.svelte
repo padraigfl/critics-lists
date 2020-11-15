@@ -2,7 +2,7 @@
 	import Modal from './Modal.svelte';
 	import axios from 'axios';
 	import { push } from 'svelte-spa-router';
-	import { processListsWithRankings } from '../../analytics';
+	import { processListsWithRankings, SCORING_MATRICES } from '../../analytics';
   import {
     loadingPage, year, format, scoringMatrix, OPTIONS, filterOptions, filterSelections, ordering, viewUninterested
   } from '../../store';
@@ -13,6 +13,15 @@
   export let selectedOptions;
   export let order;
   export let checkboxes;
+
+  let activeMatrix;
+
+  scoringMatrix.subscribe((val) => activeMatrix = val);
+
+  const setMatrix = (e) => {
+    const value = e.target.value;
+    scoringMatrix.update(() => value);
+  }
 
   $: options = getOptions();
 </script>
@@ -48,6 +57,18 @@
         {/if}
       </li>
     {/each}
+    <li>
+      <div class="nav__options__title">
+          Scoring Metric
+      </div>
+      <select class="nav__options__select" on:change={setMatrix} value={activeMatrix}>
+        {#each Object.entries(SCORING_MATRICES) as [ key, matrix]}
+          <option value={key}>
+            {key}
+          </option>
+        {/each}
+      </select>
+    </li>
     {#each checkboxes as { title, toggle, checked, icon, goal }}
       <li class={`nav__options__toggle nav__options__toggle--${title}`}>
         <input name={`${goal}_${title}`} id={`${goal}_${title}`} type="checkbox" on:change={toggle} checked={checked} />

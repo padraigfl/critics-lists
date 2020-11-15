@@ -1,12 +1,13 @@
 
 Important and/or easy:
-- [] BUG Resolve scroll bug across devices, verify
+- [x] BUG Resolve scroll bug across devices, verify
 - [] Update data script to run one request at a time
 - [] Add data update script (used IMDb IDs for guaranteed matches)
 - [] Multiple scoring systems
 - [] Query string holding search values for routing purposes
 - [] Link to lists within expanded details
 - [] Add TV data fetch script
+- [] indexedDB for old lists
 
 Nice to have:
 - [] Generate weighted decade list 

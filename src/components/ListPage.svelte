@@ -10,6 +10,7 @@
     deriveAdditionalDataFromProcessedList,
     processListsWithRankings,
     getListOfArrayValues,
+    SCORING_MATRICES,
   } from '../analytics';
   import '../styles.scss';
   import {
@@ -132,7 +133,8 @@
   });
 
 	scoringMatrix.subscribe(async value => {
-    matrix_value = value;
+    matrix_value = SCORING_MATRICES[value];
+    console.log(matrix_value);
     await processData();
 	});
 

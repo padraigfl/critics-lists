@@ -57,8 +57,8 @@ export const SCORING_MATRICES = {
     description: 'Inversion of default scoring system, priotises lower ranked entries.',
   },
   flatTop5: {
-    1: 3,
-    2: 2,
+    1: 1,
+    2: 1,
     3: 1,
     4: 1,
     5: 1,
