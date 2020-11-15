@@ -7,6 +7,7 @@ Important and/or easy:
 - [] Query string holding search values for routing purposes
 - [] Link to lists within expanded details
 - [] Add TV data fetch script
+- [] Investigate music API options
 - [] indexedDB for old lists
 - [] Explanation or weighting systems
 
