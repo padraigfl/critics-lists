@@ -65,8 +65,8 @@
   ]);
 
   const album = [// need to remove by
-    { site: 'Spotify', link: 'https://open.spotify.com/search/', icon: 'spotify.png', modify: v => v.replace(/\s/g, '%20').replace(/by/g, '') },// %20
-    { site: 'Youtube', link: 'https://www.youtube.com/results?search_query=', icon: 'youtube.png', modify: v => v.replace(/\s/g, '%20') }, // +
+    { site: 'Spotify', link: 'https://open.spotify.com/search/', icon: 'spotify.png', modify: v => v.replace(' by ', ' ').replace(/\s+/g, '%20') },// %20
+    { site: 'Youtube', link: 'https://www.youtube.com/results?search_query=', icon: 'youtube.png', modify: v => v.replace(/by/g, '').replace(/\s/g, '%20') }, // +
   ];
 
   const tv = [
@@ -172,7 +172,7 @@
               site={site}
               icon={icon}
               text={text}
-              link={link}
+              link={title && modify ? `${link}${modify(title)}` : link}
             />
           {/each}
           <!-- <button on:click={toggle}>
