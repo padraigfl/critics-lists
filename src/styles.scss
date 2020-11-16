@@ -100,7 +100,8 @@ $dataListWidth: 400px;
   padding: $s;
   padding-right: 0px;
   margin-top: 0px;
-  max-width: $dataListWidth;
+  width: $dataListWidth;
+  max-width: 100%;
   margin-left: auto;
 
   dl {
@@ -429,12 +430,15 @@ $dataListWidth: 400px;
   grid: auto /repeat(3, minmax(200px, 1fr));
   margin: $m;
   padding: 0px;
+  padding-top: 52px;
   grid-gap: $gutters;
   .InterestedCard {
+    list-style-type: none;
     position: relative;
     border: none;
     outline: 2px dashed $dark;
     padding: $m;
+    box-shadow: none;
     &__heading {
       display: block;
     }

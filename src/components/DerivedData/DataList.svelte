@@ -4,7 +4,7 @@
 	import {
     deriveAdditionalDataFromProcessedList,
   } from '../../analytics';
-  import { SOURCE } from '../../store'; 
+  import { SOURCE } from '../../utils/constants'; 
   export let yearData;
   export let listData;
   export let format;
@@ -26,6 +26,7 @@
 
   
   const getDerivedData = () => {
+    console.time()
     let derivedData = deriveAdditionalDataFromProcessedList(listData, yearData, format);
     dataList = [
       ...dataList.slice(0, 3),
@@ -72,6 +73,7 @@
         },
       );
     }
+    console.timeEnd()
   }
 
 

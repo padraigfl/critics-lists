@@ -5,7 +5,7 @@
     generateListUpdater,
     getLocalStorageList,
     customLists,
-  } from '../../utils.js';
+  } from '../../utils/general.js';
   export let listData;
   export let yearData;  
   export let format;

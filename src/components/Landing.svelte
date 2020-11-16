@@ -1,5 +1,5 @@
 <script>
-	import { OPTIONS, SOURCE } from '../store';
+	import { OPTIONS, SOURCE } from '../utils/constants';
 </script>
 
 <svelte:head>
@@ -18,7 +18,7 @@
 	<h2>Features</h2>
 
 	<ol>
-		<li>Year Lists aggregated using a custom weighting scheme (#1 gets 10 points, #2 gets 9, etc), this will be customisable in the future</li>
+		<li>Year Lists aggregated using a custom weighting scheme (#1 gets 10 points, #2 gets 9, etc)</li>
 		<li>Genre, country and language filters</li>
 		<li>Sorting options</li>
 		<li>A custom list for each format to track items you've flagged, which is then viewable at <a href="/#/interested/film">Film</a>, <a href="/#/interested/tv">TV</a> and <a href="/#/interested/album">Music</a></li>
@@ -34,7 +34,7 @@
 		music docs.
 	</p>
 	<p>
-		Each year I'd trawl through endless top 10s looking for names I didn't recognise, Googling every one and usually unearthing a couple of neat indies at thevery least...
+		Each year I'd trawl through endless top 10s looking for names I didn't recognise, Googling every one and usually unearthing a couple of neat indies at the very least...
 		It was pretty tedious stuff when you could dismiss half of them with just a few other data points
 		(e.g. by a filmmaker I don't like; or had already dismissed but forgotten the name). Finding it increasingly hard to
 		find new interesting things to watch and having to trawl through all the noise in lists on Letterbox'd, I decided to try
@@ -44,10 +44,8 @@
 
 	<h2>Still to do</h2>
 	<ul>
-		<li>Multiple points weighting systems</li>
 		<li>Aggregation of the individual year lists (would be a very large file download)</li>
 		<li>Extra data for TV shows</li>
-		<li>Style improvements (e.g. cleaner navigation)</li>
 		<li>Performance issue resolutions</li>
 		<li>Data fixes</li>
 		<li>Clean up the code, I hadn't a clue how Svelte works at the start and it really shows. The CSS needs to be restructured too</li>
@@ -98,9 +96,8 @@
 		{/each}
 	</p>
 
-	<p>If you're actually using this and have some feedback, I'd love to hear it, try my Github ^</p>
 	<p>
-		On the super off-chance you think any of these things are neat and would like to get me enthusiastic about one of them again, please consider donating some money.
-		I'll forward it on to a charity of my choosing whenever I notice I get it, I just want the ego rub and the encouragement tbh. <a href="https://www.buymeacoffee.com/padraig" target="_blank">Link</a>
+		If you're actually using this and have some feedback, I'd love to hear it, try my Github ^.
+		and if you just wanna be all encouraging, <a href="https://www.buymeacoffee.com/padraig" target="_blank">I think this thing works</a>
 	</p>
 </div>

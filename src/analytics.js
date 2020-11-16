@@ -12,7 +12,8 @@ export const SCORING_MATRICES = {
     9: 2,
     10: 1,
     '_': 0.5,
-    description: 'Strongly favours entries high in lists'
+    description: 'Strongly favours entries high in lists.',
+    objective: 'Will hopefully reduce the chances of films being bolstered solely due to extreme popularity',
   },
   metacritic: {
     1: 3,
@@ -27,6 +28,7 @@ export const SCORING_MATRICES = {
     10: 1,
     '_': 0.5,
     description: 'Approximation of metacritic scoring system',
+    objective: 'Included to follow source, serious deviations may suggest data issues',
   },
   flat: {
     1: 1,
@@ -40,21 +42,8 @@ export const SCORING_MATRICES = {
     9: 1,
     10: 1,
     '_': 1,
-    description: '1 point regardless of ranking',
-  },
-  defaultInverted: {
-    1: 1,
-    2: 2,
-    3: 3,
-    4: 4,
-    5: 5,
-    6: 6,
-    7: 7,
-    8: 8,
-    9: 9,
-    10: 10,
-    '_': 5,
-    description: 'Inversion of default scoring system, priotises lower ranked entries.',
+    description: 'Everything in an entry gets one point',
+    objective: 'Ranked lists are frequently pretty arbitrary, in this case it will hugely favour more well known releases',
   },
   flatTop5: {
     1: 1,
@@ -70,25 +59,50 @@ export const SCORING_MATRICES = {
     '_': 0.1,
     description: '1 point for any 1-5, .1 point for other ratings',
   },
-}
-
-const addMetricToScore = (val, rank, scoringMatrix = SCORING_MATRICES.default) => {
-  const score = scoringMatrix[rank];
-  return val ? val + score : score;
-}
-
-const getUnrankedListValue = (list, scoringMatrix = SCORING_MATRICES.default) => {
-  const rankedCount = Object.values(list).filter(v => typeof v === 'number').length;
-  const unrankedCount = Object.values(list).length - rankedCount;
-  const totalMatrixScorePoints = Object.entries(scoringMatrix).reduce(
-    (acc, [rank, score]) => {
-      if (typeof rank === 'number') {
-        return acc + score;
-      }
-      return acc;
-    }, 0
-  );
-  return (totalMatrixScorePoints / Object.values(list)) * unrankedCount;
+  flatBottom5: {
+    1: 0.1,
+    2: 0.1,
+    3: 0.1,
+    4: 0.1,
+    5: 0.1,
+    6: 1,
+    7: 1,
+    8: 1,
+    9: 1,
+    10: 1,
+    '_': 0,
+    description: '1 point for any 6-10, .1 point for other rankings, 0 for unranked',
+  },
+  defaultInverted: {
+    1: 1,
+    2: 2,
+    3: 3,
+    4: 4,
+    5: 5,
+    6: 6,
+    7: 7,
+    8: 8,
+    9: 9,
+    10: 10,
+    '_': 1,
+    description: 'Inversion of default scoring system, priotises lower ranked entries.',
+    objective: 'Strongly prioritises films lower in the list. Mainly an attempt to bump up things that were well received but likely to be forgotten over time against really strong competition'
+  },
+  defaultOmitFirst: {
+    1: 0,
+    2: 9,
+    3: 8,
+    4: 7,
+    5: 6,
+    6: 5,
+    7: 4,
+    8: 3,
+    9: 2,
+    10: 1,
+    '_': 0.5,
+    description: 'Default scoring system but 0 points for first place',
+    objective: 'Honestly just want a system that stops Parasite from being the top film of 2019'
+  },
 }
 
 const stringToNumber = val => (
@@ -162,16 +176,25 @@ const formatOmdbData = (omdbData = {}) => {
   }
 }
 
+const getRankingData = ({ rankings = {} },  ranking) => {
+  return {
+    ...rankings,
+    [ranking]: (rankings[ranking] || 0) + 1,
+  };
+}
+
 export const processListsWithRankings = (critics, omdbData, matrix = SCORING_MATRICES.default, orderFunc) => {
   const films = {};
   Object.values(critics).forEach(({ list }) => {
-    matrix._ = matrix._ || getUnrankedListValue(list, matrix);
     Object.entries(list).forEach(([workName, ranking]) => {
       films[workName] = {
-        score: addMetricToScore(films[workName] ? films[workName].score : undefined, ranking, matrix),
         ...formatOmdbData(omdbData[workName] || {}),
+        rankings: getRankingData(films[workName] || {}, ranking),
       };
     });
+  });
+  Object.entries(films).forEach(([workName, filmData]) => {
+    films[workName].score = Object.entries(filmData.rankings).reduce((acc, [key, val]) => acc + (matrix[key] * val), 0)
   });
   return Object.entries(films).sort(orderFunc || objectEntriesSort('score'));
 }
@@ -291,6 +314,7 @@ const getMostContrarianCritic = (processedList, data, maxUniqueEntries) => {
       };
     }
   });
+
   return {
     ...biggestContrarian,
     totalVal,
@@ -342,10 +366,12 @@ const getMostSuccessfulStudio = (processedList) => {
   const mostSuccessfulStudio = Object.entries(productions).sort((a, b) => (
     b[1].length - a[1].length
   ))[0];
+
   return `${mostSuccessfulStudio[0]} (${mostSuccessfulStudio[1].length})`
 }
 
 export const deriveAdditionalDataFromProcessedList = (processedList, data, format) => {
+  console.time();
   const biggestLoser = getHighestWithoutNumberOne(processedList, data);
   const smallestWinner = getLowestNumberOne(processedList, data);
   const smallestWinnerValidator = getLowestNumberOneValidator(processedList, data);
@@ -360,6 +386,7 @@ export const deriveAdditionalDataFromProcessedList = (processedList, data, forma
     bestStudio = getMostSuccessfulStudio(processedList);
   }
 
+  console.timeEnd();
   return {
     biggestLoser,
     smallestWinner,

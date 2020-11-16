@@ -7,7 +7,6 @@
   import DataList from './DerivedData/DataList.svelte';
 	import {
     formatList,
-    deriveAdditionalDataFromProcessedList,
     processListsWithRankings,
     getListOfArrayValues,
     SCORING_MATRICES,
@@ -16,7 +15,8 @@
   import {
     year, filmData, format, scoringMatrix, loadingPage, filterOptions, ordering, filterSelections,
   } from '../store';
-  import { objectEntriesSort, getValuesFromObject } from '../utils';
+  import { objectEntriesSort } from '../utils/general';
+  import { FILM, FORMATS, YEARS } from '../utils/constants';
 	export let params = params;
   let listData = null;
   let data;
@@ -32,6 +32,24 @@
   let maxPoints;
   let sortBy;
   let format_value = params.format;
+  let paramError; 
+
+  $: (() => {
+    let errors = [];
+    if(params.format && !FORMATS.includes(params.format)) {
+      errors.push('format=true');
+    }
+    if (params.year && !YEARS.includes(params.year)) {
+      errors.push('year=true');
+    }
+
+    if (errors.length) {
+      paramError = true;
+      push(`/error?${errors.join('&')}`);
+    } else {
+      console.log('no errors');
+    }
+  })();
 
   const handlingFilters = () => {
     let iterativeList = fullList;
@@ -94,7 +112,7 @@
   }
 
   const getJsonData = async () => {
-    if (params.format !== 'film') {
+    if (params.format !== FILM) {
       ordering.update(() => 'score');
     }
     year.update(() => params.year);
@@ -102,11 +120,14 @@
     let resp;
     let json;
     let films = {};
+    if (paramError) {
+      return;
+    }
     try {
       resp = await fetch(fileName);
       json = await resp.json();
     } catch {
-      push('/');
+      push('/errors?requestFailure=true');
       return;
     }
     if (resp.ok) {

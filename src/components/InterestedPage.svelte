@@ -1,11 +1,13 @@
 <script>
   import {beforeUpdate} from 'svelte';
-  import { OPTIONS, year, format, filterOptions, filterSelections, ordering } from '../store';
+	import { push } from 'svelte-spa-router';
+  import { OPTIONS, FORMATS } from '../utils/constants';
+  import { year, format, filterOptions, filterSelections, ordering } from '../store';
   import InterestedCard from './InterestedCard/InterestedCard.svelte';
   import {
     getLocalStorageList,
     objectEntriesSort,
-  } from '../utils';
+  } from '../utils/general';
   import {
     getListOfArrayValues,
   } from '../analytics';
@@ -15,6 +17,12 @@
   let filters = {};
   let sortBy;
   let currentFormat = params.format;
+
+  $: (() => {
+    if (!FORMATS.includes(params.format)) {
+      push('/error?format=true');
+    }
+  })();
 
   const handlingFilters = (fullList) => {
     let iterativeList = fullList;

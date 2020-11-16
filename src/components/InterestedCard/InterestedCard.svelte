@@ -1,6 +1,6 @@
 <script>
   import Checkbox from '../List/Checkbox.svelte';
-  import { getLocalStorageList, setLocalStorageList } from '../../utils';
+  import { getLocalStorageList, setLocalStorageList } from '../../utils/general';
   export let format;
   export let year;
   export let data;
@@ -51,7 +51,7 @@
 
 </script>
 
-<li class={`Entry InterestedCard`}>
+<li class={`InterestedCard`}>
   <div class="InterestedCard__heading">
     <div class="InterestedCard__actions">
       {#if interested}

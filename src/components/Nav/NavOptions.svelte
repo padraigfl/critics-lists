@@ -4,8 +4,9 @@
 	import { push } from 'svelte-spa-router';
 	import { processListsWithRankings, SCORING_MATRICES } from '../../analytics';
   import {
-    loadingPage, year, format, scoringMatrix, OPTIONS, filterOptions, filterSelections, ordering, viewUninterested
+    loadingPage, year, format, scoringMatrix, filterOptions, filterSelections, ordering, viewUninterested
   } from '../../store';
+  import { OPTIONS } from '../../utils/constants';
 
   export let getOptions;
   export let updateSort;

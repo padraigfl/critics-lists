@@ -3,7 +3,8 @@
   import ListEntryDataPoint from './ListEntryDataPoint.svelte';
   import ExternalLink from './ExternalLink.svelte';
   import Checkbox from './Checkbox.svelte';
-  import {getIdFromName} from '../../utils';
+  import {getIdFromName} from '../../utils/general';
+  import { ALBUM, TV } from '../../utils/constants';
   export let placement;
   export let title;
   export let entry;
@@ -20,6 +21,11 @@
   $: optionsVisible = false;
   $: extend = false; // TODO handle toggle of extra data
   $: hasData = data.director || data.cast || data.genre || data.language;
+  $: formattedTitle = format === ALBUM
+    ? { name: title.split(' by ')[0], src: title.split(' by ')[1] }
+    : format === TV
+      ? { name: title.split('(')[0], src: (title.split('(')[1] || '').replace(')', '')}
+      : null;
 
   const formatVoteCount = (count) => {
     if (count > 10 ** 6) {
@@ -66,7 +72,7 @@
 
   const album = [// need to remove by
     { site: 'Spotify', link: 'https://open.spotify.com/search/', icon: 'spotify.png', modify: v => v.replace(' by ', ' ').replace(/\s+/g, '%20') },// %20
-    { site: 'Youtube', link: 'https://www.youtube.com/results?search_query=', icon: 'youtube.png', modify: v => v.replace(/by/g, '').replace(/\s/g, '%20') }, // +
+    { site: 'Youtube', link: 'https://www.youtube.com/results?search_query=', icon: 'youtube.png', modify: v => v.replace(/by\s/g, '').replace(/\s/g, '%20') }, // +
   ];
 
   const tv = [
@@ -158,7 +164,16 @@
     </div>
     <div class="Entry__body">
       <div class="Entry__body-row--title">
-        <strong class="Entry__title">{title}</strong>
+        <span class="Entry__title">
+          { #if formattedTitle }
+            <strong>{formattedTitle.name}</strong>
+            {#if formattedTitle.src}
+              {' '}{formattedTitle.src}
+            {/if}
+          {:else }
+            <strong>{title}</strong>
+          {/if}
+        </span>
         {#if data.runtime || data.country}
           <div class="Entry__subtitle">
           ({data.runtime ? `${data.runtime}min${data.country ? '; ': ''}`: ''}{data.country ? data.country.join(', ') : ''})

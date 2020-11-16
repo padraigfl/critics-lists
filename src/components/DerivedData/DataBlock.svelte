@@ -1,5 +1,5 @@
 <script>
-  import {getIdFromName} from '../../utils';
+  import {getIdFromName} from '../../utils/general';
   export let entry;
   $: data = Array.isArray(entry.data) ? entry.data : [entry.data];
 
@@ -7,6 +7,9 @@
     document.getElementById(id)
       .scrollIntoView();
     const focusEl = document.querySelector(`#${id} input`);
+    if (!focusEl) {
+      return;
+    }
     focusEl.focus();
     setTimeout(() => focusEl.blur(), 1000);
   }

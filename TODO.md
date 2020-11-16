@@ -8,6 +8,7 @@ Important and/or easy:
 - [] Link to lists within expanded details
 - [] Add TV data fetch script
 - [] indexedDB for old lists
+- [] Explanation or weighting systems
 
 Nice to have:
 - [] Generate weighted decade list 
