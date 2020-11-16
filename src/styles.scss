@@ -224,11 +224,11 @@ $dataListWidth: 400px;
   &__points {
     min-height: 56px;
     display: grid;
-    grid: auto 18px auto / repeat(2, 40px);
+    grid: auto 18px 18px / repeat(2, 40px);
     margin-right: $m;
     margin-top: $s;
     @media (max-width: $mobile) {
-      grid: auto / repeat(1, 60px);
+      grid: 24px repeat(4, 18px) / repeat(1, 60px);
     }
   }
   &__links {
@@ -553,10 +553,10 @@ $dataListWidth: 400px;
         content: attr(icon);
         font-weight: bold;
         @media (max-width: $mobilePortrait) {
-          display: block;
-          margin-left: auto;
+          // display: block;
+          margin-left: 2px;
           width: initial;
-          content: attr(data-description);
+          // content: attr(data-description);
         }
     }
   }
@@ -677,6 +677,7 @@ $dataListWidth: 400px;
   }
   &__main {
     display: flex;
+    max-width: 100%;
     width: 100%;
     height: 50px;
     &__home {
@@ -705,8 +706,11 @@ $dataListWidth: 400px;
         font-size: 12px;
         text-align: left;
         margin-left: $xs;
-        margin-right: auto;
       }
+    }
+
+    @media (max-width: $mobile) {
+      justify-content: space-between;
     }
   }
   &__data{
@@ -818,7 +822,12 @@ button, select {
 
 // hacky means to include text where icons are used as bg img
 .a11y {
+  opacity: 0.01;
+  font-size: 1px;
   display: block;
-  position: absolute;
-  left: -10000px;
+  height: 2px;
+  max-width: 2px;
+  overflow: hidden;
+  margin-left: -2px;
+  margin-top: -2px;
 }

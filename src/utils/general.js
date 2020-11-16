@@ -1,3 +1,5 @@
+import { TV } from "./constants";
+
 export const getIdFromName = name =>
   '_' +
   name
@@ -77,4 +79,18 @@ export const generateListUpdater = (role, format, year, listData, yearData) => (
   } else {
     setLocalStorageList(role, format, year)([...tempList, key]);
   }
+}
+
+// scrape the correct routes to generate links
+export const getJustWatchLocations = () => (
+  [...document.querySelectorAll('.countries-list__region li a')].reduce((acc, el) => {
+    return {
+      ...acc,
+      [el.href.replace('https://www.justwatch.com/', '')]: el.innerText.trim(),
+    };
+  }, {})
+);
+
+export const getJustWatchLink = (title, location, type, year) => {
+  return `https://justwatch.com/${location}/search?q=${title}&content_type=${type === TV ? 'show' : 'movie'}`;
 }

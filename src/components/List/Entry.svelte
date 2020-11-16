@@ -213,7 +213,7 @@
     </div>
     <div class="Entry__points">
       <ListEntryDataPoint value={points} key="pts" />
-      {#if !hasData || !data.award}
+      {#if !hasData || !data.awards}
         <div/> <div />
       {/if}
       <ListEntryDataPoint value={entry.firsts.length} small icon="🏆" description="Number of first place entries"/>
