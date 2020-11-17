@@ -1,5 +1,4 @@
-const years = ['2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2010s']; 
-
+// Breaks down string value for awards and noms into a basic numeric, currently ignores source of award
 const formatAwards = (awards = '') => {
   let count = {};
   if (awards === 'N/A') {
@@ -33,6 +32,7 @@ const formatAwards = (awards = '') => {
   return count;
 };
 
+// pulls data from the Ratings attribute and uses it if no other value available
 const formatRatings = (filmData) => {
   const ratings = {
     Metascore: filmData.Metascore,
@@ -59,17 +59,37 @@ const formatRatings = (filmData) => {
   return ratings;
 };
 
-const formatFilmData = (filmData) => {
+// Aggregates the ratings across critics for faster data breakdowns
+const getEntryRankings = (key, criticData) => {
+  const rankings = {};
+
+  if (key) {
+    Object.values(criticData).forEach(({ list }) => {
+      Object.entries(list).forEach(([title, rank]) => {
+        if (title === key) {
+          rankings[rank] = (rankings[rank] || 0) + 1
+        }
+      })
+    });
+  }
+
+  return rankings;
+}
+
+// cleans the data some from the OMDb responses
+const formatFilmData = (filmData, key, criticData) => {
   return {
-    Year: +filmData.Year,
-    Runtime: parseInt(filmData.Runtime),
-    Awards: formatAwards(filmData.Awards),
+    ...filmData,
     ...formatRatings(filmData),
-    imdbVotes: +filmData.imdbVotes,
-    BoxOffice: +filmData.BoxOffice.replace(/(\$|,)+/g, ''),
+    Year: +filmData.Year || undefined,
+    Runtime: parseInt(filmData.Runtime) || 'N/A',
+    Awards: formatAwards(filmData.Awards),
+    imdbVotes: +filmData.imdbVotes || undefined,
+    rankings: getEntryRankings(key, criticData)
   }
 };
 
 module.exports = {
   formatFilmData,
-}
+  getEntryRankings,
+};

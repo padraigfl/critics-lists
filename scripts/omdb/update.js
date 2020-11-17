@@ -1,6 +1,7 @@
 var curl = require('curl');
 var process = require('process');
 var { readFile, writeFile } = require('../utils');
+var { formatFilmData, getEntryRankings } = require('./formatters');
 
 const getByImdbId = (imdbId, issueLog = {}, apikey = '') => {
   const url = `http://www.omdbapi.com/?t=${imdbId}&apikey=${apikey}`
@@ -51,8 +52,10 @@ const getByImdbId = (imdbId, issueLog = {}, apikey = '') => {
   });
 }
 
-const updateFilmList = (year) => {
-  const filmData = readFile(`./public/filmdata/${year}film.json`);
+// searches through the existing film data fields and checks again against omdb for new data
+const updateFilmList = (year, format = 'film') => {
+  const criticData = readFile(`./public/data/${year}-${format}.json`);
+  const filmData = readFile(`./public/filmdata/${year}${format}.json`);
   const [filmKeys, filmValues] = Object.entries(filmData);
   const issueLog = {};
   Promise.all(
@@ -61,10 +64,13 @@ const updateFilmList = (year) => {
     const sanitizedFilmData = {};
     updatedFilmData.forEach((film, idx) => {
       if (film.imdbID) {
-        sanitizedFilmData[filmKeys[idx]] = formatFilmData(film);
+        sanitizedFilmData[filmKeys[idx]] = formatFilmData(film, filmKeys[idx], criticData);
       }
     });
-    console.warn(issueLog);
+    
+    if (Object.keys(issueLog).length > 0) {
+      console.warn(issueLog);
+    }
     writeFile(
       `./public/filmdata/${year}film.json`,
       { ...filmData, ...sanitizedFilmData },
