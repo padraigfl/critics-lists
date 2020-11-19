@@ -141,7 +141,8 @@ $dataListWidth: 400px;
   padding: 0;
   margin-left: $s;
   flex-grow: 1;
-  max-width: 66vw;
+  max-width: 60vw;
+  width: 100%;
 
   &--hide-known .Entry--known {
     display: none;

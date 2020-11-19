@@ -16,7 +16,7 @@
 		viewKnown,
 		viewInterested,
 	} from '../../store';
-  import { OPTIONS, FILM, FORMATS, YEARS } from '../../utils/constants';
+  import { OPTIONS, FILM, FORMATS, YEARS, ALBUM, TV } from '../../utils/constants';
 
 	let display;
 	let year_value = 'Year';
@@ -130,31 +130,36 @@
 		}));
 
 	const getOptions = () => {
-		if (format_value !== FILM) {
+		if (format_value !== TV && format_value !== FILM) {
 			return [];
 		}
+		const options = [
+			{
+				title: "Sort by",
+				type: 'sort',
+				options: year_value !== 'List'
+					? [
+						{ title: 'Points', key: 'score' },
+						// { title: 'Box Office', key: 'boxOffice' }, seems to be buggy af
+						// { title: '# lists', key: 'val.critics.length' },
+						// { title: '# firsts', key: 'val.firsts.length' },
+						{ title: 'IMDb rating', key: 'imdb.rating' },
+						{ title: 'Awards', key: 'awards.wins' },
+						{ title: 'Awards+Noms', key: 'awards.combined' },
+					] : [
+						{ title: 'Release', key: 'release' },
+					],
+				default: year_value !== 'List' ? 'Points' : 'Release',
+			}
+		];
+		if (format_value === FILM) {
+			ptions.push({ title: 'Length', key: 'runtime' })
+		}
     return [
-		{
-			title: "Sort by",
-			type: 'sort',
-			options: year_value !== 'List'
-				? [
-					{ title: 'Points', key: 'score' },
-					// { title: 'Box Office', key: 'boxOffice' }, seems to be buggy af
-					{ title: 'Length', key: 'runtime' },
-					// { title: '# lists', key: 'val.critics.length' },
-					// { title: '# firsts', key: 'val.firsts.length' },
-					{ title: 'IMDb rating', key: 'imdb.rating' },
-					{ title: 'Awards', key: 'awards.wins' },
-					{ title: 'Awards+Noms', key: 'awards.combined' },
-				] : [
-					{ title: 'Release', key: 'release' },
-					{ title: 'Length', key: 'runtime' },
-				],
-			default: year_value !== 'List' ? 'Points' : 'Release',
-		},
-		...getFilmFilters(),
-	]}
+			...options,
+			...getFilmFilters(),
+		]
+	}
 
   filterOptions.subscribe(val => {
 		availableOptions = val;

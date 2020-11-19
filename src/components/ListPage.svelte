@@ -16,7 +16,7 @@
     year, filmData, format, scoringMatrix, loadingPage, filterOptions, ordering, filterSelections,
   } from '../store';
   import { objectEntriesSort } from '../utils/general';
-  import { FILM, FORMATS, YEARS } from '../utils/constants';
+  import { FILM, ALBUM, FORMATS, YEARS } from '../utils/constants';
 	export let params = params;
   let listData = null;
   let data;
@@ -86,8 +86,11 @@
   });
 
   const getFilmData = async (year) => {
+    if (params.format === ALBUM) {
+      return {};
+    }
     try {
-      const resp = await fetch(`/filmdata/${year}film.json`);
+      const resp = await fetch(`/${params.format}data/${year}data.json`);
       const films = await resp.json();
       filmData.update(() => films);
       return films;
@@ -142,7 +145,7 @@
     listData = handlingFilters();
     loadingPage.update(() => false);
     filterOptions.update(() => ({
-      film: getOptions(listData),
+      [params.format]: getOptions(listData),
     }));
   }
 
