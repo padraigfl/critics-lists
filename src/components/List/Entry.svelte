@@ -51,7 +51,7 @@
     content.imdb ? {
       ...imdb,
       link: `https://www.imdb.com/title/${content.imdb.id}`,
-      text: content.imdb.rating ? `${content.imdb.rating && content.imdb.rating.toFixed(1)} (${formatVoteCount(content.imdb.votes)})` : undefined,
+      text: content.imdb.rating ? `${content.imdb.rating && +content.imdb.rating.toFixed(1)} (${formatVoteCount(content.imdb.votes)})` : undefined,
     } : {
       ...imdb,
       link: `https://www.imdb.com/find?s=tt&q=${title}`,
@@ -83,7 +83,7 @@
   $: mediaLinkSets = {
     film: getFilm(data),
     album,
-    tv,
+    tv: getFilm(data).slice(0, 1),
   };
 
   const getFormat = format => [...mediaLinkSets[format]] || [];

@@ -10,6 +10,7 @@ Important and/or easy:
 - [] Investigate music API options
 - [] indexedDB for old lists
 - [] Explanation or weighting systems
+- [] Script to update data using imdb ids
 
 Nice to have:
 - [] Generate weighted decade list 

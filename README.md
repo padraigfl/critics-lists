@@ -13,6 +13,10 @@ I probably should've had a runthorugh of how Svelte updates components first. Ot
 
 Oh, and I hate the layout, weirdness for weirdness sake and the 2 color restriction I set for myself was really hard to follow.
 
+## Why isn't there a server? You reall should have a server...
+
+But then I'd start getting ambitious and adding features I have no use for, and I'm not sure anyone else would have that much use for them either.
+
 ## Future updates
 
 Lord knows when I'll get to most of these

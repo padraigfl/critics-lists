@@ -110,7 +110,7 @@ const stringToNumber = val => (
 );
 
 const formatAwards = (awards = '') => {
-  let count = {};
+  let count = { wins: 0, noms: 0, combined: 0 };
   if (awards === 'N/A') {
     return count;
   };
@@ -155,7 +155,6 @@ const formatOmdbData = (omdbData = {}) => {
   const metacritic = (omdbData.Ratings || []).find(v => v.Source === 'Metacritic');
   const boxOffice = omdbData.BoxOffice !== 'N/A' ? stringToNumber(omdbData.BoxOffice) : undefined;
   const awards = formatAwards(omdbData.Awards);
-
   return {
     imdb,
     awards,
@@ -185,6 +184,7 @@ const getRankingData = ({ rankings = {} },  ranking) => {
 
 export const processListsWithRankings = (critics, omdbData, matrix = SCORING_MATRICES.default, orderFunc) => {
   const films = {};
+  console.log(omdbData);
   Object.values(critics).forEach(({ list }) => {
     Object.entries(list).forEach(([workName, ranking]) => {
       films[workName] = {

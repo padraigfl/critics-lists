@@ -1,5 +1,7 @@
 var curl = require('curl');
+const process = require('process');
 var { readFile, writeFile, YEARS } = require('../utils');
+const { formatFilmData } = require('./formatters');
 var formatters = require('./formatters');
 
 const addFilm = (films, film, year, bonusData) => {
@@ -10,7 +12,6 @@ const addFilm = (films, film, year, bonusData) => {
     data = film.replace(/.*\((.*)\)/, '$1').trim();
   }
   if (films[filmName]) {
-    console.log('duplicate film');
     return;
   }
   films[filmName] = { year, originalTitle: film }
@@ -19,8 +20,8 @@ const addFilm = (films, film, year, bonusData) => {
   }
 };
 
-const getFilmList = (year, bonusData) => {
-  const criticData = readFile(`./public/data/${year}-film.json`);
+const getFilmList = (year, bonusData, format = 'film') => {
+  const criticData = readFile(`./public/data/${year}-${format}.json`);
   const films = {};
 
   Object.values(criticData).forEach(critic => {
@@ -32,20 +33,31 @@ const getFilmList = (year, bonusData) => {
           });
         return;
       }
+      if (format === 'tv' && film.match(/^.*\(.*\)$/)) {
+        addFilm(films, film, year, bonusData);
+        return;
+      }
       addFilm(films, film, year, bonusData);
     });
   });
   return films;
 };
 
-const getFilm = (films, title, year, issueLog, errorLog = {}, apikey = '') => {
-  const url = `http://www.omdbapi.com/?t=${title.replace(/\&/g, '%26').replace(/\s/g, '%20')}${year ? `&y=${year}` : ''}&type=movie&apikey=${apikey}`
+const getFilm = (films, title, year, issueLog, errorLog = {}, format = 'film', apikey = '') => {
+  let url;
+  if (format === 'film') {
+    url = `http://www.omdbapi.com/?t=${title.replace(/\&/g, '%26').replace(/\s/g, '%20')}${year ? `&y=${year}` : ''}&type=movie&apikey=${apikey}`
+  } else if (format === 'tv' && title.split(' (')[0]) {
+    url = `http://www.omdbapi.com/?t=${title.split(' (')[0].replace(/\&/g, '+').replace(/\s/g, '+')}&type=series&apikey=${apikey}`
+    console.log(url);
+  } else {
+    return Promise.resolve();
+  }
   return new Promise((res) => {
     setTimeout(() => {
       curl.get(url, null, (err,resp,respBody)=>{
         try {
           const body = JSON.parse(respBody);
-          console.log(respBody);
           if (body.Error) {
             errorLog[title] = { year, error: body.Error };
           }
@@ -86,9 +98,8 @@ const getFilm = (films, title, year, issueLog, errorLog = {}, apikey = '') => {
           res(body);
         } catch(e) {
           errorLog[title] = { year };
+          console.log('error');
           res();
-          console.log(e);
-          console.log(respBody);
         }
       });
     }, 500);
@@ -103,45 +114,42 @@ const handleIssueLog = (
 ) => {
   const log = Object.entries(issues);
   issueLog = {};
-  Promise.all(
-    log.map(([name, { year }]) => 
-      getFilm(films, name, +year + yearChange, issueLog, errorLog)
-    )
-  ).then(() => {
-    writeFile(`filmdata/${year}failures.json`, errorLog);
-    writeFile(`filmdata/${year}issues.json`, issueLog);
-    writeFile(`filmdata/${year}film.json`, films);
-    if (!yearChange) {
-      handleIssueLog(films, issueLog, errorLog, 1);
-    } else if (yearChange === 1) {
-      handleIssueLog(films, issueLog, errorLog, -1);
-    }
-  });
+  log.map(async ([name, { year }]) => 
+    await getFilm(films, name, +year + yearChange, issueLog, errorLog)
+  )
+  writeFile(`filmdata/${year}failures.json`, errorLog);
+  writeFile(`filmdata/${year}issues.json`, issueLog);
+  writeFile(`filmdata/${year}film.json`, films);
+  if (!yearChange) {
+    handleIssueLog(films, issueLog, errorLog, 1);
+  } else if (yearChange === 1) {
+    handleIssueLog(films, issueLog, errorLog, -1);
+  }
 }
 
-const writeFilms = (films, year, errorLog, issueLog) => {
+const writeFilms = (films, year, errorLog, issueLog, format = 'film') => {
   Promise.all(Object.entries(films).map(([title]) => (
-    getFilm(films, title, null, issueLog, errorLog)
+    getFilm(films, title, null, issueLog, errorLog, format)
   ))).then(() => {
     // console.log(films);
     films = Object.entries(films).reduce((acc, [key,val]) => ({
       ...acc,
       [val.originalTitle || key]: val,
     }), {});
-    writeFile(`filmdata/${year}failures.json`, errorLog);
-    writeFile(`filmdata/${year}issues.json`, issueLog);
-    writeFile(`filmdata/${year}film.json`, films);
+    writeFile(`${format}data/${year}failures.json`, errorLog);
+    writeFile(`${format}data/${year}issues.json`, issueLog);
+    writeFile(`${format}data/${year}data.json`, films);
     // handleIssueLog(films, issueLog, errorLog);
   });
 }
 
 
 
-const workYear = (year, bonusData) => {
-  let films = getFilmList(year, bonusData);
+const workYear = (year, bonusData, format) => {
+  let films = getFilmList(year, bonusData, format);
   const errorLog = {};
   let issueLog = {};
-  writeFilms(films, year, errorLog, issueLog);
+  writeFilms(films, year, errorLog, issueLog, format);
 };
 
 /*
@@ -169,3 +177,14 @@ resolve issues example (wrong year)
     } 
   )
 */
+
+[YEARS[5]].forEach((year, idx) => {
+  setTimeout(() => {
+    workYear(year, 'year', 'tv')
+    if (idx === YEARS.length - 1) {
+      setTimeout(process.exit, 1000);
+    }
+  }, idx * 500);
+})
+
+

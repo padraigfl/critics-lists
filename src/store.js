@@ -33,6 +33,11 @@ export const filterOptions = writable({
     [LANGUAGE]: defaultFilters[FILM][LANGUAGE],
     [COUNTRY]: defaultFilters[FILM][COUNTRY],
   },
+  [TV]: {
+    [GENRE]: defaultFilters[FILM][GENRE],
+    [LANGUAGE]: defaultFilters[FILM][LANGUAGE],
+    [COUNTRY]: defaultFilters[FILM][COUNTRY],
+  },
 });
 
 // controls the current means of allocating points
