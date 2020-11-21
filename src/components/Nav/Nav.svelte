@@ -153,7 +153,7 @@
 			}
 		];
 		if (format_value === FILM) {
-			ptions.push({ title: 'Length', key: 'runtime' })
+			options.push({ title: 'Length', key: 'runtime' })
 		}
     return [
 			...options,

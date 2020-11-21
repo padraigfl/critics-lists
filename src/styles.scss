@@ -214,9 +214,6 @@ $dataListWidth: 400px;
       margin-top: auto;
       align-items: center;
       > * { margin: $s 0 0; }
-      @media (max-width: $mobilePortrait) {
-        display: block;
-      }
     }
   }
   &__subtitle {
@@ -238,9 +235,6 @@ $dataListWidth: 400px;
     align-items: center;
     margin-right: auto;
     flex-wrap: wrap;
-    @media (max-width: $mobilePortrait) {
-      display: block;
-    }
     &--search .ExternalLink.ExternalLink--icon {
       width: initial;
       margin: $xs;
@@ -289,6 +283,9 @@ $dataListWidth: 400px;
       }
       &:not(:last-child) {
         margin-right: $m;
+        @media (max-width: $mobile) {
+          margin-right: $s;
+        }
       }
       &:hover, &:focus {
         label::after {
@@ -311,41 +308,81 @@ $dataListWidth: 400px;
       }
     }
   }
-  // TODO make link component
+
+
   .ExternalLink {
     font-size: 12px;
     font-weight: bold;
     margin: 2px 2px 2px 0px;
-    &--icon {
-      display: inline-flex;
-      align-items: center;
-      height: 20px;
-      padding: $xs;
-      width: 100px;
-      border: 1px dashed $dark;
-      &.ExternalLink--imdb {
-        width: 105px;
+
+
+    display: inline-flex;
+    align-items: center;
+    height: 20px;
+    padding: $xs;
+    width: 100px;
+    border: 1px dashed $dark;
+    text-decoration: none;
+    margin-right: $s;
+
+    &:hover, &:focus {
+      border-color: transparent;
+      outline: $borderDash;
+      outline-offset: -1px;
+    }
+
+    &:last-child { margin-right: 0px; }
+
+    .ExternalLink__icon {
+      width: 72px;
+      height: 100%;
+      background-position: left center;
+      background-repeat: no-repeat;
+      background-size: 60px;
+      filter: brightness(0);
+      &--metacritic { background-image: url('/icons/metacritic.png'); }
+      &--rotten { background-image: url('/icons/rotten.png'); }
+      &--letterboxd { background-image: url('/icons/letterboxd.png'); }
+      &--spotify { background-image: url('/icons/spotify.png'); }
+      &--google { background-image: url('/icons/google.png'); }
+      &--imdb { width: 44px; background-size: 40px 20px; background-image: url('/icons/imdb.png'); }
+      &--youtube { width: 44px; background-size: 40px 20px; background-image: url('/icons/youtube.png'); }
+      @media (max-width: $mobile) {
+        &--metacritic, &--google, &--imdb, &--rotten {
+          width: 24px;
+          height: 24px;
+          background-size: 24px;
+        }
+        &--metacritic { background-image: url('/icons/metacritic--small.png'); }
+        &--rotten { background-image: url('/icons/Rotten_Tomatoes.svg'); }
+        &--imdb { 
+          background-image: none;
+          display: none;
+          + span:before {
+            display: block;
+            font-weight: bold;
+            content: 'IMDb';
+          }
+          + span {
+            margin-left: 2px;
+          }
+        }
       }
-      &:hover, &:focus {
-        border-color: transparent;
-        outline: $borderDash;
-        outline-offset: -1px;
-      }
-      text-decoration: none;
-      img {
-        max-height: 18px;
-        max-width: 70px;
-        filter: brightness(0);
-      }
-      .album & {
-        width: 80px;
-      }
-      .ExternalLink__search-icon {
-        margin-left: auto;
+      &--no-icon {
+        &:after {        
+          content: attr(site);
+        }
       }
     }
 
-
+    .album & {
+      width: 80px;
+    }
+    .ExternalLink__search-icon {
+      margin-left: auto;
+      width: 28px;
+      height: 28px;
+    }
     &__extra-text {
       display: inline-block;
       margin-left: 2px;
@@ -354,19 +391,29 @@ $dataListWidth: 400px;
     }
     @media (max-width: $mobile) {
       max-width: 80%;
-      width: 100px;
+      width: 58px;
+      height: 28px;
       border: 1px solid $dark;
       &__extra-text {
         margin-left: auto;
       }
-    }
-
-    @media (max-width: $mobilePortrait) {
-      display: flex;
-      width: 115px !important;
-      max-width: initial;
+      &--Metacritic { display: none; }
+      &:nth-child(2) { margin-right: 0px }
+      // &--IMDb .ExternalLink__icon.ExternalLink__icon--imdb {
+      //   background-image: none;
+      //   display: none;
+      //   + span:before {
+      //     display: block;
+      //     font-weight: bold;
+      //     content: 'IMDb';
+      //   }
+      //   + span {
+      //     margin-left: 2px;
+      //   }
+      // }
     }
   }
+
   &__extended {
     margin-top: $xs;
     padding: $s $m $m 42px;
@@ -613,7 +660,7 @@ $dataListWidth: 400px;
   background-color: #111;
   z-index: 150;
   color: white;
-  overflow: scroll;
+  overflow: auto;
   white-space: nowrap;
   padding-left: $s;
   display: flex;
@@ -633,7 +680,7 @@ $dataListWidth: 400px;
   h2, p, div, ul, ol {
     max-width: 800px;
   }
-  overflow: scroll;
+  overflow: auto;
   .yearList {
     font-variant-numeric: tabular-nums;
     display: inline-block;

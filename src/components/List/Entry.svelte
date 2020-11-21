@@ -43,7 +43,7 @@
 
   const imdb = {
     site: 'IMDb', 
-    icon: 'imdb.png',
+    icon: 'imdb',
   }
 
   
@@ -51,33 +51,33 @@
     content.imdb ? {
       ...imdb,
       link: `https://www.imdb.com/title/${content.imdb.id}`,
-      text: content.imdb.rating ? `${content.imdb.rating && +content.imdb.rating.toFixed(1)} (${formatVoteCount(content.imdb.votes)})` : undefined,
+      text: content.imdb.rating ? `${content.imdb.rating && +content.imdb.rating.toFixed(1)}/${formatVoteCount(content.imdb.votes)}` : undefined,
     } : {
       ...imdb,
       link: `https://www.imdb.com/find?s=tt&q=${title}`,
     },
     {
-      site: 'RT',
+      site: 'RottenTomatoes',
       link: `https://www.rottentomatoes.com/search/?search=${title}`,
-      icon: 'rotten.png',
+      icon: 'rotten',
       text: content.rotten ? content.rotten + '%' : '',
     },
     ...(content.metacritic ? [{
-      site: 'MC',
+      site: 'Metacritic',
       link: `https://www.metacritic.com/search/movie/${title}/results`,
       text: content.metacritic + '%',
-      icon: 'metacritic--text.png',
+      icon: 'metacritic',
     }] : []),
   ]);
 
   const album = [// need to remove by
-    { site: 'Spotify', link: 'https://open.spotify.com/search/', icon: 'spotify.png', modify: v => v.replace(' by ', ' ').replace(/\s+/g, '%20') },// %20
-    { site: 'Youtube', link: 'https://www.youtube.com/results?search_query=', icon: 'youtube.png', modify: v => v.replace(/by\s/g, '').replace(/\s/g, '%20') }, // +
+    { site: 'Spotify', link: 'https://open.spotify.com/search/', icon: 'spotify', modify: v => v.replace(' by ', ' ').replace(/\s+/g, '%20') },// %20
+    { site: 'Youtube', link: 'https://www.youtube.com/results?search_query=', icon: 'youtube', modify: v => v.replace(/by\s/g, '').replace(/\s/g, '%20') }, // +
   ];
 
   const tv = [
-    { site: 'IMDbTv', link: 'https://www.imdb.com/find?s=tt&q=', icon: 'imdb.png', modify: v => v.replace(/\(.*\)/g, '%20') },
-    { site: 'RTTv', link: 'https://www.rottentomatoes.com/search/?search=', icon: 'rotten.png', modify: v => v.replace(/\(.*\)/g, '%20') },
+    { site: 'IMDbTv', link: 'https://www.imdb.com/find?s=tt&q=', icon: 'imdb', modify: v => v.replace(/\(.*\)/g, '%20') },
+    { site: 'RTTv', link: 'https://www.rottentomatoes.com/search/?search=', icon: 'rotten', modify: v => v.replace(/\(.*\)/g, '%20') },
   ];
 
   $: mediaLinkSets = {
@@ -92,9 +92,9 @@
   $: searches = [{
     site: 'Letterboxd',
     link: `https://letterboxd.com/search/films/${title}`,
-    icon: 'letterboxd.png'
+    icon: 'letterboxd'
   }, {
-    icon: 'google.png',
+    icon: 'google',
     site: 'Google',
     link: `https://www.google.com/search?q=film+${title.replace(' ', '+').replace('&', '+and+')}`,
   }];
