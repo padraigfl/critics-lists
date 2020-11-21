@@ -6,15 +6,11 @@
 </script>
 
 <a
-  class={`ExternalLink ${ icon ? `ExternalLink--icon` : '' } ${site === 'IMDb' ? 'ExternalLink--imdb' : '' }`}
+  class={`ExternalLink ${site ? `ExternalLink--${site}` : '' }`}
   href={link}
   target="_blank"
 >
-  {#if icon}
-    <img class="ExternalLink__icon" src={`/icons/${icon}`} alt={site} />
-  {:else}
-    {site}
-  {/if}
+  <div class={`ExternalLink__icon ${ icon ? `ExternalLink__icon--${icon}` : 'ExternalLink__icon--no-icon' }`} aria-label={icon} data-site={site}/>
   {#if text}
     <span class="ExternalLink__extra-text">{text}</span>
   {:else}
