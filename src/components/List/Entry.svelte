@@ -50,11 +50,13 @@
   }
 
   
-  const getFilm = (content) => ([
+  const getFilm = (content) => {
+    console.log(content)
+    return ([
     content.imdbID ? {
       ...imdb,
       link: `https://www.imdb.com/title/${content.imdbID}`,
-      text: content.imdbRating ? `${content.imdbRating && +content.imdbRating.toFixed(1)}/${formatVoteCount(content.imdbVotes)}` : undefined,
+      text: content.imdbRating ? `${+content.imdbRating && (+content.imdbRating).toFixed(1)}/${formatVoteCount(content.imdbVotes)}` : undefined,
     } : {
       ...imdb,
       link: `https://www.imdb.com/find?s=tt&q=${title}`,
@@ -72,6 +74,7 @@
       icon: 'metacritic',
     }] : []),
   ]);
+  }
 
   const album = [// need to remove by
     { site: 'Spotify', link: 'https://open.spotify.com/search/', icon: 'spotify', modify: v => v.replace(' by ', ' ').replace(/\s+/g, '%20') },// %20

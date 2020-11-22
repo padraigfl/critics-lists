@@ -40,7 +40,7 @@ const formatRatings = (filmData) => {
     Metascore: filmData.Metascore,
     "Rotten Tomatoes": parseInt(filmData["Rotten Tomatoes"]),
     imdbRating: +filmData.imdbRating,
-    imdbVotes: +filmData.imdbVotes,
+    imdbVotes: +filmData.imdbVotes.replace(','),
   };
 
   if (!filmData.Ratings || filmData.Ratings.length === 0) {
@@ -53,7 +53,7 @@ const formatRatings = (filmData) => {
     } else if (!ratings['Rotten Tomatoes'] && rating.Source === 'Rotten Tomatoes') {
       ratings['Rotten Tomatoes'] = +rating.Value.replace('%', '')
     } else if (!ratings.imdbRating && rating.Source === 'Internet Movie Database') {
-      ratings.imdbRating = +rating.Value.split('/')[0];
+      ratings.imdbRating = +(rating.Value.split('/')[0]);
     } else {
       ratings[rating.Source] === ratings[rating.Value]
     }
@@ -80,13 +80,14 @@ const getEntryRankings = (key, criticData) => {
 
 // cleans the data some from the OMDb responses
 const formatFilmData = (filmData, key, criticData) => {
+  const { Ratings, ...data } = filmData;
   return {
-    ...filmData,
+    ...data,
     ...formatRatings(filmData),
     Year: +filmData.Year || undefined,
     Runtime: parseInt(filmData.Runtime) || 'N/A',
     // Awards: formatAwards(filmData.Awards),
-    imdbVotes: filmData && filmData.imdbVotes ? +filmData.imdbVotes.replace(',', '') : undefined,
+    imdbVotes: filmData && filmData.imdbVotes ? +(filmData.imdbVotes.replace(',', '')) : undefined,
     // rankings: getEntryRankings(key, criticData)
   }
 };

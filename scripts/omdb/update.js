@@ -23,7 +23,6 @@ const getByImdbId = (imdbId, title, issueLog = {}, apikey = '') => {
               Production,
               ...restBody
             } = body;
-            console.log(title);
             res({
               ...(Ratings || []).reduce((acc, {Source, Value}) => {
                 if (['Internet Movie Database', 'Metacritic'].includes(Source)) {
@@ -43,52 +42,73 @@ const getByImdbId = (imdbId, title, issueLog = {}, apikey = '') => {
           }
           res(body);
         } catch(e) {
-          issueLog[imdbId] = "CaughtError"
+          issueLog[title] = { e: "CaughtError", id: imdbId }
           res();
         }
       });
-    }, 100);
+    }, 300);
   });
 }
 
 // searches through the existing film data fields and checks again against omdb for new data
-const updateFilmList = (year, format = 'film') => {
+const updateFilmList = async (year, format = 'film') => {
   const criticData = readFile(`./public/data/${year}-${format}.json`);
   const filmData = readFile(`./public/filmdata/${year}data.json`);
   const issueLog = {};
   const filteredEntries = Object.entries(filmData).filter(([, value]) => value.imdbID);
+  const sanitizedFilmData = {};
+  const requestBatches = []
 
-  return Promise.all(
-    filteredEntries.map(async ([key, { imdbID }]) => await getByImdbId(imdbID, key, issueLog))
-  ).then((updatedFilmData) => {
-    console.log(updatedFilmData)
-    const sanitizedFilmData = {};
-    updatedFilmData.forEach((film, idx) => {
-      if (film && film.imdbID) {
-        sanitizedFilmData[filteredEntries[idx][0]] = formatFilmData(film, filteredEntries[idx][1], criticData);
-      } else {
-        issueLog[filteredEntries[idx][0]] = 'noImdbKey';
-      }
+  for (let j = 0; j < filteredEntries.length; j += 10) {
+    requestBatches.push(filteredEntries.slice(j, j+10));
+  }
+
+  for (let i = 0; i < requestBatches.length; i++) {
+    await Promise.all(
+      requestBatches[i].map((entry, idx) => {
+        const [key, data] = entry;
+        return new Promise((res, rej) => 
+          getByImdbId(data.imdbID, key, issueLog)
+            .then((film) => setTimeout(() => res(film), 20 * idx))
+            .catch(() => setTimeout(() => res(), 1000))
+        )
+      })
+    ).then((films) => {
+      films.forEach((film, idx) => {
+        if (film && film.imdbID) {
+          sanitizedFilmData[requestBatches[i][idx][0]] = formatFilmData(film, requestBatches[i][idx][0], criticData);
+        } else {
+          issueLog[requestBatches[i][idx][0]] = {
+            ...(issueLog[requestBatches[i][idx][0]] || {}),
+            noId: true,
+          };
+        }
+      })
     });
-    
-    if (Object.keys(issueLog).length > 0) {
-      console.warn(issueLog);
-    }
-    writeFile(
-      `./public/${format}data/${year}data.json`,
-      { ...filmData, ...sanitizedFilmData },
-    );
+  }
 
-    setTimeout(process.exit, 1000);
-    return null;
-  });
+  console.log('finished', year)
+  if (Object.keys(issueLog).length > 0) {
+    console.warn(issueLog);
+  }
+  writeFile(
+    `./public/${format}data/${year}data.json`,
+    { ...filmData, ...sanitizedFilmData },
+  );
+  return Promise.resolve();
 };
 
-YEARS.forEach((year, idx, arr) => {
-  updateFilmList(year, 'film')
-    .then(() => {
-      if (idx === arr.length - 1)
-        setTimeout(process.exit, 1000);
-    });
-});
+const getAllYears = async (format, idx = 0) => {
+  if (!YEARS[idx]) {
+    setTimeout(process.exit, 1000);
+    return;
+  }
+  console.log(YEARS[idx]);
+  await updateFilmList(YEARS[idx], 'film');
+  setTimeout(() => {
+    getAllYears(format, idx + 1)
+  }, 1000);
+}
+
+getAllYears('film');
 // module.exports = updateFilmList;
