@@ -90,7 +90,7 @@
       return {};
     }
     try {
-      const resp = await fetch(`/${params.format}data/${year}new.json`);
+      const resp = await fetch(`/${params.format}data/${year}data.json`);
       const films = await resp.json();
       filmData.update(() => films);
       return films;

@@ -2,20 +2,30 @@ var curl = require('curl');
 var process = require('process');
 var { readFile, writeFile } = require('../utils');
 
-const getSpotify = (query, pause = 500) => new Promise((res, rej) => {
-  curl.get(
+const getSpotify = (query, pause = 1000) => new Promise((res, rej) => {
+  return curl.get(
   `https://api.spotify.com/v1/${query}`,
   {
-    method: 'get',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${process.env.SPOTIFY_TOKEN}`,
       Accept: 'application/json',
     },
-  }, (data) => {
+  }, (err, resp, data) => {
+    // console.log(f)
+    if (err) {
+      res({});
+    }
     try {
-      setTimeout(() => res(JSON.parse(data)), pause);
+      setTimeout(() => {
+        try {
+          res(JSON.parse(data))
+         } catch(e) {
+           rej(e);
+         }
+      }, pause);
     } catch (e) {
+      console.log(e);
       rej('e');
     }
   })
@@ -24,6 +34,10 @@ const getSpotify = (query, pause = 500) => new Promise((res, rej) => {
 const sanitizeString = (str) => str.toLowerCase().replace(/[^\w]/g, ' ').replace(/\s+/g, ' ')
 
 const handleAlbumResponse = (albumName, artistName) => res => {
+  if (!res.albums) {
+    console.log('none for ', albumName, artistName);
+    return [5, null];
+  }
   let album = res.albums.items.find((album) => sanitizeString(album.name) === sanitizeString(albumName));
   if (album) {
     return [
@@ -56,7 +70,7 @@ const handleAlbumResponse = (albumName, artistName) => res => {
 
 const formatAlbumData = (albumName, artistName) => ([confidence, albumData]) => {
   const album = { album: albumName, artist: artistName, confidence };
-  if (!albumData) {
+  if (!albumData && albumData !== null) {
     return album;
   }
   // const spotifyAlbum = await getSpotify(`album/${albumData.id}`)
@@ -66,17 +80,19 @@ const formatAlbumData = (albumName, artistName) => ([confidence, albumData]) => 
     popularity: albumData.popularity,
     spotifyId: albumData.id,
     urls: albumData.external_urls,
+    trackCount: albumData.total_tracks,
+    release: albumData.release_date,
   };
 }
 
-const getAlbumData = (albumName, artistName) => {
-  return getSpotify(`search?q=album%3A${albumName}%20artist%3A${artistName}&type=album`)
+const getAlbumData = async (albumName, artistName) => {
+  return await getSpotify(`search?q=album%3A${albumName.split(' ').join('%20')}%20artist%3A${artistName.split(' ').join('%20')}&type=album&limit=10&include_external=audio`)
     .then(handleAlbumResponse(albumName, artistName))
     .then(formatAlbumData(albumName, artistName))
     .catch((e) => e)
 }
 
-const getAlbumsData = (year) => {
+const getAlbumsData = async (year) => {
   const listData = readFile(`./public/data/${year}-album.json`);
   const allAlbums = [];
   Object.values(listData).forEach((current) => {
@@ -89,15 +105,19 @@ const getAlbumsData = (year) => {
 
   const albumData = {};
 
-  allAlbums.map(async (albumString, idx) => {
-    const [name, artist] = albumString.split(' by ');
-    albumData[albumString] = await getAlbumData(name, artist);
-    if (allAlbums.length === idx + 1) {
-      // writeFile(`./public/albumdata/${year}data.json`, albumData);
-      // setTimeout(process.exit, 1000);
-      console.log(allAlbums);
-    }
-  });
+  for (let i = 0; i < allAlbums.length; i++) {
+    const [name, artist] = allAlbums[i].split(' by ');
+    albumData[allAlbums[i]] = await getAlbumData(name, artist);
+    process.stdout.write(`${i+1}/${allAlbums.length};`);
+  }
+  console.log(albumData);
+  console.log('high ', Object.values(albumData).filter(v => v.confidence === 1).length);
+  console.log('med ', Object.values(albumData).filter(v => v.confidence === 2).length);
+  console.log('low ', Object.values(albumData).filter(v => v.confidence === 3).length);
+  console.log('no match', Object.values(albumData).filter(v => v.confidence === 4).length);
+  console.log('no response', Object.values(albumData).filter(v => v.confidence === 5).length)
+  writeFile('./public/audio2010.json', albumData);
+  setTimeout(process.exit, 1000);
 }
 
 getAlbumsData('2010');
