@@ -1,4 +1,6 @@
 // Breaks down string value for awards and noms into a basic numeric, currently ignores source of award
+const stringToNumber = (val) => +val ? +val : 0;
+
 const formatAwards = (awards = '') => {
   let count = {};
   if (awards === 'N/A') {
@@ -83,9 +85,9 @@ const formatFilmData = (filmData, key, criticData) => {
     ...formatRatings(filmData),
     Year: +filmData.Year || undefined,
     Runtime: parseInt(filmData.Runtime) || 'N/A',
-    Awards: formatAwards(filmData.Awards),
-    imdbVotes: +filmData.imdbVotes || undefined,
-    rankings: getEntryRankings(key, criticData)
+    // Awards: formatAwards(filmData.Awards),
+    imdbVotes: filmData && filmData.imdbVotes ? +filmData.imdbVotes.replace(',', '') : undefined,
+    // rankings: getEntryRankings(key, criticData)
   }
 };
 
