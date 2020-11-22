@@ -106,7 +106,11 @@ export const SCORING_MATRICES = {
 }
 
 const stringToNumber = val => (
-  typeof val === 'string' ? +val.replace(/[^\d.]+/g, '') : undefined
+  typeof val === 'string'
+    ? +val.replace(/[^\d.]+/g, '')
+    : val === 'number'
+      ? val
+      : undefined
 );
 
 const formatAwards = (awards = '') => {
@@ -146,23 +150,21 @@ const formatAwards = (awards = '') => {
 
 
 const formatOmdbData = (omdbData = {}) => {
-  const imdb = {
-    id: omdbData.imdbID || undefined,
-    rating: stringToNumber(omdbData.imdbRating),
-    votes: stringToNumber(omdbData.imdbVotes),
-  };
-  const rotten = (omdbData.Ratings || []).find(v => v.Source === 'Rotten Tomatoes');
-  const metacritic = (omdbData.Ratings || []).find(v => v.Source === 'Metacritic');
+  const { imdbID, imdbRating, imdbVotes } = omdbData;
+  const rotten = omdbData['Rotten Tomatoes'];
+  const metacritic = omdbData.Metascore;
   const boxOffice = omdbData.BoxOffice !== 'N/A' ? stringToNumber(omdbData.BoxOffice) : undefined;
   const awards = formatAwards(omdbData.Awards);
   return {
-    imdb,
+    imdbID,
+    imdbRating,
+    imdbVotes,
     awards,
     boxOffice,
+    rotten,
+    metacritic,
     plot: omdbData.Plot,
     rating: omdbData.Rated,
-    rotten: rotten ? stringToNumber(rotten.Value) : undefined,
-    metacritic: metacritic ? parseInt(metacritic.Value) : undefined,
     poster: omdbData.Poster,
     language: omdbData.Language ? omdbData.Language.split(', ') : undefined,
     country: omdbData.Country ? omdbData.Country.split(', ') : undefined,

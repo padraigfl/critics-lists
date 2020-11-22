@@ -37,6 +37,9 @@
     if (count > 10 ** 3) {
       return  (count / 10 ** 3).toFixed(0) + 'K';
     }
+    if (!count) {
+      return '';
+    }
     return `<1k`
   }
 
@@ -48,10 +51,10 @@
 
   
   const getFilm = (content) => ([
-    content.imdb ? {
+    content.imdbID ? {
       ...imdb,
-      link: `https://www.imdb.com/title/${content.imdb.id}`,
-      text: content.imdb.rating ? `${content.imdb.rating && +content.imdb.rating.toFixed(1)}/${formatVoteCount(content.imdb.votes)}` : undefined,
+      link: `https://www.imdb.com/title/${content.imdbID}`,
+      text: content.imdbRating ? `${content.imdbRating && +content.imdbRating.toFixed(1)}/${formatVoteCount(content.imdbVotes)}` : undefined,
     } : {
       ...imdb,
       link: `https://www.imdb.com/find?s=tt&q=${title}`,
@@ -65,7 +68,7 @@
     ...(content.metacritic ? [{
       site: 'Metacritic',
       link: `https://www.metacritic.com/search/movie/${title}/results`,
-      text: content.metacritic + '%',
+      text: content.metacritic  !== 'N/A' ? content.metacritic + '%' : '',
       icon: 'metacritic',
     }] : []),
   ]);

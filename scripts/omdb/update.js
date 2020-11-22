@@ -1,10 +1,10 @@
 var curl = require('curl');
 var process = require('process');
-var { readFile, writeFile } = require('../utils');
+var { readFile, writeFile, YEARS } = require('../utils');
 var { formatFilmData, getEntryRankings } = require('./formatters');
 
-const getByImdbId = (imdbId, issueLog = {}, apikey = '') => {
-  const url = `http://www.omdbapi.com/?t=${imdbId}&apikey=${apikey}`
+const getByImdbId = (imdbId, title, issueLog = {}, apikey = '') => {
+  const url = `http://www.omdbapi.com/?i=${imdbId}&apikey=${apikey}`
   return new Promise((res) => {
     setTimeout(() => {
       curl.get(url, null, (err,resp,respBody)=>{
@@ -23,8 +23,8 @@ const getByImdbId = (imdbId, issueLog = {}, apikey = '') => {
               Production,
               ...restBody
             } = body;
-            const filmData = {
-              ...films[title],
+            console.log(title);
+            res({
               ...(Ratings || []).reduce((acc, {Source, Value}) => {
                 if (['Internet Movie Database', 'Metacritic'].includes(Source)) {
                   return acc;
@@ -35,10 +35,9 @@ const getByImdbId = (imdbId, issueLog = {}, apikey = '') => {
                 };
               }, {}),
               ...restBody
-            };
-            res(filmData)
+            });
           } else {
-            errorLog[title] = { year };
+            issueLog[imdbId] = { year };
             //some error handling
             // console.log("error while fetching url", url, err, resp);
           }
@@ -55,16 +54,20 @@ const getByImdbId = (imdbId, issueLog = {}, apikey = '') => {
 // searches through the existing film data fields and checks again against omdb for new data
 const updateFilmList = (year, format = 'film') => {
   const criticData = readFile(`./public/data/${year}-${format}.json`);
-  const filmData = readFile(`./public/filmdata/${year}${format}.json`);
-  const [filmKeys, filmValues] = Object.entries(filmData);
+  const filmData = readFile(`./public/filmdata/${year}data.json`);
   const issueLog = {};
-  Promise.all(
-    filmValues.map(async ({ imdbID }) => await getByImdbId(imdbID, issueLog))
+  const filteredEntries = Object.entries(filmData).filter(([, value]) => value.imdbID);
+
+  return Promise.all(
+    filteredEntries.map(async ([key, { imdbID }]) => await getByImdbId(imdbID, key, issueLog))
   ).then((updatedFilmData) => {
+    console.log(updatedFilmData)
     const sanitizedFilmData = {};
     updatedFilmData.forEach((film, idx) => {
-      if (film.imdbID) {
-        sanitizedFilmData[filmKeys[idx]] = formatFilmData(film, filmKeys[idx], criticData);
+      if (film && film.imdbID) {
+        sanitizedFilmData[filteredEntries[idx][0]] = formatFilmData(film, filteredEntries[idx][1], criticData);
+      } else {
+        issueLog[filteredEntries[idx][0]] = 'noImdbKey';
       }
     });
     
@@ -72,11 +75,20 @@ const updateFilmList = (year, format = 'film') => {
       console.warn(issueLog);
     }
     writeFile(
-      `./public/filmdata/${year}film.json`,
+      `./public/${format}data/${year}data.json`,
       { ...filmData, ...sanitizedFilmData },
     );
+
     setTimeout(process.exit, 1000);
+    return null;
   });
 };
 
-module.exports = updateFilmList;
+YEARS.forEach((year, idx, arr) => {
+  updateFilmList(year, 'film')
+    .then(() => {
+      if (idx === arr.length - 1)
+        setTimeout(process.exit, 1000);
+    });
+});
+// module.exports = updateFilmList;
