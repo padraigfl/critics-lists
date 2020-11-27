@@ -51,7 +51,6 @@
 
   
   const getFilm = (content) => {
-    console.log(content)
     return ([
     content.imdbID ? {
       ...imdb,
@@ -76,19 +75,18 @@
   ]);
   }
 
-  const album = [// need to remove by
-    { site: 'Spotify', link: 'https://open.spotify.com/search/', icon: 'spotify', modify: v => v.replace(' by ', ' ').replace(/\s+/g, '%20') },// %20
-    { site: 'Youtube', link: 'https://www.youtube.com/results?search_query=', icon: 'youtube', modify: v => v.replace(/by\s/g, '').replace(/\s/g, '%20') }, // +
-  ];
-
-  const tv = [
-    { site: 'IMDbTv', link: 'https://www.imdb.com/find?s=tt&q=', icon: 'imdb', modify: v => v.replace(/\(.*\)/g, '%20') },
-    { site: 'RTTv', link: 'https://www.rottentomatoes.com/search/?search=', icon: 'rotten', modify: v => v.replace(/\(.*\)/g, '%20') },
-  ];
+  const getAlbum = content =>{
+    return [
+      !content.id
+        ? { site: 'Spotify', link: 'https://open.spotify.com/search/', icon: 'spotify', modify: v => v.replace(' by ', ' ').replace(/\s+/g, '%20') }
+        : { site: 'Spotify', link: `https://open.spotify.com/album/${content.id}`, icon: 'spotify', text: 'P' },
+      { site: 'Youtube', link: 'https://www.youtube.com/results?search_query=', icon: 'youtube', modify: v => v.replace(/by\s/g, '').replace(/\s/g, '%20') }, // +
+    ];
+  }
 
   $: mediaLinkSets = {
     film: getFilm(data),
-    album,
+    album: getAlbum(data),
     tv: getFilm(data).slice(0, 1),
   };
 

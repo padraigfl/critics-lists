@@ -49,20 +49,21 @@
         },
       },
       { title: 'Highest ranked pair that share no lists', data: derivedData.divisivePair, dataLink: true },
-      {
-        title: 'Most contrarian critic (lowest points for overall list)',
-        data: derivedData.mostContrarianCritic.name,
-        descriptors: `with ${ derivedData.mostContrarianCritic.score }
-    against an average of ${ (derivedData.mostContrarianCritic.totalVal / (Object.keys(yearData.critics).length)).toFixed(1)}`,
-        link: yearData.critics[derivedData.mostContrarianCritic.name].link,
-        validator: {
-          text: 'Omitting lists with 3+ unique entries',
-          data: derivedData.mostContrarianCriticValidator.name,
-          descriptors: `with ${ derivedData.mostContrarianCriticValidator.score }
-    against an average of ${ (derivedData.mostContrarianCriticValidator.totalVal / (Object.keys(yearData.critics).length)).toFixed(1)}`,
-        link: yearData.critics[derivedData.mostContrarianCriticValidator.name].link,
-        },
-      },
+    // // NOTE: the computational overhead of figuring this datapoint out on the client side was too high to keep in
+    //   {
+    //     title: 'Most contrarian critic (lowest points for overall list)',
+    //     data: derivedData.mostContrarianCritic.name,
+    //     descriptors: `with ${ derivedData.mostContrarianCritic.score }
+    // against an average of ${ (derivedData.mostContrarianCritic.totalVal / (Object.keys(yearData.critics).length)).toFixed(1)}`,
+    //     link: yearData.critics[derivedData.mostContrarianCritic.name].link,
+    //     validator: {
+    //       text: 'Omitting lists with 3+ unique entries',
+    //       data: derivedData.mostContrarianCriticValidator.name,
+    //       descriptors: `with ${ derivedData.mostContrarianCriticValidator.score }
+    // against an average of ${ (derivedData.mostContrarianCriticValidator.totalVal / (Object.keys(yearData.critics).length)).toFixed(1)}`,
+    //     link: yearData.critics[derivedData.mostContrarianCriticValidator.name].link,
+    //     },
+    //   },
       // { title: 'Data Source', data: yearData.source }
     ];
     if (derivedData.bestStudio) {

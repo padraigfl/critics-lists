@@ -1,6 +1,7 @@
 var curl = require('curl');
+const { get } = require('http');
 var process = require('process');
-var { readFile, writeFile } = require('../utils');
+var { readFile, writeFile, YEARS } = require('../utils');
 
 const getSpotify = (query, pause = 1000) => new Promise((res, rej) => {
   return curl.get(
@@ -14,85 +15,143 @@ const getSpotify = (query, pause = 1000) => new Promise((res, rej) => {
   }, (err, resp, data) => {
     // console.log(f)
     if (err) {
-      res({});
+      res({ error: true });
     }
     try {
       setTimeout(() => {
         try {
           res(JSON.parse(data))
          } catch(e) {
-           rej(e);
+           rej({ error: true });
          }
       }, pause);
     } catch (e) {
       console.log(e);
-      rej('e');
+      rej({ error: true });
     }
   })
 });
 
 const sanitizeString = (str) => str.toLowerCase().replace(/[^\w]/g, ' ').replace(/\s+/g, ' ')
 
-const handleAlbumResponse = (albumName, artistName) => res => {
-  if (!res.albums) {
-    console.log('none for ', albumName, artistName);
-    return [5, null];
-  }
-  let album = res.albums.items.find((album) => sanitizeString(album.name) === sanitizeString(albumName));
-  if (album) {
-    return [
-      1,
-      album,
-    ];
-  }
-  const first = res.albums.items;
-  if (sanitizeString(artistName) === sanitizeString(album.artist)) {
-    return [
-      2,
-      first,
-    ];
-  }
+const getArtistData = async (artistId) => {
+  return await getSpotify(`artists/${artistId}`);
+}
 
-  if (res.albums.items.length) {
-    return [
-      3,
-      res.albums.items.reduce((maxPop, album) => {
-        if (album.popularity > maxPop.popularity) {
-          return album;
+const getAlbumLengthFromTracks = (tracks) => tracks.items.reduce(
+  (acc, { duration_ms }) => acc + duration_ms,
+  0,
+);
+
+const getAlbumData = async (selectedSearchResult) => {
+  return await getSpotify(`albums/${selectedSearchResult}`)
+}
+
+const getArtistGenres = (artistData) => {
+  return (
+    artistData.reduce((acc, { genres }) => {
+      genres.forEach((genre) => {
+        if (!acc.includes(genre)) {
+          acc.push(genre);
         }
-        return maxPop;
-      }),
-    ];
-  }
-
-  return [4, null];
+      });
+      return acc;
+    }, [])
+  );
 }
 
-const formatAlbumData = (albumName, artistName) => ([confidence, albumData]) => {
-  const album = { album: albumName, artist: artistName, confidence };
-  if (!albumData && albumData !== null) {
-    return album;
+const handleAlbumResponse = (albumName, artistName) => async res => {
+  let confidence = 4;
+  let likelyAlbum = null;
+
+  if (!res || res.error) {
+    console.log('failed to fetch', artistName, albumName);
+    return await Promise.resolve({ artist: artistName, album: albumName, confidence: 5 })
   }
-  // const spotifyAlbum = await getSpotify(`album/${albumData.id}`)
+  if (!res.albums || !res.albums.items.length) {
+    console.log('none for ', albumName, artistName);
+    return await Promise.resolve({ artist: artistName, album: albumName, confidence: 4 });
+  }
+
+  let album = res.albums.items.find((album) =>
+    sanitizeString(album.name) === sanitizeString(albumName)
+    && album.artists.some(artist =>
+      sanitizeString(artist.name) === sanitizeString(artistName)
+    )
+  );
+
+  if (album) {
+    confidence = 1;
+    likelyAlbum = album;
+  } else {
+    album = res.albums.items.find((album) =>
+      sanitizeString(album.name) === sanitizeString(albumName)
+      || album.artists.some(artist =>
+        sanitizeString(artist.name) === sanitizeString(artistName)
+      )
+    );
+  }
+
+  if (!likelyAlbum && album) {
+    likelyAlbum = album;
+    confidence = 2;
+  }
+
+  if (!likelyAlbum && res.albums.items.length) {
+    likelyAlbum = res.albums.items[0];
+    // most popular was failing badly
+    // likelyAlbum = res.albums.items.reduce((maxPop, album) => {
+    //   if (album.popularity > maxPop.popularity) {
+    //     return album;
+    //   }
+    //   return maxPop;
+    // });
+    confidence = 3;
+  }
+
+  const albumData = await getAlbumData(likelyAlbum.id);
+  const artistData = await Promise.all(
+    likelyAlbum.artists.filter(({ id }) => !!id).map((artist) => {
+      return getArtistData(artist.id)
+    })
+  );
+
   return {
-    ...album,
-    image: albumData.images.find((image) => image.width === 64).url,
+    artistName,
+    albumName,
+    spotifyAlbumName: albumData.name,
+    confidence,
+    id: albumData.id,
     popularity: albumData.popularity,
-    spotifyId: albumData.id,
-    urls: albumData.external_urls,
     trackCount: albumData.total_tracks,
-    release: albumData.release_date,
-  };
+    // mostPopularTrack: getMostPopularTrackId(albumData),
+    upc: albumData.external_ids
+      ? albumData.external_ids.upc
+      : null,
+    image: albumData.images.length
+      ? albumData.images.pop().url
+      : null,
+    artists: artistData.map((artist) => ({
+      id: artist.id,
+      name: artist.name,
+      genres: artist.genres,
+    })),
+    genres: albumData.genres.length > 0
+      ? albumData.genres
+      : getArtistGenres(artistData),
+    usingArtistGenres: albumData.genres.length === 0,
+    length: getAlbumLengthFromTracks(albumData.tracks),
+  }
 }
 
-const getAlbumData = async (albumName, artistName) => {
-  return await getSpotify(`search?q=album%3A${albumName.split(' ').join('%20')}%20artist%3A${artistName.split(' ').join('%20')}&type=album&limit=10&include_external=audio`)
+const findAlbumData = async (albumName, artistName) => {
+  return await getSpotify(`search?q=album%3A${(albumName || '').split(' ').join('%20')}%20artist%3A${(artistName|| '').split(' ').join('%20')}&type=album&limit=10&include_external=audio`)
     .then(handleAlbumResponse(albumName, artistName))
-    .then(formatAlbumData(albumName, artistName))
     .catch((e) => e)
 }
 
 const getAlbumsData = async (year) => {
+  console.log(year);
   const listData = readFile(`./public/data/${year}-album.json`);
   const allAlbums = [];
   Object.values(listData).forEach((current) => {
@@ -105,20 +164,44 @@ const getAlbumsData = async (year) => {
 
   const albumData = {};
 
-  for (let i = 0; i < allAlbums.length; i++) {
-    const [name, artist] = allAlbums[i].split(' by ');
-    albumData[allAlbums[i]] = await getAlbumData(name, artist);
-    process.stdout.write(`${i+1}/${allAlbums.length};`);
+  const albumBatches = [];
+  const batchSize = 10;
+  for (let i = 0; i < allAlbums.length; i+=batchSize) {
+    albumBatches.push(allAlbums.slice(i, i+batchSize));
+  }
+
+  for (let i = 0; i < albumBatches.length; i++) {
+    await Promise.all(albumBatches[i].map(
+      (alb) => {
+        const [name, artist] = alb.split(' by ');
+        return findAlbumData(name, artist);
+      })).then((dataArr) => {
+        dataArr.forEach((entryData, idx) => {
+          albumData[allAlbums[(i*batchSize) + idx]] = entryData;
+        });
+        return new Promise((res, rej) => {
+          setTimeout(res, 2000);
+        });
+      });
+    process.stdout.write(`${i+1}/${albumBatches.length};`);
   }
   console.log(albumData);
   console.log('high ', Object.values(albumData).filter(v => v.confidence === 1).length);
   console.log('med ', Object.values(albumData).filter(v => v.confidence === 2).length);
   console.log('low ', Object.values(albumData).filter(v => v.confidence === 3).length);
   console.log('no match', Object.values(albumData).filter(v => v.confidence === 4).length);
-  console.log('no response', Object.values(albumData).filter(v => v.confidence === 5).length)
-  writeFile('./public/audio2010.json', albumData);
-  setTimeout(process.exit, 1000);
+  console.log('fail', Object.values(albumData).filter(v => v.confidence === 5).length);
+  writeFile(`./public/${year}data.json`, albumData);
 }
 
-getAlbumsData('2010');
+const getYears = async (idx) => {
+  await getAlbumsData(YEARS[idx]);
+  if (idx === YEARS.length - 1) {
+    process.exit();
+  }
+  return getYears(idx + 1);
+}
 
+// getYears(7);
+
+getAlbumsData('2016')

@@ -86,7 +86,7 @@
 	const changeFormat = (e) => {
     format.update(() => e.target.value);
 		filterSelections.update(() => ({}));
-		ordering.update(() => 'score')
+		ordering.update(() => ({ key: 'score' }))
 		if (year_value === 'List' 
 			&& OPTIONS.formats.includes(e.target.value)
 		) {
@@ -129,9 +129,35 @@
 			options: Object.entries(availableOptions[format_value][key]),
 		}));
 
+	const orderMusicFilters = (filters) => {
+		if (!filters) { return []; }
+		const entries = Object.entries(filters);
+		// NOTE: Spotify genres are crazy specific, list is huge without filtering smaller entries
+		return entries.filter(([,number]) => number >= 4);
+	}
+
+	const getMusicFilters = () => ['genre'].map(key => ({
+			title: key,
+			type: 'filter',
+			options: format_value !== 'Format'
+				? orderMusicFilters(availableOptions[format_value][key])
+				: [],
+		}));
+
 	const getOptions = () => {
+		console.log('options');
 		if (format_value !== TV && format_value !== FILM) {
-			return [];
+			return [{
+				title: 'Sort by',
+				type: 'sort',
+				options: year_value !== 'List'
+					? [
+						{ title: 'Score', key: 'score' },
+						{ title: 'Popularity', key: 'popularity' },
+						{ title: 'Longest', key: 'length' },
+					]
+					: [],
+			}, ...getMusicFilters()];
 		}
 		const options = [
 			{
@@ -143,7 +169,8 @@
 						// { title: 'Box Office', key: 'boxOffice' }, seems to be buggy af
 						// { title: '# lists', key: 'val.critics.length' },
 						// { title: '# firsts', key: 'val.firsts.length' },
-						{ title: 'IMDb rating', key: 'imdb.rating' },
+						{ title: 'IMDb votes', key: 'imdbVotes' },
+						{ title: 'IMDb rating', key: 'imdbRating' },
 						{ title: 'Awards', key: 'awards.wins' },
 						{ title: 'Awards+Noms', key: 'awards.combined' },
 					] : [
@@ -152,8 +179,8 @@
 				default: year_value !== 'List' ? 'Points' : 'Release',
 			}
 		];
-		if (format_value === FILM) {
-			options.push({ title: 'Length', key: 'runtime' })
+		if (format_value === FILM && options[0] && options[0].options) {
+			options[0].options.push({ title: 'Length', key: 'runtime' })
 		}
     return [
 			...options,
@@ -163,6 +190,7 @@
 
   filterOptions.subscribe(val => {
 		availableOptions = val;
+		console.log(availableOptions);
 		options = getOptions();
   });
 
@@ -173,15 +201,14 @@
       ...selectedOptions,
       [key]: e.target.value,
     }
-
     filterSelections.update(() => selectedOptions)
-    toggle();
+		toggle();
 	}
 	ordering.subscribe(val => {
 		order = val;
 	})
   const updateSort = (o) => {
-		ordering.update(() => o.key);
+		ordering.update(() => o);
     toggle();
   };
  
@@ -195,7 +222,7 @@
 			<div class="nav__main__data">
 				{#if format_value !== 'Format' && year_value !== 'Year'}
 					<div class="nav__data">
-						<strong>Order</strong>: {order}
+						<strong>Order</strong>: {order.key} { order.invert ? 'reverse' : ''}
 					</div>
 					{#if Object.keys(selectedOptions).length > 0 || !seeKnown || !seeInterested || !seeUninterested}
 						<div class="nav__data">

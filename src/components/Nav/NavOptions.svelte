@@ -36,7 +36,7 @@
           <div class="nav__options__title">
             {opt.key || opt.title}
           </div>
-          <select class="nav__options__select" on:change={(e) => updateSort(opt.options[e.target.value])} value={opt.options.findIndex(v => v.key === order)}>
+          <select class="nav__options__select" on:change={(e) => updateSort(opt.options[e.target.value])} value={opt.options.findIndex(v => v.key === order.key)}>
             {#each opt.options as selectOption, i}
               <option value={i} >
                 {selectOption.title}
@@ -49,11 +49,13 @@
           </div>
           <select class="nav__options__select" on:change={updateOptions(opt.key || opt.title, opt.type)} value={selectedOptions[opt.key || opt.title] || null}>
             <option value='All'>All</option>
-            {#each opt.options.sort((a, b) => a[0] > b[0] ? 1 : -1).filter(a => a[1] > 1) as selectOption}
-              <option value={selectOption.title || selectOption[0]} >
-                {`${selectOption[0]} (${selectOption[1]})`}
-              </option>
-            {/each}
+            {#if Array.isArray(opt.options)}
+              {#each opt.options.sort((a, b) => a[0] > b[0] ? 1 : -1).filter(a => a[1] > 1) as selectOption}
+                <option value={selectOption.title || selectOption[0]} >
+                  {`${selectOption[0]} (${selectOption[1]})`}
+                </option>
+              {/each}
+            {/if}
           </select>
         {/if}
       </li>

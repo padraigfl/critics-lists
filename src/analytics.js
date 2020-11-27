@@ -1,3 +1,4 @@
+import { ALBUM } from "./utils/constants";
 
 export const SCORING_MATRICES = {
   default: {
@@ -184,21 +185,29 @@ const getRankingData = ({ rankings = {} },  ranking) => {
   };
 }
 
-export const processListsWithRankings = (critics, omdbData, matrix = SCORING_MATRICES.default, orderFunc) => {
-  const films = {};
-  console.log(omdbData);
+// Placeholder function
+const formatSpotifyData = (spotifyData) => {
+  return {
+    ...spotifyData,
+    genre: spotifyData.genres,
+  };
+}
+
+export const processListsWithRankings = (critics, bonusData, matrix = SCORING_MATRICES.default, orderFunc, format) => {
+  const aggregatedData = {};
+  const bonusDataHandler = format === ALBUM ? formatSpotifyData : formatOmdbData;
   Object.values(critics).forEach(({ list }) => {
     Object.entries(list).forEach(([workName, ranking]) => {
-      films[workName] = {
-        ...formatOmdbData(omdbData[workName] || {}),
-        rankings: getRankingData(films[workName] || {}, ranking),
+      aggregatedData[workName] = {
+        ...(bonusDataHandler(bonusData[workName] || {})),
+        rankings: getRankingData(aggregatedData[workName] || {}, ranking),
       };
     });
   });
-  Object.entries(films).forEach(([workName, filmData]) => {
-    films[workName].score = Object.entries(filmData.rankings).reduce((acc, [key, val]) => acc + (matrix[key] * val), 0)
+  Object.entries(aggregatedData).forEach(([workName, mediaData]) => {
+    aggregatedData[workName].score = Object.entries(mediaData.rankings).reduce((acc, [key, val]) => acc + (matrix[key] * val), 0)
   });
-  return Object.entries(films).sort(orderFunc || objectEntriesSort('score'));
+  return Object.entries(aggregatedData).sort(orderFunc || objectEntriesSort('score'));
 }
 
 const getHighestWithoutNumberOne = (processedList, data) =>
@@ -379,8 +388,9 @@ export const deriveAdditionalDataFromProcessedList = (processedList, data, forma
   const smallestWinnerValidator = getLowestNumberOneValidator(processedList, data);
   const divisivePair = getMostDivisivePair(processedList, data);
   const onlyInOneList = getFilmsInOneList(data);
-  const mostContrarianCritic = getMostContrarianCritic(processedList, data);
-  const mostContrarianCriticValidator = getMostContrarianCritic(processedList, data, 3);
+  // // NOTE: the computational overhead of figuring this datapoint out on the client side was too high to keep in
+  // const mostContrarianCritic = getMostContrarianCritic(processedList, data);
+  // const mostContrarianCriticValidator = getMostContrarianCritic(processedList, data, 3);
   const arrayValues = getMostOfArrayValues(processedList, ['genre', 'cast', 'country', 'language']);
   const count = processedList.length;
   let bestStudio;
@@ -395,8 +405,8 @@ export const deriveAdditionalDataFromProcessedList = (processedList, data, forma
     smallestWinnerValidator,
     divisivePair,
     onlyInOneList,
-    mostContrarianCritic,
-    mostContrarianCriticValidator,
+    // mostContrarianCritic,
+    // mostContrarianCriticValidator,
     bestStudio,
     arrayValues,
     count,
