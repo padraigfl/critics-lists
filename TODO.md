@@ -1,16 +1,17 @@
 
 Important and/or easy:
 - [x] BUG Resolve scroll bug across devices, verify
-- [] Update data script to run one request at a time
-- [] Add data update script (used IMDb IDs for guaranteed matches)
-- [] Multiple scoring systems
+- [x] Update data script to run one request at a time
+- [x] Add data update script (used IMDb IDs for guaranteed matches)
+- [x] Multiple scoring systems
 - [] Query string holding search values for routing purposes
 - [] Link to lists within expanded details
-- [] Add TV data fetch script
-- [] Investigate music API options
+- [x] Add TV data fetch script
+- [x] Investigate music API options (using spotify)
+- [] resolve loading issues (display from second page stalls processing)
+- [] update film and tv to use same data format
 - [] indexedDB for old lists
-- [] Explanation or weighting systems
-- [] Script to update data using imdb ids
+- [] Explanation of weighting systems
 
 Nice to have:
 - [] Generate weighted decade list 

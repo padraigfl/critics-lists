@@ -4,7 +4,6 @@
   const params = new URLSearchParams(window.location.hash.split('?')[1] || '');
   const newErrors = {};
   if (params.get('year')) {
-    console.log('tt')
     errors = { 
       year: true,
     };

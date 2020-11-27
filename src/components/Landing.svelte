@@ -40,23 +40,27 @@
 		find new interesting things to watch and having to trawl through all the noise in lists on Letterbox'd, I decided to try
 		and make something from this data on metacritic aggregated with a movie database
 	</p>
-	<p>...and, er, I also wanted to see how far I could push a 2 color style (#eeeeee and #111111)</p>
+	<p>...and, er, I also wanted to see how far I could push a 2 color style (#eeeeee and #111111). This, combined with it being my first Svelte project, has left it an unmaintainable mess.</p>
 
 	<h2>Still to do</h2>
 	<ul>
 		<li>Aggregation of the individual year lists (would be a very large file download)</li>
-		<li>Extra data for TV shows</li>
-		<li>Performance issue resolutions</li>
-		<li>Data fixes</li>
-		<li>Clean up the code, I hadn't a clue how Svelte works at the start and it really shows. The CSS needs to be restructured too</li>
+		<li>Performance issue resolutions (removed biggest culprits)</li>
+		<li>Data fixes (ongoing)</li>
+		<li>Clean up the code, I hadn't a clue how Svelte works at the start and it really shows. The CSS needs to be restructured too (doubt I'll ever bother with this)</li>
 	</ul>
 
 	<h2>Things I won't do</h2>
 	<ul>
-		<li>Album data: the hassle in sanitizing the data would be absolutely huge due to only having a string to work from</li>
-		<li>Display images on load: would involve loading so many assets at once that I'm not hosting, seems douchey</li>
+		<li>Display images on load: would involsve loading so many assets at once that I'm not hosting, seems douchey</li>
 		<li>Save lists between devices: using local storage of browser, there is no server involved</li>
 		<li>Up to date data: Again, due to no server being involved. Although I might be able to throw together a script to occasionally update this.</li>
+	</ul>
+
+	<h2>Caveats</h2>
+	<ul>
+		<li>Filters entirely omit entries which do not have the values to filter, was the easiest way I could think to prevent issues</li>
+		<li>Album data from spotify is very dirty, will clean up a little over time but not by loads</li>
 	</ul>
 
 	<h2>Sources</h2>

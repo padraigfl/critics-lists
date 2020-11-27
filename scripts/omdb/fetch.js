@@ -43,7 +43,7 @@ const getFilmList = (year, bonusData, format = 'film') => {
   return films;
 };
 
-const getFilm = (films, title, year, issueLog, errorLog = {}, format = 'film', apikey = '') => {
+const getFilm = (films, title, year, issueLog, errorLog = {}, format = 'film', apikey = process.env.OMDB_KEY) => {
   let url;
   if (format === 'film') {
     url = `http://www.omdbapi.com/?t=${title.replace(/\&/g, '%26').replace(/\s/g, '%20')}${year ? `&y=${year}` : ''}&type=movie&apikey=${apikey}`

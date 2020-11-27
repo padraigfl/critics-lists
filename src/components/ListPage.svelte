@@ -13,9 +13,9 @@
   } from '../analytics';
   import '../styles.scss';
   import {
-    year, filmData, format, scoringMatrix, loadingPage, filterOptions, ordering, filterSelections,
+    year, mediaData, format, scoringMatrix, loadingPage, filterOptions, ordering, filterSelections,
   } from '../store';
-  import { objectEntriesSort } from '../utils/general';
+  import { objectEntriesSort, hasNestedValue } from '../utils/general';
   import { FILM, ALBUM, FORMATS, YEARS } from '../utils/constants';
 	export let params = params;
   let listData = null;
@@ -58,7 +58,12 @@
         iterativeList = iterativeList.filter(v => v[1][key] && v[1][key].includes(val));
       }
     });
-    return [...iterativeList.sort(objectEntriesSort(sortBy))]
+    let sorted = [...iterativeList.sort(objectEntriesSort(sortBy.key))];
+    if (sortBy.invert) {
+      sorted.reverse();
+    }
+    console.log(sorted);
+    return sorted.filter(v => hasNestedValue(v, sortBy.key));
   }
 
   ordering.subscribe(val => {
@@ -81,21 +86,18 @@
 		isLoading = value;
   });
 
-  filmData.subscribe(value => {
+  mediaData.subscribe(value => {
     omdbData = value;
   });
 
-  const getFilmData = async (year) => {
-    if (params.format === ALBUM) {
-      return {};
-    }
+  const getMediaData = async (year) => {
     try {
-      const resp = await fetch(`/${params.format}data/${year}data.json`);
-      const films = await resp.json();
-      filmData.update(() => films);
-      return films;
+      const resp = await fetch(`/${params.format}/${year}data.json`);
+      const data = await resp.json();
+      mediaData.update(() => data);
+      return data;
     } catch (e) {
-      filmData.update({});
+      mediaData.update({});
       return {};
     }
   }
@@ -103,11 +105,11 @@
   const getOptions = (listData) => getListOfArrayValues(listData, ['genre', 'language', 'country']);
 
   const processFile = async (json) => {
-    const filmss = await getFilmData(params.year);
-    listData = await processListsWithRankings(json, filmss, matrix_value, objectEntriesSort(sortBy));
+    const media = await getMediaData(params.year);
+    listData = await processListsWithRankings(json, media, matrix_value, objectEntriesSort(sortBy.key), params.format);
     fullList = listData;
     yearData = formatList(json, matrix_value);
-    // getFilmData(params.year);
+    // getMediaData(params.year);
     return {
       yearData,
       listData,
@@ -116,7 +118,7 @@
 
   const getJsonData = async () => {
     if (params.format !== FILM) {
-      ordering.update(() => 'score');
+      ordering.update(() => ({ key: 'score' }));
     }
     year.update(() => params.year);
     format.update(() => params.format);
@@ -158,7 +160,6 @@
 
 	scoringMatrix.subscribe(async value => {
     matrix_value = SCORING_MATRICES[value];
-    console.log(matrix_value);
     await processData();
 	});
 

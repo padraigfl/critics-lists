@@ -3,7 +3,7 @@ var process = require('process');
 var { readFile, writeFile, YEARS } = require('../utils');
 var { formatFilmData, getEntryRankings } = require('./formatters');
 
-const getByImdbId = (imdbId, title, issueLog = {}, apikey = '') => {
+const getByImdbId = (imdbId, title, issueLog = {}, apikey = process.env.OMDB_KEY) => {
   const url = `http://www.omdbapi.com/?i=${imdbId}&apikey=${apikey}`
   return new Promise((res) => {
     setTimeout(() => {

@@ -17,6 +17,16 @@ export const getValueFromObject = (key = 'score') => val => {
   return soughtValue;
 }
 
+export const hasNestedValue = (obj, key) => {
+  let soughtValue = obj[1];
+  key.split('.').forEach(k => {
+    if (typeof soughtValue !== 'undefined') {
+      soughtValue = soughtValue[k];
+    }
+  });
+  return typeof soughtValue !== 'undefined';
+}
+
 export const objectEntriesSort = (key) => {
   const getComparisonValue = getValueFromObject(key);
   return ([,a], [,b]) => {

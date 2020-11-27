@@ -20,8 +20,8 @@ export const format = writable('Format');
 // active year (selected from navbar)
 export const year = writable('Year');
 
-// expanded data for a film
-export const filmData = writable({});
+// expanded data for media
+export const mediaData = writable({});
 
 // very generic all app loading handler
 export const loadingPage = writable(true);
@@ -38,6 +38,9 @@ export const filterOptions = writable({
     [LANGUAGE]: defaultFilters[FILM][LANGUAGE],
     [COUNTRY]: defaultFilters[FILM][COUNTRY],
   },
+  [ALBUM]: {
+    [GENRE]: defaultFilters[FILM][GENRE],
+  }
 });
 
 // controls the current means of allocating points
@@ -47,7 +50,7 @@ export const scoringMatrix = writable(SCORING_MATRICES.default);
 export const filterSelections = writable({});
 
 // ordering of entries, could potentially persist across formats if shared type??
-export const ordering = writable('score');
+export const ordering = writable({ key: 'score' });
 
 // toggle for including entries you've flagged with one of the icons
 export const viewKnown = writable(true);

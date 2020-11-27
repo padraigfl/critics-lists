@@ -7,6 +7,7 @@
   import {
     getLocalStorageList,
     objectEntriesSort,
+    hasNestedValue,
   } from '../utils/general';
   import {
     getListOfArrayValues,
@@ -24,6 +25,7 @@
     }
   })();
 
+
   const handlingFilters = (fullList) => {
     let iterativeList = fullList;
     Object.entries(filters ||{}).forEach(([key, val]) => {
@@ -31,7 +33,11 @@
         iterativeList = iterativeList.filter(v => v[1][key] && v[1][key].includes(val));
       }
     });
-    return [...iterativeList.sort(objectEntriesSort(sortBy))]
+    let sorted = [...iterativeList.sort(objectEntriesSort(sortBy.key))]
+    if (sortBy.invert) {
+      sorted = sorted.reverse();
+    }
+    return sorted.filter(v => hasNestedValue(v, sortBy.key));
   }
 
   OPTIONS.years.forEach((year) => {
@@ -51,6 +57,7 @@
 
   ordering.subscribe(val => {
     sortBy = val;
+    console.log(sortBy)
     if (filteredList) {
       filteredList = handlingFilters(flattened);
     }
@@ -64,8 +71,8 @@
 
   year.update(() => 'List');
   format.update(() => params.format);
-  if (!['release', 'runtime'].includes(sortBy)) {
-    ordering.update(() => 'release');
+  if (!['release', 'runtime'].includes(sortBy.key)) {
+    ordering.update(() => ({ key: 'release'}));
   }
   filteredList = handlingFilters(flattened, params);
   if (params.format === 'film') {
