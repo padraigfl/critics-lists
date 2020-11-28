@@ -20,7 +20,9 @@
   export let isUninterested;
   $: optionsVisible = false;
   $: extend = false; // TODO handle toggle of extra data
-  $: hasData = data.director || data.cast || data.genre || data.language;
+  $: hasData = format !== ALBUM && (
+    data.director || data.cast || data.genre || data.language
+  );
   $: formattedTitle = format === ALBUM
     ? { name: title.split(' by ')[0], src: title.split(' by ')[1] }
     : format === TV
@@ -79,7 +81,7 @@
     return [
       !content.id
         ? { site: 'Spotify', link: 'https://open.spotify.com/search/', icon: 'spotify', modify: v => v.replace(' by ', ' ').replace(/\s+/g, '%20') }
-        : { site: 'Spotify', link: `https://open.spotify.com/album/${content.id}`, icon: 'spotify', text: 'P' },
+        : { site: 'Spotify', link: `https://open.spotify.com/album/${content.id}`, icon: 'spotify', text: '►' },
       { site: 'Youtube', link: 'https://www.youtube.com/results?search_query=', icon: 'youtube', modify: v => v.replace(/by\s/g, '').replace(/\s/g, '%20') }, // +
     ];
   }
