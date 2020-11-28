@@ -180,7 +180,7 @@ const getAlbumsData = async (year) => {
           albumData[allAlbums[(i*batchSize) + idx]] = entryData;
         });
         return new Promise((res, rej) => {
-          setTimeout(res, 2000);
+          setTimeout(res, 5000);
         });
       });
     process.stdout.write(`${i+1}/${albumBatches.length};`);
@@ -197,11 +197,9 @@ const getAlbumsData = async (year) => {
 const getYears = async (idx) => {
   await getAlbumsData(YEARS[idx]);
   if (idx === YEARS.length - 1) {
-    process.exit();
+    setTimeout(process.exit, 1000);
   }
   return getYears(idx + 1);
 }
 
-// getYears(7);
-
-getAlbumsData('2016')
+getAlbumsData(YEARS[YEARS.length - 1]);

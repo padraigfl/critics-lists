@@ -53,7 +53,7 @@ const getByImdbId = (imdbId, title, issueLog = {}, apikey = process.env.OMDB_KEY
 // searches through the existing film data fields and checks again against omdb for new data
 const updateFilmList = async (year, format = 'film') => {
   const criticData = readFile(`./public/data/${year}-${format}.json`);
-  const filmData = readFile(`./public/filmdata/${year}data.json`);
+  const filmData = readFile(`./public/${format}/${year}data.json`);
   const issueLog = {};
   const filteredEntries = Object.entries(filmData).filter(([, value]) => value.imdbID);
   const sanitizedFilmData = {};
@@ -92,7 +92,7 @@ const updateFilmList = async (year, format = 'film') => {
     console.warn(issueLog);
   }
   writeFile(
-    `./public/${format}data/${year}data.json`,
+    `./public/${format}/${year}data.json`,
     { ...filmData, ...sanitizedFilmData },
   );
   return Promise.resolve();
@@ -110,5 +110,6 @@ const getAllYears = async (format, idx = 0) => {
   }, 1000);
 }
 
-getAllYears('film');
+// getAllYears('film');
+getAllYears('tv');
 // module.exports = updateFilmList;
