@@ -51,7 +51,7 @@ const getByImdbId = (imdbId, title, issueLog = {}, apikey = process.env.OMDB_KEY
 }
 
 // searches through the existing film data fields and checks again against omdb for new data
-const updateFilmList = async (year, format = 'film') => {
+const updateYearData = async (year, format) => {
   const criticData = readFile(`./public/data/${year}-${format}.json`);
   const filmData = readFile(`./public/${format}/${year}data.json`);
   const issueLog = {};
@@ -102,9 +102,8 @@ const getAllYears = async (format, idx = 0) => {
   if (!YEARS[idx]) {
     setTimeout(process.exit, 1000);
     return;
-  }
-  console.log(YEARS[idx]);
-  await updateFilmList(YEARS[idx], 'film');
+  };
+  await updateYearData(YEARS[idx], firnat);
   setTimeout(() => {
     getAllYears(format, idx + 1)
   }, 1000);

@@ -4,6 +4,7 @@
 	import InterestedPage from './components/InterestedPage.svelte';
 	import Nav from './components/Nav/Nav.svelte';
 	import FourOhFour from './components/404.svelte';
+	import FAQ from './components/FAQ.svelte';
 	import Router, { push } from 'svelte-spa-router';
 	import axios from 'axios';
 	import './styles.scss';
@@ -12,6 +13,7 @@
 		'/': Landing,
 		'/interested/:format': InterestedPage,
 		'/l/:format/:year': ListBreakdown,
+		'/faq': FAQ,
     '/*': FourOhFour,
 	}
 
