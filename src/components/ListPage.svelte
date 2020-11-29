@@ -46,8 +46,6 @@
     if (errors.length) {
       paramError = true;
       push(`/error?${errors.join('&')}`);
-    } else {
-      console.log('no errors');
     }
   })();
 
@@ -62,7 +60,6 @@
     if (sortBy.invert) {
       sorted.reverse();
     }
-    console.log(sorted);
     return sorted.filter(v => hasNestedValue(v, sortBy.key));
   }
 
@@ -94,6 +91,7 @@
     try {
       const resp = await fetch(`/${params.format}/${year}data.json`);
       const data = await resp.json();
+      console.log(data);
       mediaData.update(() => data);
       return data;
     } catch (e) {

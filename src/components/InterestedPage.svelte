@@ -57,7 +57,6 @@
 
   ordering.subscribe(val => {
     sortBy = val;
-    console.log(sortBy)
     if (filteredList) {
       filteredList = handlingFilters(flattened);
     }
