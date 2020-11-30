@@ -103,7 +103,7 @@ const getAllYears = async (format, idx = 0) => {
     setTimeout(process.exit, 1000);
     return;
   };
-  await updateYearData(YEARS[idx], firnat);
+  await updateYearData(YEARS[idx], format);
   setTimeout(() => {
     getAllYears(format, idx + 1)
   }, 1000);
