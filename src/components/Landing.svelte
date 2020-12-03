@@ -1,4 +1,5 @@
 <script>
+	import { SCORING_MATRICES } from '../analytics';
 	import { OPTIONS, SOURCE } from '../utils/constants';
 </script>
 
@@ -7,24 +8,44 @@
 </svelte:head>
 <div class="Landing">
 	<h1>Aggregated End-of-Year Lists 2010-2010s</h1>
+	<p>Select a year and format from the list above to see the aggregated end-of-year critics lists for a given year (list data derived from Metacritic)</p>
 
 	<h2>What does it do?</h2>
 	<p>
 		Metacritic gathers up all these lists every year and makes a pretty basic top 20 out of it.
-		This site presents a longer list from the same data with some additional data points (film only) to make it easier to unearth some gems.
-		There's some basic means of sorting and filtering results too so you can find stuff for a particular mood more quickly.
+		This site presents a longer list from the same data with some additional data points to make it easier to unearth some gems.
 	</p>
 
 	<h2>Features</h2>
 
-	<ol>
-		<li>Year Lists aggregated using a custom weighting scheme (#1 gets 10 points, #2 gets 9, etc)</li>
-		<li>Genre, country and language filters</li>
-		<li>Sorting options</li>
-		<li>A custom list for each format to track items you've flagged, which is then viewable at <a href="/#/interested/film">Film</a>, <a href="/#/interested/tv">TV</a> and <a href="/#/interested/album">Music</a></li>
-		<li>Three customisable filter options to reduce list size (options are icon based, other than the list one you can interpret them as you like)</li>
-		<li>Some generated factoids about the content of the lists, I don't think I've gotten much of interest from these tbh</li>
-	</ol>
+	<h3>Interested List</h3>
+	<p>By clicking <img src="/icons/list-add.svg" alt="interested icon" style="margin-bottom:-5px;" /> you add that entry to a list viewable from the "List" option in the year filter (I should probably improve that) or via the following links</p>
+	<ul style="list-style-type: none;">
+		<li><a href="/#/list/film">Films</a></li>
+		<li><a href="/#/list/album">Albums</a></li>
+		<li><a href="/#/list/tv">TV Series</a></li>
+	</ul>
+
+	<h3>Filters</h3>
+	<p>Each list offers limited generated feature options (e.g. genre, language)</p>
+	<p>Additional custom filter options are achievable via three clickable icons on each entry. Asides from the list one, you can assign whatever meaning you deem appropriate.</p>
+
+	<h3>Sorting</h3>
+	<p>Sorting options are generated via additional data derived from OMDb for TV and Film and Spotify for Music. The Spotify data is highly unreliable but hopefully of some use.</p>
+	<p><em>NOTE: When using sorting any entries which do not contain data to meet the sorting requirements will be removed (e.g. sorting by IMDb rating and a film has no IMDb rating associated with it)</em></p>
+
+	<h3>Aggregated list scoring options</h3>
+	<p>I tried to think of a few different means of scoring the aggregation to see if it could pull out some interesting results. The primary goal here is to try and make the top end of the lists contain things that perhaps got a bit forgotten or ignored in favour of bigger releases at the time.</p>
+	<ul>
+		{#each Object.entries(SCORING_MATRICES) as [name, { description }]}
+			<li><strong>{name}</strong>: {description}</li>
+		{/each}
+	</ul>
+
+	<h3>Generated list data</h3>
+	<p>Err... this was causing performance issues and needs a rethink.</p>
+
+	<hr />
 
 	<h2>Motive</h2>
 	<p>
@@ -46,15 +67,15 @@
 	<ul>
 		<li>Aggregation of the individual year lists (would be a very large file download)</li>
 		<li>Performance issue resolutions (removed biggest culprits)</li>
-		<li>Data fixes (ongoing)</li>
+		<li>Data fixes (ongoing, updates welcome)</li>
 		<li>Clean up the code, I hadn't a clue how Svelte works at the start and it really shows. The CSS needs to be restructured too (doubt I'll ever bother with this)</li>
 	</ul>
 
 	<h2>Things I won't do</h2>
 	<ul>
-		<li>Display images on load: would involsve loading so many assets at once that I'm not hosting, seems douchey</li>
-		<li>Save lists between devices: using local storage of browser, there is no server involved</li>
-		<li>Up to date data: Again, due to no server being involved. Although I might be able to throw together a script to occasionally update this.</li>
+		<li>Display images on load: would involve loading so many assets at once that I'm not hosting, seems douchey</li>
+		<li>Save lists between devices: using localStorage feature of web browser, there is no server involved</li>
+		<li>Up to date data: Again, due to no server being involved. There is an update script to update the data occasionally.</li>
 	</ul>
 
 	<h2>Caveats</h2>
