@@ -4,7 +4,7 @@
 </script>
 
 <svelte:head>
-  <title>Critics Lists: Intro</title>
+  <title>Aggregated Year-End Lists: Intro</title>
 </svelte:head>
 <div class="Landing">
 	<h1>Aggregated End-of-Year Lists 2010-2010s</h1>

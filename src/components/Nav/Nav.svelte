@@ -224,24 +224,25 @@
 					<div class="nav__data">
 						<strong>Order</strong>: {order.key} { order.invert ? 'reverse' : ''}
 					</div>
-					{#if Object.keys(selectedOptions).length > 0 || !seeKnown || !seeInterested || !seeUninterested}
+					{#if !seeKnown || !seeInterested || !seeUninterested || (Object.keys(selectedOptions).length > 0  && Object.values(selectedOptions).every(v => v.toLowerCase() !== 'all'))}
 						<div class="nav__data">
 							<strong>Filters: </strong>
-							{#each Object.entries(selectedOptions) as [key, val]}
-								{#if val.toLowerCase() !== 'all'}
-									<span class="nav__data__filter">
-										{val}
-									</span>
-								{/if}
+							{#each Object.entries(selectedOptions).filter(v => v[1].toLowerCase() !== 'all') as [key, val]}
+								<span class="nav__data__filter">
+									{val}
+								</span>
 							{/each}
-							{#if !seeKnown}
-								<div class="nav__data__filter nav__data__filter--known" />
-							{/if}
-							{#if !seeInterested}
-								<div class="nav__data__filter nav__data__filter--interested" />
-							{/if}
-							{#if !seeUninterested}
-								<div class="nav__data__filter nav__data__filter--uninterested" />
+							{#if  !seeKnown || !seeInterested || !seeUninterested}
+								Hide
+								{#if !seeKnown}
+									<div class="nav__data__filter nav__data__filter--known" />
+								{/if}
+								{#if !seeInterested}
+									<div class="nav__data__filter nav__data__filter--interested" />
+								{/if}
+								{#if !seeUninterested}
+									<div class="nav__data__filter nav__data__filter--uninterested" />
+								{/if}
 							{/if}
 						</div>
 					{/if}

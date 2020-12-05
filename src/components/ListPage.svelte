@@ -165,7 +165,7 @@
 
 
 <svelte:head>
-  <title>Critics Lists: {params.format} of {params.year}</title>
+  <title>Aggregated Year-End List: {params.format} of {params.year}</title>
 </svelte:head>
 <div class={`ListBreakdown ${params.format}`}>
   {#if isLoading}
@@ -177,6 +177,7 @@
       listData={listData}
       format={params.format}
       year={params.year}
+      filters={filters}
     />
   {/if}
   {#if listData && listData.length && yearData}
