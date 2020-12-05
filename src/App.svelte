@@ -18,7 +18,6 @@
 	}
 
 </script>
-
 <Nav />
 <div class="wasAMarquee">
 	{#each [

@@ -743,6 +743,7 @@ $dataListWidth: 400px;
       }
       @media (max-width: $mobile) {
         margin: 0px;
+        display: none;
       }
     }
     &__data {
@@ -754,6 +755,7 @@ $dataListWidth: 400px;
         font-size: 12px;
         text-align: left;
         margin-left: $xs;
+        margin-right: auto;
       }
     }
 

@@ -9,6 +9,7 @@
   export let listData;
   export let format;
   export let year;
+  export let filters;
   let prevYearData;
   let prevListData;
 
@@ -89,9 +90,9 @@
 </script>
 
 <div class="DataList">
+  <h1>Aggregated Critics' Lists Chart: {format} of {year}</h1>
   <dl>
-    {#each dataList as entry
-    }
+    {#each dataList as entry}
       <DataBlock
         entry={entry}
       />
