@@ -265,6 +265,7 @@
 			<button
 				on:click={toggle}
 				class={`nav__button ${display ? "nav__button--active" : ''}`}
+				disabled={year_value === 'List'}
 			>
 				...
 			</button>

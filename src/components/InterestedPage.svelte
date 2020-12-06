@@ -89,7 +89,10 @@
   })
 </script>
 {#if filteredList.length === 0}
-  You haven't added anything to your {currentFormat} list.
+  <div style="margin-top: 50vh; transform: translateY(-50%); text-align: center;">
+    You haven't added anything to your {currentFormat} list. Please check the home page to
+    by clicking <img src="/icons/list-add.svg" alt="interested icon" style="margin-bottom:-5px;" /> you add that entry to this list
+  </div>
 {:else}
   <ul class="InterestedList">
     {#each filteredList as [ key, data ], i}

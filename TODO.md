@@ -9,12 +9,13 @@ Important and/or easy:
 - [x] Add TV data fetch script
 - [x] Investigate music API options (using spotify)
 - [] resolve loading issues (display from second page stalls processing)
-- [] update film and tv to use same data format
+- [x] update film and tv to use same data format
 - [] indexedDB for old lists
-- [] Explanation of weighting systems
+- [x] Explanation of weighting systems
 
 Nice to have:
 - [] Generate weighted decade list 
 - [] Custom weighting system
 - [] Only display lists containing a specific entry (e.g.if a 2019 list excluded Parasite odds are it'll be using UK release dates, which may add a lot of noise to the list)
 - [] Exclude lists containing a specific entry (e.g. same as above, but also I'm not gonna trust a list that thinks Bombshell is top 10 for 2019)
+- [] Letterbox'd/IMDb friendly exportable data for watchlists
