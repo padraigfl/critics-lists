@@ -18,28 +18,36 @@
 
 	<h2>Features</h2>
 
-	<h3>Interested List</h3>
-	<p>By clicking <img src="/icons/list-add.svg" alt="interested icon" style="margin-bottom:-5px;" /> you add that entry to a list viewable from the "List" option in the year filter (I should probably improve that) or via the following links</p>
-	<ul style="list-style-type: none;">
-		<li><a href="/#/list/film">Films</a></li>
-		<li><a href="/#/list/album">Albums</a></li>
-		<li><a href="/#/list/tv">TV Series</a></li>
-	</ul>
-
 	<h3>Filters</h3>
 	<p>Each list offers limited generated feature options (e.g. genre, language)</p>
 	<p>Additional custom filter options are achievable via three clickable icons on each entry. Asides from the list one, you can assign whatever meaning you deem appropriate.</p>
 
 	<h3>Sorting</h3>
-	<p>Sorting options are generated via additional data derived from OMDb for TV and Film and Spotify for Music. The Spotify data is highly unreliable but hopefully of some use.</p>
+	<p>Sorting options are generated via additional data derived from <a href="https://www.omdbapi.com" target="_blank">OMDb</a> for TV and Film and Spotify for Music. The Spotify data is highly unreliable but hopefully of some use.</p>
 	<p><em>NOTE: When using sorting any entries which do not contain data to meet the sorting requirements will be removed (e.g. sorting by IMDb rating and a film has no IMDb rating associated with it)</em></p>
 
-	<h3>Aggregated list scoring options</h3>
+	<h3 id="scoringMetric">Aggregated list scoring options</h3>
 	<p>I tried to think of a few different means of scoring the aggregation to see if it could pull out some interesting results. The primary goal here is to try and make the top end of the lists contain things that perhaps got a bit forgotten or ignored in favour of bigger releases at the time.</p>
 	<ul>
-		{#each Object.entries(SCORING_MATRICES) as [name, { description }]}
-			<li><strong>{name}</strong>: {description}</li>
+		{#each Object.entries(SCORING_MATRICES) as [name, { description, objective }]}
+			<li>
+				<strong>{name}</strong>: {description}
+				<br />
+				{#if objective}
+					<em>(Objective: {objective})</em>
+					<br />
+				{/if}
+				<br />
+			</li>
 		{/each}
+	</ul>
+
+	<h3 id="interestedListExplained">Interested List</h3>
+	<p>By clicking <img src="/icons/list-add.svg" alt="interested icon" style="margin-bottom:-5px;" /> you add that entry to a list viewable from the "List" option in the year filter (I should probably improve that) or via the following links</p>
+	<ul style="list-style-type: none;">
+		<li><a href="/#/list/film">Films</a></li>
+		<li><a href="/#/list/album">Albums</a></li>
+		<li><a href="/#/list/tv">TV Series</a></li>
 	</ul>
 
 	<h3>Generated list data</h3>
