@@ -72,11 +72,11 @@
         {/each}
       </select>
     </li>
-    {#each checkboxes as { title, toggle, checked, icon, goal }}
-      <li class={`nav__options__toggle nav__options__toggle--${title}`}>
-        <input name={`${goal}_${title}`} id={`${goal}_${title}`} type="checkbox" on:change={toggle} checked={checked} />
-        <label for={`${goal}_${title}`}>
-          {goal}
+    {#each checkboxes as { title, toggle, checked, icon, goal, text }}
+      <li class={`nav__options__toggle nav__options__toggle--${title || text}`}>
+        <input name={`${goal}_${title || text}`} id={`${goal}_${title || text}`} type="checkbox" on:change={toggle} checked={checked} />
+        <label for={`${goal}_${title || text}`}>
+          {goal}{text ? ` ${text}` : ''}
         </label>
       </li>
     {/each}
