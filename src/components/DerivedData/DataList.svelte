@@ -4,7 +4,7 @@
 	import {
     deriveAdditionalDataFromProcessedList,
   } from '../../analytics';
-  import { SOURCE } from '../../utils/constants'; 
+  import { SOURCE, ALBUM } from '../../utils/constants'; 
   export let yearData;
   export let listData;
   export let format;
@@ -97,5 +97,19 @@
         entry={entry}
       />
     {/each}
+    <dt>
+      Data Disclaimers
+    </dt>
+    <dd>
+      <em>
+        {#if format === ALBUM}
+          Data derived from Spotify API, genres reflect artists not albums. Data is not generated live so will be outdated with respect to popularity.
+        {:else}
+          Data derived from the OMDb API. Data is not generated live so RT, IMDb and Metacritic scores may not be accurate.
+        {/if}
+        <br />
+        Filters/sorting will omit entries without data when appropriate.
+       </em>
+    </dd>
   </dl>
 </div>

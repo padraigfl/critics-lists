@@ -15,6 +15,7 @@
 		viewUninterested,
 		viewKnown,
 		viewInterested,
+		viewSingleEntries,
 	} from '../../store';
   import { OPTIONS, FILM, FORMATS, YEARS, ALBUM, TV } from '../../utils/constants';
 
@@ -35,6 +36,7 @@
 	let seeUninterested = true;
 	let seeInterested = true;
 	let seeKnown = true;
+	let seeSingleEntries = true;
 	$: matrix = SCORING_MATRICES.default;
 
 	const onClickOutside = (e) => {
@@ -47,6 +49,7 @@
 	viewUninterested.subscribe((val) => seeUninterested = val);
 	viewKnown.subscribe((val) => seeKnown = val);
 	viewInterested.subscribe((val) => seeInterested = val);
+	viewSingleEntries.subscribe((val) => seeSingleEntries = val);
 
 	filterSelections.subscribe((val) => selectedOptions = val);
 
@@ -81,6 +84,10 @@
 	}
 	const toggleKnown = () => {
 		viewKnown.update(() => !seeKnown);
+	}
+
+	const toggleSingleEntries = () => {
+		viewSingleEntries.update(() => !seeSingleEntries)
 	}
 
 	const changeFormat = (e) => {
@@ -243,6 +250,9 @@
 								{#if !seeUninterested}
 									<div class="nav__data__filter nav__data__filter--uninterested" />
 								{/if}
+								{#if !seeSingleEntries}
+									2+ lists
+								{/if}
 							{/if}
 						</div>
 					{/if}
@@ -283,6 +293,7 @@
 						{ goal: 'Hide', title: 'yep', toggle: toggleKnown, checked: !seeKnown },
 						{ goal: 'Hide', title: 'ooh', toggle: toggleInterested, checked: !seeInterested },
 						{ goal: 'Hide', title: 'meh', toggle: toggleUninterested, checked: !seeUninterested },
+						{ goal: 'Hide', text: '<2 lists', title: 'multiple-lists', toggle: toggleSingleEntries, checked: !seeSingleEntries },
 					]
 					: []
 				}

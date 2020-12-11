@@ -58,7 +58,7 @@ export const SCORING_MATRICES = {
     9: 0.1,
     10: 0.1,
     '_': 0.1,
-    description: '1 point for any 1-5, .1 point for other ratings',
+    description: '1 point for any 1-5, 0.1 point for other ratings',
   },
   flatBottom5: {
     1: 0.1,
@@ -72,7 +72,7 @@ export const SCORING_MATRICES = {
     9: 1,
     10: 1,
     '_': 0,
-    description: '1 point for any 6-10, .1 point for other rankings, 0 for unranked',
+    description: '1 point for any 6-10, 0.1 point for other rankings, 0 for unranked',
   },
   defaultInverted: {
     1: 1,
@@ -187,6 +187,9 @@ const getRankingData = ({ rankings = {} },  ranking) => {
 
 // Placeholder function
 const formatSpotifyData = (spotifyData) => {
+  if (spotifyData.confidence > 2) {
+    return {};
+  }
   return {
     ...spotifyData,
     genre: spotifyData.genres,
@@ -262,22 +265,6 @@ const getMostDivisivePair = (processedList, data) => {
     processedList[i][0],
     processedList[j][0],
   ];
-
-  // for (let i = 0; i < processedList.length; i++) {
-  //   const a = data.works[processedList[i][0]];
-  //   for (let j = i+1; j < processedList.length; j++) {
-  //     const b = data.works[processedList[j][0]];
-  //     let noMatch = true;
-  //     a.critics.forEach(critic => {
-  //       if (b.critics.includes(critic)) {
-  //         noMatch = false;
-  //       }
-  //     });
-  //     if (noMatch) {
-  //     }
-  //   }
-  // }
-  // return pair;
 };
 
 const getFilmsInOneList = (data) => (

@@ -153,6 +153,9 @@ $dataListWidth: 400px;
   &--hide-uninterested .Entry--uninterested {
     display: none;
   }
+  &--hide-single-entries .Entry--single-list {
+    display: none;
+  }
 
   @media (max-width: $mobile) {
     margin-left: 0px;
@@ -338,7 +341,7 @@ $dataListWidth: 400px;
       height: 100%;
       background-position: left center;
       background-repeat: no-repeat;
-      background-size: 60px;
+      background-size: contain;
       filter: brightness(0);
       &--metacritic { background-image: url('/icons/metacritic.png'); }
       &--rotten { background-image: url('/icons/rotten.png'); }
@@ -834,6 +837,9 @@ $dataListWidth: 400px;
         width: 20px;
         height: 18px;
         background-repeat: no-repeat;
+      }
+      &--multiple-lists label::after {
+        width: 0px;
       }
       &--yep label::after {
           background-image: url('/icons/tick-fill.png');

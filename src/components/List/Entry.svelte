@@ -157,6 +157,8 @@
       isInterested ? 'Entry--interested' : ''
     } ${
       isUninterested ? 'Entry--uninterested' : ''
+    } ${
+      entry.critics.length === 1 ? 'Entry--single-list' : ''
     }`}
   id={getIdFromName(title)}>
   <div
