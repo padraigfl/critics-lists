@@ -109,6 +109,6 @@ const getAllYears = async (format, idx = 0) => {
   }, 1000);
 }
 
-// getAllYears('film');
-getAllYears('tv');
+getAllYears('film', 10);
+// getAllYears('tv');
 // module.exports = updateFilmList;

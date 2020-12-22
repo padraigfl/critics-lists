@@ -98,7 +98,7 @@ const getFilm = (films, title, year, issueLog, errorLog = {}, format = 'film', a
           res(body);
         } catch(e) {
           errorLog[title] = { year };
-          console.log('error');
+          console.log('error', title);
           res();
         }
       });
@@ -117,9 +117,9 @@ const handleIssueLog = (
   log.map(async ([name, { year }]) => 
     await getFilm(films, name, +year + yearChange, issueLog, errorLog)
   )
-  writeFile(`filmdata/${year}failures.json`, errorLog);
-  writeFile(`filmdata/${year}issues.json`, issueLog);
-  writeFile(`filmdata/${year}film.json`, films);
+  writeFile(`${year}failures.json`, errorLog);
+  writeFile(`${year}issues.json`, issueLog);
+  writeFile(`${year}film.json`, films);
   if (!yearChange) {
     handleIssueLog(films, issueLog, errorLog, 1);
   } else if (yearChange === 1) {
@@ -136,9 +136,9 @@ const writeFilms = (films, year, errorLog, issueLog, format = 'film') => {
       ...acc,
       [val.originalTitle || key]: val,
     }), {});
-    writeFile(`${format}data/${year}failures.json`, errorLog);
-    writeFile(`${format}data/${year}issues.json`, issueLog);
-    writeFile(`${format}data/${year}data.json`, films);
+    writeFile(`${year}failures.json`, errorLog);
+    writeFile(`${year}issues.json`, issueLog);
+    writeFile(`${year}data.json`, films);
     // handleIssueLog(films, issueLog, errorLog);
   });
 }
@@ -178,7 +178,7 @@ resolve issues example (wrong year)
   )
 */
 
-[YEARS[5]].forEach((year, idx) => {
+['2020'].forEach((year, idx) => {
   setTimeout(() => {
     workYear(year, 'year', 'tv')
     if (idx === YEARS.length - 1) {

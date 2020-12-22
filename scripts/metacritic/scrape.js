@@ -127,6 +127,9 @@ const processData = (document) => {
 
   let publicationsEl = document.getElementsByClassName('listtable');
 
+
+  console.log('\n\n\n\n'+publicationsEl.length+'\n\n\n');
+
   if (publicationsEl.length === 2) {
     return process2010(
       [...publicationsEl[1].querySelectorAll('.criticname')].map(el => el.parentElement)
@@ -161,7 +164,7 @@ const processData = (document) => {
           ...formatListData(dataRows[j+1].querySelectorAll('td li'), works, criticName)
         };
       } catch {
-        console.log(publicationName, criticName);
+        // console.log(publicationName, criticName);
       }
     }
   }
@@ -193,12 +196,20 @@ const dataFetch = (url, log) => {
   curl.get(url, null, (err,resp,body)=>{
     if(resp && resp.statusCode == 200){
       const document = parseDom(body);
-      const data = document.querySelector('.categoryname') || document.querySelector('.criticname')
+
+      const data = document.querySelector('.categoryname')// || document.querySelector('.criticname')
         ? process2010([...document.querySelectorAll('tr.categoryname')], url)
         : processData(document);
-      const validData = Object.values(data).some((criticData) => (
-        Object.values(criticData.list) && Object.values(criticData.list).length > 9
-      ));
+      const validData = Object.values(data.critics).some((criticData, idx) => {
+
+        if (!criticData || typeof criticData.list !== 'object') {
+          console.log('bad', Object.keys(data)[idx], criticData);
+          return false;
+        }
+        return (
+          Object.values(criticData.list) && Object.values(criticData.list).length > 9
+        );
+      });
 
       if (!validData) {
         throw Error('request fetched invalid data structure');
@@ -232,40 +243,43 @@ let count = 0;
 const dataLog = { year: [], format: [] };
 [
   // // // 'https://www.metacritic.com/feature/film-critics-pick-the-best-movies-of-the-decade', // no valid data
-  'https://www.metacritic.com/feature/best-movies-of-the-decade-2010s',
-  'https://www.metacritic.com/feature/best-albums-of-the-decade-2010s',
+  // 'https://www.metacritic.com/feature/best-movies-of-the-decade-2010s',
+  // 'https://www.metacritic.com/feature/best-albums-of-the-decade-2010s',
   // // // 'https://www.metacritic.com/feature/best-albums-of-the-decade-a-roundup-of-critic-lists' // unique format,
-  'https://www.metacritic.com/feature/best-tv-shows-of-the-decade-2010s',
-  'https://www.metacritic.com/feature/film-critic-top-ten-lists',
-  'https://www.metacritic.com/feature/movie-critic-best-of-2011-top-ten-lists',
-  'https://www.metacritic.com/feature/top-ten-lists-best-movies-of-2012',
-  'https://www.metacritic.com/feature/film-critic-top-10-lists-best-movies-of-2013',
-  'https://www.metacritic.com/feature/film-critic-top-10-lists-best-movies-of-2014',
-  'https://www.metacritic.com/feature/film-critics-list-the-top-10-movies-of-2015',
-  'https://www.metacritic.com/feature/film-critics-list-the-top-10-movies-of-2016',
-  'https://www.metacritic.com/feature/film-critics-list-the-top-10-movies-of-2017',
-  'https://www.metacritic.com/feature/film-critics-list-the-top-10-movies-of-2018',
-  'https://www.metacritic.com/feature/critics-pick-top-10-best-movies-of-2019',
-  'https://www.metacritic.com/feature/music-critic-top-ten-lists-best-of-2010?albums=1',
-  'https://www.metacritic.com/feature/music-critic-top-ten-lists-best-albums-of-2011',
-  'https://www.metacritic.com/feature/top-ten-lists-best-albums-of-2012',
-  'https://www.metacritic.com/feature/critics-pick-top-ten-albums-of-2013',
-  'https://www.metacritic.com/feature/critics-pick-top-10-albums-of-2014',
-  'https://www.metacritic.com/feature/critics-pick-top-10-best-albums-of-2015',
-  'https://www.metacritic.com/feature/critics-pick-top-10-best-albums-of-2016',
-  'https://www.metacritic.com/feature/critics-pick-top-10-best-albums-of-2017',
-  'https://www.metacritic.com/feature/critics-pick-top-10-best-albums-of-2018',
-  'https://www.metacritic.com/feature/critics-pick-top-10-best-albums-of-2019',
-  'https://www.metacritic.com/feature/tv-critics-pick-ten-best-tv-shows-of-2010',
-  'https://www.metacritic.com/feature/tv-critic-top-10-best-shows-of-2011',
-  'https://www.metacritic.com/feature/top-ten-lists-best-tv-shows-of-2012',
-  'https://www.metacritic.com/feature/tv-critics-pick-best-television-shows-of-2013',
-  'https://www.metacritic.com/feature/tv-critics-pick-10-best-tv-shows-of-2014',
-  'https://www.metacritic.com/feature/critics-pick-the-top-10-best-tv-shows-of-2015',
-  'https://www.metacritic.com/feature/critics-pick-the-top-10-best-tv-shows-of-2016',
-  'https://www.metacritic.com/feature/critics-pick-the-top-10-best-tv-shows-of-2017',
-  'https://www.metacritic.com/feature/critics-pick-the-top-10-best-tv-shows-of-2018',
-  'https://www.metacritic.com/feature/critics-pick-top-10-best-tv-shows-of-2019',
+  // 'https://www.metacritic.com/feature/best-tv-shows-of-the-decade-2010s',
+  // 'https://www.metacritic.com/feature/film-critic-top-ten-lists',
+  // 'https://www.metacritic.com/feature/movie-critic-best-of-2011-top-ten-lists',
+  // 'https://www.metacritic.com/feature/top-ten-lists-best-movies-of-2012',
+  // 'https://www.metacritic.com/feature/film-critic-top-10-lists-best-movies-of-2013',
+  // 'https://www.metacritic.com/feature/film-critic-top-10-lists-best-movies-of-2014',
+  // 'https://www.metacritic.com/feature/film-critics-list-the-top-10-movies-of-2015',
+  // 'https://www.metacritic.com/feature/film-critics-list-the-top-10-movies-of-2016',
+  // 'https://www.metacritic.com/feature/film-critics-list-the-top-10-movies-of-2017',
+  // 'https://www.metacritic.com/feature/film-critics-list-the-top-10-movies-of-2018',
+  // 'https://www.metacritic.com/feature/critics-pick-top-10-best-movies-of-2019',
+  'https://www.metacritic.com/feature/film-critics-pick-10-best-movies-of-2020',
+  // 'https://www.metacritic.com/feature/music-critic-top-ten-lists-best-of-2010?albums=1',
+  // 'https://www.metacritic.com/feature/music-critic-top-ten-lists-best-albums-of-2011',
+  // 'https://www.metacritic.com/feature/top-ten-lists-best-albums-of-2012',
+  // 'https://www.metacritic.com/feature/critics-pick-top-ten-albums-of-2013',
+  // 'https://www.metacritic.com/feature/critics-pick-top-10-albums-of-2014',
+  // 'https://www.metacritic.com/feature/critics-pick-top-10-best-albums-of-2015',
+  // 'https://www.metacritic.com/feature/critics-pick-top-10-best-albums-of-2016',
+  // 'https://www.metacritic.com/feature/critics-pick-top-10-best-albums-of-2017',
+  // 'https://www.metacritic.com/feature/critics-pick-top-10-best-albums-of-2018',
+  // 'https://www.metacritic.com/feature/critics-pick-top-10-best-albums-of-2019',
+  'https://www.metacritic.com/feature/music-critics-pick-top-10-best-albums-of-2020',
+  // 'https://www.metacritic.com/feature/tv-critics-pick-ten-best-tv-shows-of-2010',
+  // 'https://www.metacritic.com/feature/tv-critic-top-10-best-shows-of-2011',
+  // 'https://www.metacritic.com/feature/top-ten-lists-best-tv-shows-of-2012',
+  // 'https://www.metacritic.com/feature/tv-critics-pick-best-television-shows-of-2013',
+  // 'https://www.metacritic.com/feature/tv-critics-pick-10-best-tv-shows-of-2014',
+  // 'https://www.metacritic.com/feature/critics-pick-the-top-10-best-tv-shows-of-2015',
+  // 'https://www.metacritic.com/feature/critics-pick-the-top-10-best-tv-shows-of-2016',
+  // 'https://www.metacritic.com/feature/critics-pick-the-top-10-best-tv-shows-of-2017',
+  // 'https://www.metacritic.com/feature/critics-pick-the-top-10-best-tv-shows-of-2018',
+  // 'https://www.metacritic.com/feature/critics-pick-top-10-best-tv-shows-of-2019',
+  'https://www.metacritic.com/feature/tv-critics-pick-10-best-tv-shows-of-2020',
 
 ].forEach((url, idx, arr) => {
   count = count + 1;
