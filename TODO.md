@@ -13,6 +13,11 @@ Important and/or easy:
 - [] indexedDB for old lists
 - [x] Explanation of weighting systems
 
+Fixes:
+- [] Clean up scrape scripts
+- [] Repair 2020 script hacks
+- [] Omdb fetch formatting match omdb update
+
 Nice to have:
 - [] Generate weighted decade list 
 - [] Custom weighting system
