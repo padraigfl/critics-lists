@@ -202,4 +202,4 @@ const getYears = async (idx) => {
   return getYears(idx + 1);
 }
 
-getAlbumsData('2020');
+getAlbumsData('2021');
