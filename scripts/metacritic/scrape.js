@@ -79,6 +79,7 @@ const process2010 = (headingRows, url) => {
       criticName = criticName.replace(publicationName, '').replace(/(\t|\n|\s)+/g, ' ').trim();
     }
     if (critics[criticName]) {
+      console.log(criticName, publicationName)
       criticName = `${criticName}-${publicationName || Math.random().toString().substr(0, 3)}`;
     }
     if (v.querySelector('a')) {
@@ -257,7 +258,8 @@ const dataLog = { year: [], format: [] };
   // 'https://www.metacritic.com/feature/film-critics-list-the-top-10-movies-of-2017',
   // 'https://www.metacritic.com/feature/film-critics-list-the-top-10-movies-of-2018',
   // 'https://www.metacritic.com/feature/critics-pick-top-10-best-movies-of-2019',
-  'https://www.metacritic.com/feature/film-critics-pick-10-best-movies-of-2020',
+  // 'https://www.metacritic.com/feature/film-critics-pick-10-best-movies-of-2020',
+  'https://www.metacritic.com/feature/film-critics-pick-10-best-movies-of-2021',
   // 'https://www.metacritic.com/feature/music-critic-top-ten-lists-best-of-2010?albums=1',
   // 'https://www.metacritic.com/feature/music-critic-top-ten-lists-best-albums-of-2011',
   // 'https://www.metacritic.com/feature/top-ten-lists-best-albums-of-2012',
@@ -268,7 +270,8 @@ const dataLog = { year: [], format: [] };
   // 'https://www.metacritic.com/feature/critics-pick-top-10-best-albums-of-2017',
   // 'https://www.metacritic.com/feature/critics-pick-top-10-best-albums-of-2018',
   // 'https://www.metacritic.com/feature/critics-pick-top-10-best-albums-of-2019',
-  'https://www.metacritic.com/feature/music-critics-pick-top-10-best-albums-of-2020',
+  // 'https://www.metacritic.com/feature/music-critics-pick-top-10-best-albums-of-2020',
+  'https://www.metacritic.com/feature/music-critics-pick-top-10-best-albums-of-2021',
   // 'https://www.metacritic.com/feature/tv-critics-pick-ten-best-tv-shows-of-2010',
   // 'https://www.metacritic.com/feature/tv-critic-top-10-best-shows-of-2011',
   // 'https://www.metacritic.com/feature/top-ten-lists-best-tv-shows-of-2012',
@@ -279,8 +282,8 @@ const dataLog = { year: [], format: [] };
   // 'https://www.metacritic.com/feature/critics-pick-the-top-10-best-tv-shows-of-2017',
   // 'https://www.metacritic.com/feature/critics-pick-the-top-10-best-tv-shows-of-2018',
   // 'https://www.metacritic.com/feature/critics-pick-top-10-best-tv-shows-of-2019',
-  'https://www.metacritic.com/feature/tv-critics-pick-10-best-tv-shows-of-2020',
-
+  // 'https://www.metacritic.com/feature/tv-critics-pick-10-best-tv-shows-of-2020',
+  'https://www.metacritic.com/feature/tv-critics-pick-10-best-tv-shows-of-2021',
 ].forEach((url, idx, arr) => {
   count = count + 1;
   setTimeout(()  => {

@@ -114,7 +114,7 @@ const stringToNumber = val => (
       : undefined
 );
 
-const formatAwards = (awards = '') => {
+const formatAwards = (awards = '', debug) => {
   let count = { wins: 0, noms: 0, combined: 0 };
   if (awards === 'N/A') {
     return count;
@@ -132,19 +132,23 @@ const formatAwards = (awards = '') => {
       }
     }
   });
-  (
-    otherAwards ? 
-      awards.split('. ')[1]
-      : awards
-  ).split(' & ').forEach(v => {
-    if (v.toLowerCase().includes('win')) {
-      count.wins = (count.wins || 0) + stringToNumber(v);
-    } else if (v.toLowerCase().includes('omination')){
-      count.noms =  (count.noms || 0) + stringToNumber(v);
+  try {
+    (
+      otherAwards ? 
+        awards.split('. ')[1]
+        : awards
+    ).split(' & ').forEach(v => {
+      if (v.toLowerCase().includes('win')) {
+        count.wins = (count.wins || 0) + stringToNumber(v);
+      } else if (v.toLowerCase().includes('omination')){
+        count.noms =  (count.noms || 0) + stringToNumber(v);
+      }
+    })
+    if (count.wins || count.noms) {
+      count.combined = (count.wins || 0) + (count.noms || 0);
     }
-  })
-  if (count.wins || count.noms) {
-    count.combined = (count.wins || 0) + (count.noms || 0);
+  } catch (e) {
+    count.errorString = awards;
   }
   return count;
 };
@@ -155,7 +159,7 @@ const formatOmdbData = (omdbData = {}) => {
   const rotten = omdbData['Rotten Tomatoes'];
   const metacritic = omdbData.Metascore;
   const boxOffice = omdbData.BoxOffice !== 'N/A' ? stringToNumber(omdbData.BoxOffice) : undefined;
-  const awards = formatAwards(omdbData.Awards);
+  const awards = formatAwards(omdbData.Awards, omdbData);
   return {
     imdbID,
     imdbRating,

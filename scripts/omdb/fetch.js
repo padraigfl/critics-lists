@@ -46,9 +46,9 @@ const getFilmList = (year, bonusData, format = 'film') => {
 const getFilm = (films, title, year, issueLog, errorLog = {}, format = 'film', apikey = process.env.OMDB_KEY) => {
   let url;
   if (format === 'film') {
-    url = `http://www.omdbapi.com/?t=${title.replace(/\&/g, '%26').replace(/\s/g, '%20')}${year ? `&y=${year}` : ''}&type=movie&apikey=${apikey}`
+    url = `http://www.omdbapi.com/?t=${title.replace(/\&/g, '%26').replace(/\s/g, '%20')}${year ? `&y=${year}` : ''}&type=movie${ apikey ? `&apikey=${apikey}` : ''}`
   } else if (format === 'tv' && title.split(' (')[0]) {
-    url = `http://www.omdbapi.com/?t=${title.split(' (')[0].replace(/\&/g, '+').replace(/\s/g, '+')}&type=series&apikey=${apikey}`
+    url = `http://www.omdbapi.com/?t=${title.split(' (')[0].replace(/\&/g, '+').replace(/\s/g, '+')}&type=series${ apikey ? `&apikey=${apikey}` : ''}`
     console.log(url);
   } else {
     return Promise.resolve();
@@ -99,6 +99,7 @@ const getFilm = (films, title, year, issueLog, errorLog = {}, format = 'film', a
         } catch(e) {
           errorLog[title] = { year };
           console.log('error', title);
+          console.log(e);
           res();
         }
       });
@@ -131,11 +132,12 @@ const writeFilms = (films, year, errorLog, issueLog, format = 'film') => {
   Promise.all(Object.entries(films).map(([title]) => (
     getFilm(films, title, null, issueLog, errorLog, format)
   ))).then(() => {
-    // console.log(films);
     films = Object.entries(films).reduce((acc, [key,val]) => ({
       ...acc,
       [val.originalTitle || key]: val,
     }), {});
+
+    console.log('HERE?E')
     writeFile(`${year}failures.json`, errorLog);
     writeFile(`${year}issues.json`, issueLog);
     writeFile(`${year}data.json`, films);
@@ -178,11 +180,11 @@ resolve issues example (wrong year)
   )
 */
 
-['2020'].forEach((year, idx) => {
+['2021'].forEach((year, idx) => {
   setTimeout(() => {
-    workYear(year, 'year', 'tv')
+    workYear(year, 'year', 'film')
     if (idx === YEARS.length - 1) {
-      setTimeout(process.exit, 1000);
+      // setTimeout(process.exit, 1000);
     }
   }, idx * 500);
 })
