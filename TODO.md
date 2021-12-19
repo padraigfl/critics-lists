@@ -2,6 +2,8 @@ QUICK NOTES FOR 2021
 - [] verify new files can be written prior to API request
 - [] steps for adding new year of data
 - [] scripts (e.g OMDB_KEY=xxxxx node ./scripts/omdb/fetch.js)
+- [] sanitize 2020 and 2021 data
+- [] more error handling in convoluted scripts
 
 Important and/or easy:
 - [x] BUG Resolve scroll bug across devices, verify
