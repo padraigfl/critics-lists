@@ -29,7 +29,7 @@ export const SOURCE = {
     '2019': 'https://www.metacritic.com/feature/critics-pick-top-10-best-movies-of-2019',
     '2020': 'https://www.metacritic.com/feature/film-critics-pick-10-best-movies-of-2020',
     '2021': 'https://www.metacritic.com/feature/film-critics-pick-10-best-movies-of-2021',
-    '2010s': 'https://www.metacritic.com/feature/best-albums-of-the-decade-2010s',
+    '2010s': 'https://www.metacritic.com/feature/best-movies-of-the-decade-2010s',
   },
   [TV]: {
     '2010': 'https://www.metacritic.com/feature/tv-critics-pick-ten-best-tv-shows-of-2010',

@@ -69,7 +69,10 @@ const updateYearData = async (year, format) => {
         const [key, data] = entry;
         return new Promise((res, rej) => 
           getByImdbId(data.imdbID, key, issueLog)
-            .then((film) => setTimeout(() => res(film), 20 * idx))
+            .then((film) => {
+              console.log(key, data.imdbID);
+              return setTimeout(() => res(film), 20 * idx);
+            })
             .catch(() => setTimeout(() => res(), 1000))
         )
       })
@@ -103,12 +106,13 @@ const getAllYears = async (format, idx = 0) => {
     setTimeout(process.exit, 1000);
     return;
   };
+  console.log(YEARS[idx]);
   await updateYearData(YEARS[idx], format);
-  setTimeout(() => {
-    getAllYears(format, idx + 1)
-  }, 1000);
+  // setTimeout(() => {
+  //   getAllYears(format, idx + 1)
+  // }, 1000);
 }
 
-getAllYears('film', 10);
+getAllYears('film', 11);
 // getAllYears('tv');
 // module.exports = updateFilmList;

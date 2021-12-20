@@ -66,7 +66,7 @@
       site: 'RottenTomatoes',
       link: `https://www.rottentomatoes.com/search/?search=${title}`,
       icon: 'rotten',
-      text: content.rotten ? content.rotten + '%' : '',
+      text: content.rotten ? `${content.rotten}%` : '',
     },
     ...(content.metacritic ? [{
       site: 'Metacritic',
