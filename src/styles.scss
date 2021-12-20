@@ -731,6 +731,7 @@ $dataListWidth: 400px;
     max-width: 100%;
     width: 100%;
     height: 50px;
+    padding-right: $s;
     &__home {
       display: block;
       background-color: $dark;
@@ -764,6 +765,7 @@ $dataListWidth: 400px;
 
     @media (max-width: $mobile) {
       justify-content: space-between;
+      padding-right: 0;
     }
   }
   &__data{

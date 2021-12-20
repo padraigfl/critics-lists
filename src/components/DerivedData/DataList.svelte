@@ -18,7 +18,7 @@
     return name.includes(year) ? name : `${name} (year)`;
   }
 
-  let dataList = [
+  $: dataList = [
     { title: 'Source', data: formatNameFromLink(SOURCE[format][year]), link: SOURCE[format][year] },
     { title: '# Lists aggregated:', data: Object.keys(yearData.critics).length },
     { title: '# Publications', data: Object.keys(yearData.publications).length },
@@ -106,6 +106,8 @@
           Data derived from Spotify API, genres reflect artists not albums. Data is not generated live so will be outdated with respect to popularity.
         {:else}
           Data derived from the OMDb API. Data is not generated live so RT, IMDb and Metacritic scores may not be accurate.
+          <br />
+          Some entries will have bizarrely incorrect results until manually changed (e.g. Days by Tsai Ming Liang being corrected to X Men Days of Future Past in the 2020 list...)
         {/if}
         <br />
         Filters/sorting will omit entries without data when appropriate.
