@@ -15,6 +15,7 @@
 		viewUninterested,
 		viewKnown,
 		viewInterested,
+		viewStateless,
 		viewSingleEntries,
 	} from '../../store';
   import { OPTIONS, FILM, FORMATS, YEARS, ALBUM, TV } from '../../utils/constants';
@@ -36,6 +37,7 @@
 	let seeUninterested = true;
 	let seeInterested = true;
 	let seeKnown = true;
+	let seeStateless = true;
 	let seeSingleEntries = true;
 	$: matrix = SCORING_MATRICES.default;
 
@@ -50,6 +52,7 @@
 	viewKnown.subscribe((val) => seeKnown = val);
 	viewInterested.subscribe((val) => seeInterested = val);
 	viewSingleEntries.subscribe((val) => seeSingleEntries = val);
+	viewStateless.subscribe((val) => seeStateless = val);
 
 	filterSelections.subscribe((val) => selectedOptions = val);
 
@@ -84,6 +87,9 @@
 	}
 	const toggleKnown = () => {
 		viewKnown.update(() => !seeKnown);
+	}
+	const toggleStateless = () => {
+		viewStateless.update(() => !seeStateless);
 	}
 
 	const toggleSingleEntries = () => {
@@ -152,7 +158,6 @@
 		}));
 
 	const getOptions = () => {
-		console.log('options');
 		if (format_value !== TV && format_value !== FILM) {
 			return [{
 				title: 'Sort by',
@@ -197,7 +202,6 @@
 
   filterOptions.subscribe(val => {
 		availableOptions = val;
-		console.log(availableOptions);
 		options = getOptions();
   });
 
@@ -231,7 +235,7 @@
 					<div class="nav__data">
 						<strong>Order</strong>: {order.key} { order.invert ? 'reverse' : ''}
 					</div>
-					{#if !seeKnown || !seeInterested || !seeUninterested || (Object.keys(selectedOptions).length > 0  && Object.values(selectedOptions).every(v => v.toLowerCase() !== 'all'))}
+					{#if !seeKnown || !seeInterested || !seeUninterested || !seeStateless || (Object.keys(selectedOptions).length > 0  && Object.values(selectedOptions).every(v => v.toLowerCase() !== 'all'))}
 						<div class="nav__data">
 							<strong>Filters: </strong>
 							{#each Object.entries(selectedOptions).filter(v => v[1].toLowerCase() !== 'all') as [key, val]}
@@ -239,7 +243,7 @@
 									{val}
 								</span>
 							{/each}
-							{#if  !seeKnown || !seeInterested || !seeUninterested}
+							{#if  !seeKnown || !seeInterested || !seeUninterested || !seeStateless }
 								Hide
 								{#if !seeKnown}
 									<div class="nav__data__filter nav__data__filter--known" />
@@ -249,6 +253,11 @@
 								{/if}
 								{#if !seeUninterested}
 									<div class="nav__data__filter nav__data__filter--uninterested" />
+								{/if}
+								{#if !seeStateless}
+									<div class="nav__data__filter nav__data__filter--stateless">
+										unselected
+									</div>
 								{/if}
 								{#if !seeSingleEntries}
 									2+ lists
@@ -293,6 +302,7 @@
 						{ goal: 'Hide', title: 'yep', toggle: toggleKnown, checked: !seeKnown },
 						{ goal: 'Hide', title: 'ooh', toggle: toggleInterested, checked: !seeInterested },
 						{ goal: 'Hide', title: 'meh', toggle: toggleUninterested, checked: !seeUninterested },
+						{ goal: 'Hide', text: 'unselected', title: 'unselected', toggle: toggleStateless, checked: !seeStateless },
 						{ goal: 'Hide', text: '<2 lists', title: 'multiple-lists', toggle: toggleSingleEntries, checked: !seeSingleEntries },
 					]
 					: []

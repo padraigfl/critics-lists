@@ -1,7 +1,7 @@
 <script>
   import {beforeUpdate} from 'svelte';
 	import { push } from 'svelte-spa-router';
-  import { OPTIONS, FORMATS } from '../utils/constants';
+  import { OPTIONS, FORMATS, ALBUM } from '../utils/constants';
   import { year, format, filterOptions, filterSelections, ordering } from '../store';
   import InterestedCard from './InterestedCard/InterestedCard.svelte';
   import {
@@ -87,6 +87,31 @@
       window.location.reload();
     }
   })
+  const getCsv = (flatList) => {
+    if (currentFormat === ALBUM) {
+      return null;
+    }
+    const url = 'data:text/csv;charset=utf-8,imdbID,Title\n'
+      + flatList
+        .filter(([,v]) => !!v && !!v.imdbID)
+        .map(([title = '', { imdbID = '' }]) =>
+          // remove TV network, year, or junk data added to names
+          `${imdbID.trim()},${title.replace(/\([^()]*\)$/, '').trim()}`
+        ).join('\n')
+    return url;
+  }
+  $: downloadCSV = () => {
+    const csv = getCsv(flattened);
+    var downloadLink = document.createElement("a");
+    var blob = new Blob(["\ufeff", csv]);
+    var url = URL.createObjectURL(blob);
+    downloadLink.href = url;
+    downloadLink.download = `${currentFormat}-letterboxdList-${Date.now()}.csv`;
+
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+  }
 </script>
 {#if filteredList.length === 0}
   <div style="margin-top: 50vh; transform: translateY(-50%); text-align: center;">
@@ -94,6 +119,11 @@
     by clicking <img src="/icons/list-add.svg" alt="interested icon" style="margin-bottom:-5px;" /> you add that entry to this list
   </div>
 {:else}
+  {#if currentFormat !== ALBUM && filteredList.length > 0}
+    <p class="csv-download">
+      <button on:click={downloadCSV}>Download CSV for Letterboxd</button>
+    </p>
+  {/if}
   <ul class="InterestedList">
     {#each filteredList as [ key, data ], i}
       <InterestedCard

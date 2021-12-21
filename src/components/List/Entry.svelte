@@ -159,6 +159,8 @@
       isUninterested ? 'Entry--uninterested' : ''
     } ${
       entry.critics.length === 1 ? 'Entry--single-list' : ''
+    } ${
+      !isKnown && !isInterested && !isUninterested ? 'Entry--stateless': ''
     }`}
   id={getIdFromName(title)}>
   <div
@@ -224,8 +226,8 @@
       {#if !hasData || !data.awards}
         <div/> <div />
       {/if}
-      <ListEntryDataPoint value={entry.firsts.length} small icon="🏆" description="Number of first place entries"/>
-      <ListEntryDataPoint value={entry.critics.length} small icon="📋" description="Numeber of lists featured on" />
+      <ListEntryDataPoint value={entry.firsts.length} small icon="🏆" description="Lists topped"/>
+      <ListEntryDataPoint value={entry.critics.length} small icon="📋" description="Lists featured on" />
       {#if hasData && data.awards}
         <ListEntryDataPoint value={data.awards.wins} small icon="W" description="Awards won"/>
         <ListEntryDataPoint value={data.awards.noms} small icon="N" description="Awards nominated for (excluding wins)"/>

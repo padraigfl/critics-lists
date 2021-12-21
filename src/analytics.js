@@ -351,7 +351,7 @@ export const getMostOfArrayValues = (processedList, values) => {
 }
 
 const getMostSuccessfulStudio = (processedList) => {
-  const productions = processedList.reduce((acc, [title, { production}]) => {
+  const productions = processedList.reduce((acc, [title, { production }]) => {
     if (!production || production === 'undefined' || production === 'N/A') {
       return acc;
     }
@@ -368,7 +368,6 @@ const getMostSuccessfulStudio = (processedList) => {
   const mostSuccessfulStudio = Object.entries(productions).sort((a, b) => (
     b[1].length - a[1].length
   ))[0];
-
   return `${mostSuccessfulStudio[0]} (${mostSuccessfulStudio[1].length})`
 }
 
@@ -389,6 +388,7 @@ export const deriveAdditionalDataFromProcessedList = (processedList, data, forma
     bestStudio = getMostSuccessfulStudio(processedList);
   }
 
+  console.log('Analytics processing time:');
   console.timeEnd();
   return {
     biggestLoser,
