@@ -70,25 +70,27 @@ const process2010 = (headingRows, url) => {
   const critics = {};
   const publications = {};
   const works = {};
+  let i = 0;
+  console.log('headings', headingRows.length);
 
   [...headingRows].forEach(v => {
     let link;
     const publicationName = !v.querySelector('strong').childElementCount ? v.querySelector('strong').textContent.replace(/(\t|\n|\s)+/g, ' ').trim() : undefined;
     let criticName = v.textContent.replace(/(View article)/, '').replace(/(\t|\n|\s)+/g, ' ').trim();
     if (publicationName) {
-      criticName = criticName.replace(publicationName, '').replace(/(\t|\n|\s)+/g, ' ').trim();
+      criticName = criticName.replace(publicationName, '').replace(/(\t|\n|\s)+/g, ' ').replace(/\s*View full list\s*/, '').trim();
     }
     if (critics[criticName]) {
-      console.log(criticName, publicationName)
       criticName = `${criticName}-${publicationName || Math.random().toString().substr(0, 3)}`;
     }
+
     if (v.querySelector('a')) {
       link = v.querySelector('a').href;
     }
-    criticName = criticName.replace(/\s*View full list\s*/, '');
 
-    const nextSibling = getNextSibling(v);
+    let nextSibling = getNextSibling(v);
     if (nextSibling) {
+      console.log(criticName, publicationName);
       critics[criticName] = {
         link,
         publication: publicationName, 
@@ -117,6 +119,7 @@ const process2010 = (headingRows, url) => {
 
     }
   })
+  console.log('lists built', Object.keys(critics).length)
 
   return { critics, works, publications }
 }
@@ -128,8 +131,7 @@ const processData = (document) => {
 
   let publicationsEl = document.getElementsByClassName('listtable');
 
-
-  console.log('\n\n\n\n'+publicationsEl.length+'\n\n\n');
+  console.log('\n=== Publications: '+publicationsEl.length+'===\n');
 
   if (publicationsEl.length === 2) {
     return process2010(
@@ -143,6 +145,7 @@ const processData = (document) => {
     );
   }
 
+  let count = 0;
   for (let i = 1; i < publicationsEl.length; i++) {
 
     let publicationName = publicationsEl[i].querySelector('caption');
@@ -155,8 +158,12 @@ const processData = (document) => {
       writers: [],
     };
     const dataRows = publicationsEl[i].querySelectorAll('tbody tr');
+    count += (dataRows.length/2)
     for (let j = 0; j < dataRows.length; j+=2) {
-      const criticName = getCriticsName(critics, publicationName, dataRows[j]);
+      let criticName = getCriticsName(critics, publicationName, dataRows[j]);
+      if (critics[criticName]) {
+        criticName = `${criticName}${Object.keys(critics).filter(v => v.includes(criticName)).length + 1}`
+      }
       publications[publicationName].writers.push(criticName);
       try {
         critics[criticName] = {
@@ -169,6 +176,7 @@ const processData = (document) => {
       }
     }
   }
+  console.log('total lists', count);
   // TODO write data
   return { critics, works, publications };
 }
@@ -255,10 +263,10 @@ const dataLog = { year: [], format: [] };
   // 'https://www.metacritic.com/feature/film-critic-top-10-lists-best-movies-of-2014',
   // 'https://www.metacritic.com/feature/film-critics-list-the-top-10-movies-of-2015',
   // 'https://www.metacritic.com/feature/film-critics-list-the-top-10-movies-of-2016',
-  // 'https://www.metacritic.com/feature/film-critics-list-the-top-10-movies-of-2017',
-  // 'https://www.metacritic.com/feature/film-critics-list-the-top-10-movies-of-2018',
-  // 'https://www.metacritic.com/feature/critics-pick-top-10-best-movies-of-2019',
-  // 'https://www.metacritic.com/feature/film-critics-pick-10-best-movies-of-2020',
+  'https://www.metacritic.com/feature/film-critics-list-the-top-10-movies-of-2017',
+  'https://www.metacritic.com/feature/film-critics-list-the-top-10-movies-of-2018',
+  'https://www.metacritic.com/feature/critics-pick-top-10-best-movies-of-2019',
+  'https://www.metacritic.com/feature/film-critics-pick-10-best-movies-of-2020',
   'https://www.metacritic.com/feature/film-critics-pick-10-best-movies-of-2021',
   // 'https://www.metacritic.com/feature/music-critic-top-ten-lists-best-of-2010?albums=1',
   // 'https://www.metacritic.com/feature/music-critic-top-ten-lists-best-albums-of-2011',
@@ -271,7 +279,7 @@ const dataLog = { year: [], format: [] };
   // 'https://www.metacritic.com/feature/critics-pick-top-10-best-albums-of-2018',
   // 'https://www.metacritic.com/feature/critics-pick-top-10-best-albums-of-2019',
   // 'https://www.metacritic.com/feature/music-critics-pick-top-10-best-albums-of-2020',
-  'https://www.metacritic.com/feature/music-critics-pick-top-10-best-albums-of-2021',
+  // 'https://www.metacritic.com/feature/music-critics-pick-top-10-best-albums-of-2021',
   // 'https://www.metacritic.com/feature/tv-critics-pick-ten-best-tv-shows-of-2010',
   // 'https://www.metacritic.com/feature/tv-critic-top-10-best-shows-of-2011',
   // 'https://www.metacritic.com/feature/top-ten-lists-best-tv-shows-of-2012',
@@ -283,7 +291,7 @@ const dataLog = { year: [], format: [] };
   // 'https://www.metacritic.com/feature/critics-pick-the-top-10-best-tv-shows-of-2018',
   // 'https://www.metacritic.com/feature/critics-pick-top-10-best-tv-shows-of-2019',
   // 'https://www.metacritic.com/feature/tv-critics-pick-10-best-tv-shows-of-2020',
-  'https://www.metacritic.com/feature/tv-critics-pick-10-best-tv-shows-of-2021',
+  // 'https://www.metacritic.com/feature/tv-critics-pick-10-best-tv-shows-of-2021',
 ].forEach((url, idx, arr) => {
   count = count + 1;
   setTimeout(()  => {
