@@ -107,7 +107,7 @@ const getAllYears = async (format, idx = 0) => {
     return;
   };
   console.log(YEARS[idx]);
-  await updateYearData(YEARS[idx], format);
+  await updateYearData('2013', format);
   // setTimeout(() => {
   //   getAllYears(format, idx + 1)
   // }, 1000);
