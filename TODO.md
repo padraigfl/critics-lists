@@ -4,6 +4,8 @@ QUICK NOTES FOR 2021
 - [] scripts (e.g OMDB_KEY=xxxxx node ./scripts/omdb/fetch.js)
 - [] sanitize 2020 and 2021 data
 - [] more error handling in convoluted scripts
+- [] move letterboxd csv download stuff to navbar for lists
+- [] tidy hide stateless option
 
 Important and/or easy:
 - [x] BUG Resolve scroll bug across devices, verify

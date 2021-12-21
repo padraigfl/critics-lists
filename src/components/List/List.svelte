@@ -1,6 +1,6 @@
 <script>
   import Entry from './Entry.svelte';
-  import { viewUninterested, viewKnown, viewInterested, viewSingleEntries } from '../../store';
+  import { viewUninterested, viewKnown, viewInterested, viewSingleEntries, viewStateless } from '../../store';
   import {
     generateListUpdater,
     getLocalStorageList,
@@ -14,6 +14,7 @@
   let canSeeKnown = true;
   let canSeeInterested = true;
   let canSeeSingleEntries = true;
+  let canSeeStateless = true;
   const updateLists = () => customLists.reduce((acc, role) => ({
     ...acc,
     [role]: getLocalStorageList(role, format, year),
@@ -22,6 +23,7 @@
   viewUninterested.subscribe((val) => canSeeUninterested = val);
   viewKnown.subscribe((val) => canSeeKnown = val);
   viewInterested.subscribe((val) => canSeeInterested = val);
+  viewStateless.subscribe((val) => canSeeStateless = val);
   viewSingleEntries.subscribe((val) => canSeeSingleEntries = val);
 
   $: lists = updateLists(format, year);
@@ -45,6 +47,8 @@
       canSeeKnown ? '' : ' List--hide-known'
     }${
       canSeeSingleEntries ? '' : ' List--hide-single-entries'
+    }${
+      canSeeStateless ? '' : ' List--hide-stateless'
     }`
   }
 >

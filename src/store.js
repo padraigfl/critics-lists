@@ -56,4 +56,5 @@ export const ordering = writable({ key: 'score' });
 export const viewKnown = writable(true);
 export const viewUninterested = writable(true);
 export const viewInterested = writable(true);
+export const viewStateless = writable(true);
 export const viewSingleEntries = writable(true);

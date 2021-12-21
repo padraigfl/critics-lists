@@ -10,6 +10,7 @@
   export let format;
   export let year;
   export let filters;
+  export let downloadCsv;
   let prevYearData;
   let prevListData;
 
@@ -27,7 +28,6 @@
 
   
   const getDerivedData = () => {
-    console.time()
     let derivedData = deriveAdditionalDataFromProcessedList(listData, yearData, format);
     dataList = [
       ...dataList.slice(0, 3),
@@ -67,7 +67,7 @@
     //   },
       // { title: 'Data Source', data: yearData.source }
     ];
-    if (derivedData.bestStudio) {
+    if (derivedData.bestStudio && derivedData.bestStudio !== 'N/A') {
       dataList.push(
         {
           title: 'Most featured production company',
@@ -75,7 +75,6 @@
         },
       );
     }
-    console.timeEnd()
   }
 
 
@@ -113,5 +112,11 @@
         Filters/sorting will omit entries without data when appropriate.
        </em>
     </dd>
+    {#if format !== ALBUM}
+      <dt></dt>
+      <dd>
+      <button on:click={downloadCsv}>Get Letterboxd CSV of current list</button>
+      </dd>
+    {/if}
   </dl>
 </div>

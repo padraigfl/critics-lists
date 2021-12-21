@@ -156,6 +156,9 @@ $dataListWidth: 400px;
   &--hide-single-entries .Entry--single-list {
     display: none;
   }
+  &--hide-stateless .Entry--stateless {
+    display: none;
+  }
 
   @media (max-width: $mobile) {
     margin-left: 0px;
@@ -475,13 +478,20 @@ $dataListWidth: 400px;
   }
 }
 
+.csv-download {
+  padding-top: 52px;
+  margin-left: 16px;
+  & + .InterestedList {
+    padding-top: 0px
+  }
+}
+
 .InterestedList {
   $gutters: $m;
   display: grid;
   grid: auto /repeat(3, minmax(200px, 1fr));
   margin: $m;
   padding: 0px;
-  padding-top: 52px;
   grid-gap: $gutters;
   .InterestedCard {
     list-style-type: none;
