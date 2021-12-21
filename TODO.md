@@ -6,6 +6,7 @@ QUICK NOTES FOR 2021
 - [] more error handling in convoluted scripts
 - [] move letterboxd csv download stuff to navbar for lists
 - [] tidy hide stateless option
+- [] manually validate IDs for 2017 and 2021
 
 Important and/or easy:
 - [x] BUG Resolve scroll bug across devices, verify

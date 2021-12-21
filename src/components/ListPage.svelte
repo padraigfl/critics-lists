@@ -203,7 +203,6 @@
   }
 
   $: downloadCSV = () => {
-    debugger
     const csv = getCsv(listData);
     var downloadLink = document.createElement("a");
     var blob = new Blob(["\ufeff", csv]);

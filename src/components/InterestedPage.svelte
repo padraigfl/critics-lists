@@ -96,7 +96,7 @@
         .filter(([,v]) => !!v && !!v.imdbID)
         .map(([title = '', { imdbID = '' }]) =>
           // remove TV network, year, or junk data added to names
-          `${imdbID.trim()},${title.replace(/\([^()]*\)$/, '').trim()}`
+          `${imdbID.trim()},${title.replace(/\([^()]*\)$/, '').replace(',', '').trim()}`
         ).join('\n')
     return url;
   }
