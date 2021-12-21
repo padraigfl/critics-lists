@@ -128,7 +128,15 @@ const handleIssueLog = (
   }
 }
 
-const writeFilms = (films, year, errorLog, issueLog, format = 'film') => {
+const writeFilms = (films, year, errorLog, issueLog, format = 'film', onlyNew) => {
+  if (onlyNew) {
+    const existingList = readFile(`./public/${format}/${year}data.json`);
+    Object.keys(films).forEach((filmName) => {
+      if (existingList[filmName]) {
+        delete films[filmName];
+      }
+    })
+  }
   Promise.all(Object.entries(films).map(([title]) => (
     getFilm(films, title, null, issueLog, errorLog, format)
   ))).then(() => {
