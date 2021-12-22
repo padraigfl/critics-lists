@@ -49,7 +49,6 @@ const getFilm = (films, title, year, issueLog, errorLog = {}, format = 'film', a
     url = `http://www.omdbapi.com/?t=${title.replace(/\&/g, '%26').replace(/\s/g, '%20')}${year ? `&y=${year}` : ''}&type=movie${ apikey ? `&apikey=${apikey}` : ''}`
   } else if (format === 'tv' && title.split(' (')[0]) {
     url = `http://www.omdbapi.com/?t=${title.split(' (')[0].replace(/\&/g, '+').replace(/\s/g, '+')}&type=series${ apikey ? `&apikey=${apikey}` : ''}`
-    console.log(url);
   } else {
     return Promise.resolve();
   }
@@ -131,35 +130,46 @@ const handleIssueLog = (
 const writeFilms = (films, year, errorLog, issueLog, format = 'film', onlyNew) => {
   if (onlyNew) {
     const existingList = readFile(`./public/${format}/${year}data.json`);
+    let i = 0;
+    let j = 0;
     Object.keys(films).forEach((filmName) => {
-      if (existingList[filmName]) {
-        delete films[filmName];
+      i++;
+      const key = filmName
+        ? filmName
+        : filmName.split(' (')[0].trim()
+  
+      if (
+        existingList[key]
+        || (format === 'tv' && !key.includes('*') && Object.keys(existingList).find(v => v.match(new RegExp("^"+key+"\s*(\(.*\))$"))))
+      ){
+        delete films[key];
+        j++;
       }
-    })
+    });
+    console.log(`fetching ${i - j} of ${i}`)
   }
-  Promise.all(Object.entries(films).map(([title]) => (
-    getFilm(films, title, null, issueLog, errorLog, format)
-  ))).then(() => {
-    films = Object.entries(films).reduce((acc, [key,val]) => ({
-      ...acc,
-      [val.originalTitle || key]: val,
-    }), {});
+  // Promise.all(Object.entries(films).map(([title]) => (
+  //   getFilm(films, title, null, issueLog, errorLog, format)
+  // ))).then(() => {
+  //   films = Object.entries(films).reduce((acc, [key,val]) => ({
+  //     ...acc,
+  //     [val.originalTitle || key]: val,
+  //   }), {});
 
-    console.log('HERE?E')
-    writeFile(`${year}failures.json`, errorLog);
-    writeFile(`${year}issues.json`, issueLog);
-    writeFile(`${year}data.json`, films);
-    // handleIssueLog(films, issueLog, errorLog);
-  });
+  //   writeFile(`${year}failures.json`, errorLog);
+  //   writeFile(`${year}issues.json`, issueLog);
+  //   writeFile(`${year}data.json`, films);
+  //   // handleIssueLog(films, issueLog, errorLog);
+  // });
 }
 
 
 
-const workYear = (year, bonusData, format) => {
+const workYear = (year, bonusData, format, onlyNew) => {
   let films = getFilmList(year, bonusData, format);
   const errorLog = {};
   let issueLog = {};
-  writeFilms(films, year, errorLog, issueLog, format);
+  writeFilms(films, year, errorLog, issueLog, format, onlyNew);
 };
 
 /*
@@ -188,9 +198,10 @@ resolve issues example (wrong year)
   )
 */
 
-['2021'].forEach((year, idx) => {
+['2017'].forEach((year, idx) => {
   setTimeout(() => {
-    workYear(year, 'year', 'film')
+    // 4th param only fetches data for new entries not in existing list
+    workYear(year, 'year', 'tv', true)
     if (idx === YEARS.length - 1) {
       // setTimeout(process.exit, 1000);
     }
