@@ -138,30 +138,33 @@ const writeFilms = (films, year, errorLog, issueLog, format = 'film', onlyNew) =
       const key = filmName
         ? filmName
         : filmName.split(' (')[0].trim()
-  
-      if (
-        existingList[key]
-        || (format === 'tv' && !key.includes('*') && Object.keys(existingList).find(v => v.match(new RegExp("^"+key+"\s*(\(.*\))$"))))
-      ) {
-        delete films[key];
-        j++;
+      try {
+        if (
+          existingList[key]
+          || (format === 'tv' && !key.includes('*') && Object.keys(existingList).find(v => v.match(new RegExp("^"+key+"\s*(\(.*\))$"))))
+        ) {
+          delete films[key];
+          j++;
+        }
+      } catch (e) {
+        console.log(e);
       }
     });
     console.log(`fetching ${i - j} of ${i}`)
   }
-  // Promise.all(Object.entries(films).map(([title]) => (
-  //   getFilm(films, title, null, issueLog, errorLog, format)
-  // ))).then(() => {
-  //   films = Object.entries(films).reduce((acc, [key,val]) => ({
-  //     ...acc,
-  //     [val.originalTitle || key]: val,
-  //   }), {});
-  //  
-  //   writeFile(`${year}failures${onlyNew ? '--only-new' : ''}.json`, errorLog);
-  //   writeFile(`${year}issues${onlyNew ? '--only-new' : ''}.json`, issueLog);
-  //   writeFile(`${year}data${onlyNew ? '--only-new' : ''}.json`, films);
-  //   // handleIssueLog(films, issueLog, errorLog);
-  // });
+  Promise.all(Object.entries(films).map(([title]) => (
+    getFilm(films, title, null, issueLog, errorLog, format)
+  ))).then(() => {
+    films = Object.entries(films).reduce((acc, [key,val]) => ({
+      ...acc,
+      [val.originalTitle || key]: val,
+    }), {});
+   
+    writeFile(`${year}failures${onlyNew ? '--only-new' : ''}.json`, errorLog);
+    writeFile(`${year}issues${onlyNew ? '--only-new' : ''}.json`, issueLog);
+    writeFile(`${year}data${onlyNew ? '--only-new' : ''}.json`, films);
+    // handleIssueLog(films, issueLog, errorLog);
+  });
 }
 
 
@@ -199,7 +202,7 @@ resolve issues example (wrong year)
   )
 */
 
-['2017'].forEach((year, idx) => {
+['2010s'].forEach((year, idx) => {
   setTimeout(() => {
     // 4th param only fetches data for new entries not in existing list
     workYear(year, 'year', 'tv', true)
