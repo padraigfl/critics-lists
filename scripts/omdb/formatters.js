@@ -1,3 +1,6 @@
+
+var { readFile, writeFile, YEARS } = require('../utils');
+
 // Breaks down string value for awards and noms into a basic numeric, currently ignores source of award
 const stringToNumber = (val) => +val ? +val : 0;
 
@@ -40,7 +43,7 @@ const formatRatings = (filmData) => {
     Metascore: filmData.Metascore,
     "Rotten Tomatoes": parseInt(filmData["Rotten Tomatoes"]),
     imdbRating: +filmData.imdbRating,
-    imdbVotes: +filmData.imdbVotes.replace(','),
+    imdbVotes:  +(`${filmData.imdbVotes}`.replace(',', '')),
   };
 
   if (!filmData.Ratings || filmData.Ratings.length === 0) {
@@ -87,12 +90,21 @@ const formatFilmData = (filmData, key, criticData) => {
     Year: +filmData.Year || undefined,
     Runtime: parseInt(filmData.Runtime) || 'N/A',
     // Awards: formatAwards(filmData.Awards),
-    imdbVotes: filmData && filmData.imdbVotes ? +(filmData.imdbVotes.replace(',', '')) : undefined,
+    imdbVotes: filmData && filmData.imdbVotes ? +(`${filmData.imdbVotes}`.replace(',', '')) : undefined,
     // rankings: getEntryRankings(key, criticData)
   }
 };
 
+const readAndFormatFile = (format = 'film', year = '2010s') => {
+  const allData = readFile(`./public/${format}/${year}data.json`);
+  Object.entries(allData).forEach(([name, data ]) => {
+    allData[name] = formatFilmData(data);
+  })
+  writeFile(`./public/${format}/${year}data.json`, allData);
+}
+
 module.exports = {
   formatFilmData,
   getEntryRankings,
+  readAndFormatFile,
 };
