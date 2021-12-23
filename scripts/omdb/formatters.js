@@ -95,7 +95,7 @@ const formatFilmData = (filmData, key, criticData) => {
   }
 };
 
-const readAndFormatFile = (format = 'film', year = '2010s') => {
+const readAndFormatFile = (format = 'tv', year = '2021') => {
   const allData = readFile(`./public/${format}/${year}data.json`);
   Object.entries(allData).forEach(([name, data ]) => {
     allData[name] = formatFilmData(data);
