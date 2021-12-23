@@ -128,8 +128,9 @@ const handleIssueLog = (
 }
 
 const writeFilms = (films, year, errorLog, issueLog, format = 'film', onlyNew) => {
+  let existingList = {};
   if (onlyNew) {
-    const existingList = readFile(`./public/${format}/${year}data.json`);
+    existingList = readFile(`./public/${format}/${year}data.json`);
     let i = 0;
     let j = 0;
     Object.keys(films).forEach((filmName) => {
@@ -141,7 +142,7 @@ const writeFilms = (films, year, errorLog, issueLog, format = 'film', onlyNew) =
       if (
         existingList[key]
         || (format === 'tv' && !key.includes('*') && Object.keys(existingList).find(v => v.match(new RegExp("^"+key+"\s*(\(.*\))$"))))
-      ){
+      ) {
         delete films[key];
         j++;
       }
@@ -155,10 +156,10 @@ const writeFilms = (films, year, errorLog, issueLog, format = 'film', onlyNew) =
   //     ...acc,
   //     [val.originalTitle || key]: val,
   //   }), {});
-
-  //   writeFile(`${year}failures.json`, errorLog);
-  //   writeFile(`${year}issues.json`, issueLog);
-  //   writeFile(`${year}data.json`, films);
+  //  
+  //   writeFile(`${year}failures${onlyNew ? '--only-new' : ''}.json`, errorLog);
+  //   writeFile(`${year}issues${onlyNew ? '--only-new' : ''}.json`, issueLog);
+  //   writeFile(`${year}data${onlyNew ? '--only-new' : ''}.json`, films);
   //   // handleIssueLog(films, issueLog, errorLog);
   // });
 }
