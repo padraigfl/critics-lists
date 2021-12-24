@@ -108,3 +108,8 @@ module.exports = {
   getEntryRankings,
   readAndFormatFile,
 };
+
+YEARS.forEach(v => {
+  readAndFormatFile('tv', v)
+  readAndFormatFile('film', v)
+});

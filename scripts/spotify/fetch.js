@@ -185,12 +185,18 @@ const getAlbumsData = async (year) => {
       });
     process.stdout.write(`${i+1}/${albumBatches.length};`);
   }
-  console.log(albumData);
-  console.log('high ', Object.values(albumData).filter(v => v.confidence === 1).length);
-  console.log('med ', Object.values(albumData).filter(v => v.confidence === 2).length);
-  console.log('low ', Object.values(albumData).filter(v => v.confidence === 3).length);
-  console.log('no match', Object.values(albumData).filter(v => v.confidence === 4).length);
-  console.log('fail', Object.values(albumData).filter(v => v.confidence === 5).length);
+
+  try {
+    ['high', 'med', 'low', 'no match', 'fail'].forEach((v, idx) => {
+      const albumsInSet =  Object.entries(albumData).filter(([k, v]) => v.confidence === (idx + 1)).map(([k]) => k)
+      console.log(`${v} - ${albumsInSet.length}`);
+      if (albumsInSet.length < 10) {
+        console.log(albumsInSet);
+      }
+    })
+  } catch (e) {
+    console.log(e);
+  }
   writeFile(`./public/${year}data.json`, albumData);
 }
 
@@ -202,4 +208,4 @@ const getYears = async (idx) => {
   return getYears(idx + 1);
 }
 
-getAlbumsData('2021');
+getAlbumsData('2020');
