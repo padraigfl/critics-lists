@@ -43,10 +43,12 @@ const getFilmList = (year, bonusData, format = 'film') => {
   return films;
 };
 
-const getFilm = (films, title, year, issueLog, errorLog = {}, format = 'film', apikey = process.env.OMDB_KEY) => {
+const getFilm = (films, title, year, issueLog, errorLog = {}, format = 'film', apikey = process.env.OMDB_KEY, data) => {
   let url;
   if (format === 'film') {
-    url = `http://www.omdbapi.com/?t=${title.replace(/\&/g, '%26').replace(/\s/g, '%20')}${year ? `&y=${year}` : ''}&type=movie${ apikey ? `&apikey=${apikey}` : ''}`
+    url = data.imdbID
+      ? `http://www.omdbapi.com/?i=${data.imdbId}&apikey=${apikey}`
+      : `http://www.omdbapi.com/?t=${title.replace(/\&/g, '%26').replace(/\s/g, '%20')}${year ? `&y=${year}` : ''}&type=movie${ apikey ? `&apikey=${apikey}` : ''}`
   } else if (format === 'tv' && title.split(' (')[0]) {
     url = `http://www.omdbapi.com/?t=${title.split(' (')[0].replace(/\&/g, '+').replace(/\s/g, '+')}&type=series${ apikey ? `&apikey=${apikey}` : ''}`
   } else {
@@ -143,8 +145,10 @@ const writeFilms = (films, year, errorLog, issueLog, format = 'film', onlyNew) =
           existingList[key]
           || (format === 'tv' && !key.includes('*') && Object.keys(existingList).find(v => v.match(new RegExp("^"+key+"\s*(\(.*\))$"))))
         ) {
-          delete films[key];
-          j++;
+          if (!existingList[key].Error && !existingList[key].imdbID) {
+            delete films[key];
+            j++;
+          }
         }
       } catch (e) {
         console.log(e);
@@ -152,8 +156,8 @@ const writeFilms = (films, year, errorLog, issueLog, format = 'film', onlyNew) =
     });
     console.log(`fetching ${i - j} of ${i}`)
   }
-  Promise.all(Object.entries(films).map(([title]) => (
-    getFilm(films, title, null, issueLog, errorLog, format)
+  Promise.all(Object.entries(films).map(([title, data]) => (
+    getFilm(films, title, null, issueLog, errorLog, format, data)
   ))).then(() => {
     films = Object.entries(films).reduce((acc, [key,val]) => ({
       ...acc,
