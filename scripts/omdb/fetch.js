@@ -11,7 +11,7 @@ const addFilm = (films, film, year, bonusData) => {
     filmName = film.replace(/\(.*\)/, '').trim();
     data = film.replace(/.*\((.*)\)/, '$1').trim();
   }
-  if (films[filmName]) {
+  if (films[filmName]) { 
     return;
   }
   films[filmName] = { year, originalTitle: film }
@@ -46,19 +46,24 @@ const getFilmList = (year, bonusData, format = 'film') => {
 const getFilm = (films, title, year, issueLog, errorLog = {}, format = 'film', apikey = process.env.OMDB_KEY, data) => {
   let url;
   if (format === 'film') {
-    url = data.imdbID
-      ? `http://www.omdbapi.com/?i=${data.imdbId}&apikey=${apikey}`
+    url = data && data.imdbID
+      ? `http://www.omdbapi.com/?i=${data.imdbID}&apikey=${apikey}`
       : `http://www.omdbapi.com/?t=${title.replace(/\&/g, '%26').replace(/\s/g, '%20')}${year ? `&y=${year}` : ''}&type=movie${ apikey ? `&apikey=${apikey}` : ''}`
   } else if (format === 'tv' && title.split(' (')[0]) {
     url = `http://www.omdbapi.com/?t=${title.split(' (')[0].replace(/\&/g, '+').replace(/\s/g, '+')}&type=series${ apikey ? `&apikey=${apikey}` : ''}`
   } else {
     return Promise.resolve();
   }
+
   return new Promise((res) => {
     setTimeout(() => {
       curl.get(url, null, (err,resp,respBody)=>{
         try {
-          const body = JSON.parse(respBody);
+          let body = JSON.parse(respBody);
+          if (!body) {
+            body = {};
+          }
+          console.log(body);
           if (body.Error) {
             errorLog[title] = { year, error: body.Error };
           }
@@ -91,6 +96,7 @@ const getFilm = (films, title, year, issueLog, errorLog = {}, format = 'film', a
               }, {}),
               ...restBody
             };
+            console.log(films[title])
           } else {
             errorLog[title] = { year };
             //some error handling
@@ -135,6 +141,7 @@ const writeFilms = (films, year, errorLog, issueLog, format = 'film', onlyNew) =
     existingList = readFile(`./public/${format}/${year}data.json`);
     let i = 0;
     let j = 0;
+    console.log("number", Object.keys(existingList).length);
     Object.keys(films).forEach((filmName) => {
       i++;
       const key = filmName
@@ -143,9 +150,10 @@ const writeFilms = (films, year, errorLog, issueLog, format = 'film', onlyNew) =
       try {
         if (
           existingList[key]
-          || (format === 'tv' && !key.includes('*') && Object.keys(existingList).find(v => v.match(new RegExp("^"+key+"\s*(\(.*\))$"))))
+        //  || (format === 'tv' && !key.includes('*') && Object.keys(existingList).find(v => v.match(new RegExp("^"+key+"\s*(\(.*\))$"))))
         ) {
-          if (!existingList[key].Error && !existingList[key].imdbID) {
+          if (
+            !existingList[key].Error && !!existingList[key].imdbID) {
             delete films[key];
             j++;
           }
@@ -206,10 +214,10 @@ resolve issues example (wrong year)
   )
 */
 
-['2010s'].forEach((year, idx) => {
+['2021'].forEach((year, idx) => {
   setTimeout(() => {
     // 4th param only fetches data for new entries not in existing list
-    workYear(year, 'year', 'tv', true)
+    workYear(year, 'year', 'film', true)
     if (idx === YEARS.length - 1) {
       // setTimeout(process.exit, 1000);
     }

@@ -1,5 +1,5 @@
 var fs = require('fs');
-
+ 
 const years = ['2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2020', '2021', '2010s']; 
 
 function writeFile(filename, jsonData) {
@@ -10,10 +10,13 @@ function writeFile(filename, jsonData) {
 }
 
 const readFile = (filename) => {
+  let file;
   try {
-    return JSON.parse(fs.readFileSync(filename, 'utf8'));
-  } catch {
-    console.error(filename, 'doesnt exist');
+    file = fs.readFileSync(filename, 'utf8')
+    return JSON.parse(file);
+  } catch (e) {
+    console.log('file char length = ', file ? file.length : 'no file')
+    console.error(e, filename, 'doesnt exist');
     return {};
   }
 }
