@@ -43,7 +43,7 @@ const getFilmList = (year, bonusData, format = 'film') => {
   return films;
 };
 
-const getFilm = (films, title, year, issueLog, errorLog = {}, format = 'film', apikey = process.env.OMDB_KEY, data) => {
+const getFilm = (films, title, year, issueLog, errorLog = {}, format = 'film', data, apikey = process.env.OMDB_KEY) => {
   let url;
   if (format === 'film') {
     url = data && data.imdbID
@@ -63,7 +63,6 @@ const getFilm = (films, title, year, issueLog, errorLog = {}, format = 'film', a
           if (!body) {
             body = {};
           }
-          console.log(body);
           if (body.Error) {
             errorLog[title] = { year, error: body.Error };
           }
@@ -96,7 +95,6 @@ const getFilm = (films, title, year, issueLog, errorLog = {}, format = 'film', a
               }, {}),
               ...restBody
             };
-            console.log(films[title])
           } else {
             errorLog[title] = { year };
             //some error handling
@@ -125,9 +123,9 @@ const handleIssueLog = (
   log.map(async ([name, { year }]) => 
     await getFilm(films, name, +year + yearChange, issueLog, errorLog)
   )
-  writeFile(`${year}failures.json`, errorLog);
-  writeFile(`${year}issues.json`, issueLog);
-  writeFile(`${year}film.json`, films);
+  // writeFile(`${year}failures.json`, errorLog);
+  // writeFile(`${year}issues.json`, issueLog);
+  // writeFile(`${year}film.json`, films);
   if (!yearChange) {
     handleIssueLog(films, issueLog, errorLog, 1);
   } else if (yearChange === 1) {
@@ -144,16 +142,25 @@ const writeFilms = (films, year, errorLog, issueLog, format = 'film', onlyNew) =
     console.log("number", Object.keys(existingList).length);
     Object.keys(films).forEach((filmName) => {
       i++;
-      const key = filmName
+      const key = format === 'film'
         ? filmName
         : filmName.split(' (')[0].trim()
       try {
+        const existingKey = format === 'tv'
+          ? Object.keys(existingList).find(v =>v.match(
+            new RegExp("^"+key+"\s*(\(.*\))$")
+          ))
+          : key;
         if (
-          existingList[key]
-        //  || (format === 'tv' && !key.includes('*') && Object.keys(existingList).find(v => v.match(new RegExp("^"+key+"\s*(\(.*\))$"))))
+          existingList[existingKey]
+          || (
+            format === 'tv'
+            && existingKey
+            && !existingKey.includes('*')
+          )
         ) {
           if (
-            !existingList[key].Error && !!existingList[key].imdbID) {
+            !!existingList[existingKey] && !existingList[existingKey].Error && !!existingList[existingKey].imdbID) {
             delete films[key];
             j++;
           }
@@ -217,7 +224,7 @@ resolve issues example (wrong year)
 ['2021'].forEach((year, idx) => {
   setTimeout(() => {
     // 4th param only fetches data for new entries not in existing list
-    workYear(year, 'year', 'film', true)
+    workYear(year, 'year', 'tv', true)
     if (idx === YEARS.length - 1) {
       // setTimeout(process.exit, 1000);
     }
