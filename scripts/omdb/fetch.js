@@ -224,7 +224,7 @@ resolve issues example (wrong year)
 ['2021'].forEach((year, idx) => {
   setTimeout(() => {
     // 4th param only fetches data for new entries not in existing list
-    workYear(year, 'year', 'tv', true)
+    workYear(year, 'year', 'film', true)
     if (idx === YEARS.length - 1) {
       // setTimeout(process.exit, 1000);
     }
