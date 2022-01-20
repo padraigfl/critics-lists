@@ -229,7 +229,7 @@
       <ListEntryDataPoint value={entry.firsts.length} small icon="🏆" description="Lists topped"/>
       <ListEntryDataPoint value={entry.critics.length} small icon="📋" description="Lists featured on" />
       {#if hasData && data.awards}
-        <ListEntryDataPoint value={data.awards.wins} small icon="W" description="Awards won"/>
+        <ListEntryDataPoint value={data.awards.wins} small icon="A" description="Awards won"/>
         <ListEntryDataPoint value={data.awards.noms} small icon="N" description="Awards nominated for (excluding wins)"/>
       {/if}
     </div>
