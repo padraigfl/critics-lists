@@ -109,7 +109,7 @@ export const SCORING_MATRICES = {
 const stringToNumber = val => (
   typeof val === 'string'
     ? +val.replace(/[^\d.]+/g, '')
-    : val === 'number'
+    : typeof val === 'number'
       ? val
       : undefined
 );
@@ -174,7 +174,7 @@ const formatOmdbData = (omdbData = {}) => {
     language: omdbData.Language ? omdbData.Language.split(', ') : undefined,
     country: omdbData.Country ? omdbData.Country.split(', ') : undefined,
     release: new Date(omdbData.Released),
-    runtime: stringToNumber(omdbData.Runtime),
+    runtime: omdbData.Runtime,
     genre: omdbData.Genre ? omdbData.Genre.split(', ') : undefined,
     production: omdbData.Production,
     cast: omdbData.Actors ? omdbData.Actors.split(', ') : undefined,
