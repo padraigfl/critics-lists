@@ -24,7 +24,7 @@
   "dependencies": {
     "axios": "^0.24.0",
     "curl": "^0.1.4",
-    "jsdom": "^16.0.0",
+    "jsdom": "^16.5.0",
     "sirv-cli": "^0.4.4"
   }
 }
