@@ -40,6 +40,7 @@ const getFilmList = (year, bonusData, format = 'film') => {
       addFilm(films, film, year, bonusData);
     });
   });
+  console.log(Object.keys(films).length)
   return films;
 };
 
@@ -59,11 +60,12 @@ const getFilm = (films, title, year, issueLog, errorLog = {}, format = 'film', d
     setTimeout(() => {
       curl.get(url, null, (err,resp,respBody)=>{
         try {
-          let body = JSON.parse(respBody);
+          console.log(respBody)
+          let body = respBody ? JSON.parse(respBody) : undefined;
           if (!body) {
             body = {};
           }
-          if (body.Error) {
+          if (body?.Error) {
             errorLog[title] = { year, error: body.Error };
           }
           if (films[title] && +body.Year !== +films[title].year) {
@@ -72,7 +74,7 @@ const getFilm = (films, title, year, issueLog, errorLog = {}, format = 'film', d
               notSameYear: body.Year,
             };
           }
-          if (+resp.statusCode == 200) {
+          if (+resp?.statusCode == 200) {
             const {
               Response,
               Website,
@@ -133,7 +135,7 @@ const handleIssueLog = (
   }
 }
 
-const writeFilms = (films, year, errorLog, issueLog, format = 'film', onlyNew) => {
+const writeFilms = async (films, year, errorLog, issueLog, format = 'film', onlyNew) => {
   let existingList = {};
   if (onlyNew) {
     existingList = readFile(`./public/${format}/${year}data.json`);
@@ -171,22 +173,28 @@ const writeFilms = (films, year, errorLog, issueLog, format = 'film', onlyNew) =
     });
     console.log(`fetching ${i - j} of ${i}`)
   }
-  Promise.all(Object.entries(films).map(([title, data]) => (
-    getFilm(films, title, null, issueLog, errorLog, format, data)
-  ))).then(() => {
-    films = Object.entries(films).reduce((acc, [key,val]) => ({
-      ...acc,
-      [val.originalTitle || key]: val,
-    }), {});
-   
-    writeFile(`${year}failures${onlyNew ? '--only-new' : ''}.json`, errorLog);
-    writeFile(`${year}issues${onlyNew ? '--only-new' : ''}.json`, issueLog);
-    writeFile(`${year}data${onlyNew ? '--only-new' : ''}.json`, films);
-    // handleIssueLog(films, issueLog, errorLog);
-  });
+  const filmEntries = Object.entries(films);
+  for (let i = 0; i < filmEntries.length; i++) {
+    await new Promise(res => {
+      setTimeout(
+        () => {
+          getFilm(films, filmEntries[i][0], null, issueLog, errorLog, format, filmEntries[i][1]);
+          res()
+        },
+        1000,
+      )
+    });
+  }
+
+  films = Object.entries(films).reduce((acc, [key,val]) => ({
+    ...acc,
+    [val.originalTitle || key]: val,
+  }), {});
+
+  writeFile(`${year}failures${onlyNew ? '--only-new' : ''}.json`, errorLog);
+  writeFile(`${year}issues${onlyNew ? '--only-new' : ''}.json`, issueLog);
+  writeFile(`${year}data${onlyNew ? '--only-new' : ''}.json`, films);
 }
-
-
 
 const workYear = (year, bonusData, format, onlyNew) => {
   let films = getFilmList(year, bonusData, format);
@@ -221,10 +229,10 @@ resolve issues example (wrong year)
   )
 */
 
-['2021'].forEach((year, idx) => {
+['2022'].forEach((year, idx) => {
   setTimeout(() => {
     // 4th param only fetches data for new entries not in existing list
-    workYear(year, 'year', 'film', true)
+    workYear(year, 'year', 'tv',false)
     if (idx === YEARS.length - 1) {
       // setTimeout(process.exit, 1000);
     }

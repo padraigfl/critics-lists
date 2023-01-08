@@ -6,7 +6,7 @@ export const ALL = 'all';
 export const GENRE = 'genre';
 export const LANGUAGE = 'language';
 export const COUNTRY = 'country';
-export const YEARS = ['2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2020', '2021', '2010s'];
+export const YEARS = ['2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022', '2010s'];
 
 export const FORMATS = [FILM, ALBUM, TV];
 
@@ -29,6 +29,7 @@ export const SOURCE = {
     '2019': 'https://www.metacritic.com/feature/critics-pick-top-10-best-movies-of-2019',
     '2020': 'https://www.metacritic.com/feature/film-critics-pick-10-best-movies-of-2020',
     '2021': 'https://www.metacritic.com/feature/film-critics-pick-10-best-movies-of-2021',
+    '2022': 'https://www.metacritic.com/feature/film-critics-pick-10-best-movies-of-2022',
     '2010s': 'https://www.metacritic.com/feature/best-movies-of-the-decade-2010s',
   },
   [TV]: {
@@ -44,6 +45,7 @@ export const SOURCE = {
     '2019': 'https://www.metacritic.com/feature/critics-pick-top-10-best-tv-shows-of-2019',
     '2020': 'https://www.metacritic.com/feature/tv-critics-pick-10-best-tv-shows-of-2020',
     '2021': 'https://www.metacritic.com/feature/tv-critics-pick-10-best-tv-shows-of-2021',
+    '2022': 'https://www.metacritic.com/feature/tv-critics-pick-10-best-tv-shows-of-2022',
     '2010s': 'https://www.metacritic.com/feature/best-tv-shows-of-the-decade-2010s',
   },
   [ALBUM]: {
@@ -59,6 +61,7 @@ export const SOURCE = {
     '2019': 'https://www.metacritic.com/feature/critics-pick-top-10-best-albums-of-2019',
     '2020': 'https://www.metacritic.com/feature/music-critics-pick-top-10-best-albums-of-2020',
     '2021': 'https://www.metacritic.com/feature/music-critics-pick-top-10-best-albums-of-2021',
+    '2022': 'https://www.metacritic.com/feature/music-critics-pick-top-10-best-albums-of-2022',
     '2010s': 'https://www.metacritic.com/feature/best-movies-of-the-decade-2010s',
   },
 };
