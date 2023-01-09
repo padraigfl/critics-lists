@@ -69,7 +69,12 @@
         iterativeList = iterativeList.filter(v => v[1][key] && v[1][key].includes(val));
       }
     });
-    let sorted = [...iterativeList.sort(objectEntriesSort(sortBy.key))];
+    const filteredList = iterativeList.filter(v => sortBy.type ? typeof v[1][sortBy.key] === sortBy.type : true);
+    const removedList = iterativeList.filter(v => sortBy.type ? typeof v[1][sortBy.key] !== sortBy.type : false);
+    let sorted = [
+      ...filteredList.sort(objectEntriesSort(sortBy.key)),
+      ...removedList,
+    ];
     if (sortBy.invert) {
       sorted.reverse();
     }

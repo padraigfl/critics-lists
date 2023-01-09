@@ -1,6 +1,7 @@
 <script>
   import Checkbox from '../List/Checkbox.svelte';
   import { getLocalStorageList, setLocalStorageList } from '../../utils/general';
+  import { TV } from '../../utils/constants';
   export let format;
   export let year;
   export let data;
@@ -70,7 +71,7 @@
                 : ''}`
             : ''
         }{
-        data.runtime
+        data.runtime && format !== TV
           ? `${data.runtime}min${data.country
             ? '; '
             : ''}`

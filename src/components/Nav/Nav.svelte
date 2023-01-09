@@ -192,7 +192,7 @@
 			}
 		];
 		if (format_value === FILM && options[0] && options[0].options) {
-			options[0].options.push({ title: 'Length', key: 'runtime' })
+			options[0].options.push({ title: 'Length', key: 'runtime', type: 'number' })
 		}
     return [
 			...options,

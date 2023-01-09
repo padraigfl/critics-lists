@@ -34,15 +34,22 @@ export const objectEntriesSort = (key) => {
     const valB = getComparisonValue(b);
     const aUndefined = typeof valA === 'undefined';
     const bUndefined = typeof valB === 'undefined';
+    const diff = valA - valB;
     if (aUndefined && bUndefined) {
-      return 0;
-    }
-    if (aUndefined || valA - valB < 0 || valA < valB) {
-      return 1;
-    }
-    if (bUndefined || valB - valA < 0 || valA > valB)  {
       return -1;
     }
+    if (aUndefined || valA < valB || (!Number.isNaN(diff) && diff < 0)) {
+      return 1;
+    }
+    if (bUndefined || valB < valA || (!Number.isNaN(diff) && diff > 0)) {
+      return -1;
+    }
+    // if (aUndefined || valA - valB < 0 || valA < valB) {
+    //   return 1;
+    // }
+    // if (bUndefined || valB - valA < 0 || valA > valB)  {
+    //   return -1;
+    // }
     return 0;
   };
 }
