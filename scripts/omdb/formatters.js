@@ -103,7 +103,7 @@ const readAndFormatFile = (format = 'tv', year = '2021') => {
   writeFile(`./public/${format}/${year}data.json`, allData);
 }
 
-readAndFormatFile('tv', '2022')
+readAndFormatFile('film', '2022')
 
 module.exports = {
   formatFilmData,

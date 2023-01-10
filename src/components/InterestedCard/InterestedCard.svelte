@@ -71,7 +71,7 @@
                 : ''}`
             : ''
         }{
-        data.runtime && format !== TV
+        data.runtime && format !== TV && data.runtime !== 'N/A'
           ? `${data.runtime}min${data.country
             ? '; '
             : ''}`

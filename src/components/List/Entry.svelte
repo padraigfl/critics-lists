@@ -186,7 +186,7 @@
         </span>
         {#if data.runtime || data.country}
           <div class="Entry__subtitle">
-          ({data.runtime ? `${data.runtime}min${data.country ? '; ': ''}`: ''}{data.country ? data.country.join(', ') : ''})
+          ({format !== 'TV' && data.runtime && data.runtime !== 'N/A' ? `${data.runtime}min${data.country ? '; ': ''}`: ''}{data.country ? data.country.join(', ') : ''})
           </div>
         {/if}
       </div>
